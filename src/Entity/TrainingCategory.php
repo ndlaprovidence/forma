@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="tbl_trainingCategory")
  * @ORM\Entity(repositoryClass="App\Repository\TrainingCategoryRepository")
  */
 class TrainingCategory

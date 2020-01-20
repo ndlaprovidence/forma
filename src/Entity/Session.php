@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="tbl_session")
  * @ORM\Entity(repositoryClass="App\Repository\SessionRepository")
  */
 class Session
@@ -42,6 +43,18 @@ class Session
      * @ORM\OneToMany(targetEntity="App\Entity\SessionTrainee", mappedBy="sessions", orphanRemoval=true)
      */
     private $sessionTrainees;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Training", inversedBy="sessions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $training;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\SessionLocation", inversedBy="sessions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $location;
 
     public function __construct()
     {
@@ -148,6 +161,30 @@ class Session
                 $sessionTrainee->setSessions(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTraining(): ?Training
+    {
+        return $this->training;
+    }
+
+    public function setTraining(?Training $training): self
+    {
+        $this->training = $training;
+
+        return $this;
+    }
+
+    public function getLocation(): ?SessionLocation
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?SessionLocation $location): self
+    {
+        $this->location = $location;
 
         return $this;
     }

@@ -2,9 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="tbl_sessionLocation")
  * @ORM\Entity(repositoryClass="App\Repository\SessionLocationRepository")
  */
 class SessionLocation
@@ -30,6 +33,16 @@ class SessionLocation
      * @ORM\Column(type="string", length=255)
      */
     private $city;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="location", orphanRemoval=true)
+     */
+    private $sessions;
+
+    public function __construct()
+    {
+        $this->sessions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -68,6 +81,37 @@ class SessionLocation
     public function setCity(string $city): self
     {
         $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Session[]
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): self
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->setLocation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): self
+    {
+        if ($this->sessions->contains($session)) {
+            $this->sessions->removeElement($session);
+            // set the owning side to null (unless already changed)
+            if ($session->getLocation() === $this) {
+                $session->setLocation(null);
+            }
+        }
 
         return $this;
     }
