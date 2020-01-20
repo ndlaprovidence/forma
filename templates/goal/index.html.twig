@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Goal index{% endblock %}
+
+{% block body %}
+    <h1>Goal index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for goal in goals %}
+            <tr>
+                <td>{{ goal.id }}</td>
+                <td>{{ goal.title }}</td>
+                <td>
+                    <a href="{{ path('goal_show', {'id': goal.id}) }}">show</a>
+                    <a href="{{ path('goal_edit', {'id': goal.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('goal_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Trainer{% endblock %}
+
+{% block body %}
+    <h1>Trainer</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ trainer.id }}</td>
+            </tr>
+            <tr>
+                <th>Last_name</th>
+                <td>{{ trainer.lastName }}</td>
+            </tr>
+            <tr>
+                <th>First_name</th>
+                <td>{{ trainer.firstName }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('trainer_index') }}">back to list</a>
+
+    <a href="{{ path('trainer_edit', {'id': trainer.id}) }}">edit</a>
+
+    {{ include('trainer/_delete_form.html.twig') }}
+{% endblock %}
