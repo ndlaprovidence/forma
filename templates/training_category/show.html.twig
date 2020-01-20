@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TrainingCategory{% endblock %}
+
+{% block body %}
+    <h1>TrainingCategory</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ training_category.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ training_category.title }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('training_category_index') }}">back to list</a>
+
+    <a href="{{ path('training_category_edit', {'id': training_category.id}) }}">edit</a>
+
+    {{ include('training_category/_delete_form.html.twig') }}
+{% endblock %}
