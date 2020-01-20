@@ -2,12 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="session_trainer")
+ * @ORM\Table(name="tbl_sessionTrainer")
  * @ORM\Entity(repositoryClass="App\Repository\SessionTrainerRepository")
  */
 class SessionTrainer
@@ -20,82 +18,42 @@ class SessionTrainer
     private $id;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $date;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Session", inversedBy="sessionTrainers")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trainer")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $sessions;
+    private $trainer;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Trainer", mappedBy="sessionTrainer")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Session")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $trainers;
-
-    public function __construct()
-    {
-        $this->trainers = new ArrayCollection();
-    }
+    private $session;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getTrainer(): ?Trainer
     {
-        return $this->date;
+        return $this->trainer;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setTrainer(?Trainer $trainer): self
     {
-        $this->date = $date;
+        $this->trainer = $trainer;
 
         return $this;
     }
 
-    public function getSessions(): ?Session
+    public function getSession(): ?Session
     {
-        return $this->sessions;
+        return $this->session;
     }
 
-    public function setSessions(?Session $sessions): self
+    public function setSession(?Session $session): self
     {
-        $this->sessions = $sessions;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Trainer[]
-     */
-    public function getTrainers(): Collection
-    {
-        return $this->trainers;
-    }
-
-    public function addTrainer(Trainer $trainer): self
-    {
-        if (!$this->trainers->contains($trainer)) {
-            $this->trainers[] = $trainer;
-            $trainer->setSessionTrainer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTrainer(Trainer $trainer): self
-    {
-        if ($this->trainers->contains($trainer)) {
-            $this->trainers->removeElement($trainer);
-            // set the owning side to null (unless already changed)
-            if ($trainer->getSessionTrainer() === $this) {
-                $trainer->setSessionTrainer(null);
-            }
-        }
+        $this->session = $session;
 
         return $this;
     }

@@ -3,7 +3,7 @@
 {% block title %}SessionLocation index{% endblock %}
 
 {% block body %}
-    <h1>SessionLocation index</h1>
+    <h1>Location index</h1>
 
     <table class="table">
         <thead>
@@ -16,15 +16,15 @@
             </tr>
         </thead>
         <tbody>
-        {% for session_location in session_locations %}
+        {% for location in locations %}
             <tr>
-                <td>{{ session_location.id }}</td>
-                <td>{{ session_location.street }}</td>
-                <td>{{ session_location.postalCode }}</td>
-                <td>{{ session_location.city }}</td>
+                <td>{{ location.id }}</td>
+                <td>{{ location.street }}</td>
+                <td>{{ location.postalCode }}</td>
+                <td>{{ location.city }}</td>
                 <td>
-                    <a href="{{ path('session_location_show', {'id': session_location.id}) }}">show</a>
-                    <a href="{{ path('session_location_edit', {'id': session_location.id}) }}">edit</a>
+                    <a href="{{ path('location_show', {'id': location.id}) }}">show</a>
+                    <a href="{{ path('location_edit', {'id': location.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -35,5 +35,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('session_location_new') }}">Create new</a>
+    <a href="{{ path('location_new') }}">Create new</a>
 {% endblock %}

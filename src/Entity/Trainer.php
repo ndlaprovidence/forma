@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,12 +26,6 @@ class Trainer
      * @ORM\Column(type="string", length=255)
      */
     private $first_name;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SessionTrainer", inversedBy="trainers")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $sessionTrainer;
 
     public function getId(): ?int
     {
@@ -60,18 +52,6 @@ class Trainer
     public function setFirstName(string $first_name): self
     {
         $this->first_name = $first_name;
-
-        return $this;
-    }
-
-    public function getSessionTrainer(): ?SessionTrainer
-    {
-        return $this->sessionTrainer;
-    }
-
-    public function setSessionTrainer(?SessionTrainer $sessionTrainer): self
-    {
-        $this->sessionTrainer = $sessionTrainer;
 
         return $this;
     }

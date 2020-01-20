@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('session_location_delete', {'id': session_location.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+<form method="post" action="{{ path('location_delete', {'id': session_location.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
     <input type="hidden" name="_method" value="DELETE">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ session_location.id) }}">
     <button class="btn">Delete</button>

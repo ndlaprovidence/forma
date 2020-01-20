@@ -2,12 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="session_trainee")
+ * @ORM\Table(name="tbl_sessionTrainee")
  * @ORM\Entity(repositoryClass="App\Repository\SessionTraineeRepository")
  */
 class SessionTrainee
@@ -22,80 +20,57 @@ class SessionTrainee
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $document_name;
+    private $convocation;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Trainee", mappedBy="sessionTrainee")
-     */
-    private $trainees;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Session", inversedBy="sessionTrainees")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trainee")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $sessions;
+    private $trainee;
 
-    public function __construct()
-    {
-        $this->trainees = new ArrayCollection();
-    }
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Session")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $session;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDocumentName(): ?string
+    public function getConvocation(): ?string
     {
-        return $this->document_name;
+        return $this->convocation;
     }
 
-    public function setDocumentName(string $document_name): self
+    public function setConvocation(string $convocation): self
     {
-        $this->document_name = $document_name;
+        $this->convocation = $convocation;
 
         return $this;
     }
 
-    /**
-     * @return Collection|Trainee[]
-     */
-    public function getTrainees(): Collection
+    public function getTrainee(): ?Trainee
     {
-        return $this->trainees;
+        return $this->trainee;
     }
 
-    public function addTrainee(Trainee $trainee): self
+    public function setTrainee(?Trainee $trainee): self
     {
-        if (!$this->trainees->contains($trainee)) {
-            $this->trainees[] = $trainee;
-            $trainee->setSessionTrainee($this);
-        }
+        $this->trainee = $trainee;
 
         return $this;
     }
 
-    public function removeTrainee(Trainee $trainee): self
+    public function getSession(): ?Session
     {
-        if ($this->trainees->contains($trainee)) {
-            $this->trainees->removeElement($trainee);
-            // set the owning side to null (unless already changed)
-            if ($trainee->getSessionTrainee() === $this) {
-                $trainee->setSessionTrainee(null);
-            }
-        }
-
-        return $this;
+        return $this->session;
     }
 
-    public function getSessions(): ?Session
+    public function setSession(?Session $session): self
     {
-        return $this->sessions;
-    }
-
-    public function setSessions(?Session $sessions): self
-    {
-        $this->sessions = $sessions;
+        $this->session = $session;
 
         return $this;
     }

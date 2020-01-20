@@ -11,22 +11,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/session/location")
+ * @Route("/location")
  */
 class SessionLocationController extends AbstractController
 {
     /**
-     * @Route("/", name="session_location_index", methods={"GET"})
+     * @Route("/", name="location_index", methods={"GET"})
      */
     public function index(SessionLocationRepository $sessionLocationRepository): Response
     {
-        return $this->render('session_location/index.html.twig', [
-            'session_locations' => $sessionLocationRepository->findAll(),
+        return $this->render('location/index.html.twig', [
+            'locations' => $sessionLocationRepository->findAll(),
         ]);
     }
 
     /**
-     * @Route("/new", name="session_location_new", methods={"GET","POST"})
+     * @Route("/new", name="location_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
@@ -39,27 +39,27 @@ class SessionLocationController extends AbstractController
             $entityManager->persist($sessionLocation);
             $entityManager->flush();
 
-            return $this->redirectToRoute('session_location_index');
+            return $this->redirectToRoute('location_index');
         }
 
-        return $this->render('session_location/new.html.twig', [
-            'session_location' => $sessionLocation,
+        return $this->render('location/new.html.twig', [
+            'location' => $sessionLocation,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="session_location_show", methods={"GET"})
+     * @Route("/{id}", name="location_show", methods={"GET"})
      */
     public function show(SessionLocation $sessionLocation): Response
     {
-        return $this->render('session_location/show.html.twig', [
-            'session_location' => $sessionLocation,
+        return $this->render('location/show.html.twig', [
+            'location' => $sessionLocation,
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="session_location_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="location_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, SessionLocation $sessionLocation): Response
     {
@@ -69,17 +69,17 @@ class SessionLocationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('session_location_index');
+            return $this->redirectToRoute('location_index');
         }
 
-        return $this->render('session_location/edit.html.twig', [
-            'session_location' => $sessionLocation,
+        return $this->render('location/edit.html.twig', [
+            'location' => $sessionLocation,
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="session_location_delete", methods={"DELETE"})
+     * @Route("/{id}", name="location_delete", methods={"DELETE"})
      */
     public function delete(Request $request, SessionLocation $sessionLocation): Response
     {
@@ -89,6 +89,6 @@ class SessionLocationController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('session_location_index');
+        return $this->redirectToRoute('location_index');
     }
 }

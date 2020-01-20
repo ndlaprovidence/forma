@@ -53,6 +53,7 @@ class Company
      * @ORM\OneToMany(targetEntity="App\Entity\Trainee", mappedBy="company", orphanRemoval=true)
      */
     private $trainees;
+    
 
     public function __construct()
     {

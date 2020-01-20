@@ -44,6 +44,11 @@ class SessionLocation
         $this->sessions = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->postal_code . " " . $this->city;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

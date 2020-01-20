@@ -16,7 +16,6 @@ class TraineeType extends AbstractType
             ->add('first_name')
             ->add('email')
             ->add('company')
-            ->add('sessionTrainee')
         ;
     }
 

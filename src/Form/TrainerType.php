@@ -14,7 +14,6 @@ class TrainerType extends AbstractType
         $builder
             ->add('last_name')
             ->add('first_name')
-            ->add('sessionTrainer')
         ;
     }
 

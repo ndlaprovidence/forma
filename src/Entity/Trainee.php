@@ -38,12 +38,6 @@ class Trainee
      */
     private $company;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SessionTrainee", inversedBy="trainees")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $sessionTrainee;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -93,18 +87,6 @@ class Trainee
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
-
-        return $this;
-    }
-
-    public function getSessionTrainee(): ?SessionTrainee
-    {
-        return $this->sessionTrainee;
-    }
-
-    public function setSessionTrainee(?SessionTrainee $sessionTrainee): self
-    {
-        $this->sessionTrainee = $sessionTrainee;
 
         return $this;
     }

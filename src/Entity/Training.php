@@ -47,9 +47,13 @@ class Training
 
     public function __construct()
     {
-        $this->trainers = new ArrayCollection();
         $this->goals = new ArrayCollection();
         $this->sessions = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->training_category;
     }
 
     public function getId(): ?int

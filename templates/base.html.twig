@@ -31,6 +31,8 @@
                             <a class="nav-link" href="{{ path('default') }}">{{ 'Default'|trans }}</a>
                         </li>
                     {% endif %}
+                </ul>
+                <ul class="navbar-nav">
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('user_index') }}">{{ 'User'|trans }}</a>
@@ -42,13 +44,7 @@
                             <a class="nav-link" href="{{ path('goal_index') }}">{{ 'Goal'|trans }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('session_location_index') }}">{{ 'Location'|trans }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('trainee_index') }}">{{ 'Trainee'|trans }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('trainer_index') }}">{{ 'Trainer'|trans }}</a>
+                            <a class="nav-link" href="{{ path('location_index') }}">{{ 'Location'|trans }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('training_category_index') }}">{{ 'Category'|trans }}</a>
@@ -59,20 +55,13 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('session_index') }}">{{ 'Session'|trans }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('trainer_index') }}">{{ 'Trainer'|trans }}</a>
+                        </li>
                     {% endif %}
-                </ul>
-                <ul class="navbar-nav">
                     {% if is_granted('ROLE_USER') %}
                         <li>
-                            <div class="nav-link disabled">
-                                <i class="fas fa-user"></i>
-                                {% if app.user %}
-                                    <strong>{{ app.user.username }}</strong>
-                                {% endif %}
-                            </div>
-                        </li>
-                        <li>
-                            <a class="nav-link" href="{{ path('app_logout') }}">{{'Logout'|trans}}</a>
+                            <a class="nav-link" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i></a>
                         </li>
                     {% else %}
                         <li>
