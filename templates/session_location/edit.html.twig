@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit SessionLocation{% endblock %}
+
+{% block body %}
+    <h1>Edit SessionLocation</h1>
+
+    {{ include('session_location/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('session_location_index') }}">back to list</a>
+
+    {{ include('session_location/_delete_form.html.twig') }}
+{% endblock %}
