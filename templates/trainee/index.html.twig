@@ -11,7 +11,7 @@
                 <th>Id</th>
                 <th>Last_name</th>
                 <th>First_name</th>
-                <th>Company</th>
+                <th>Email</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -21,7 +21,7 @@
                 <td>{{ trainee.id }}</td>
                 <td>{{ trainee.lastName }}</td>
                 <td>{{ trainee.firstName }}</td>
-                <td>{{ trainee.company }}</td>
+                <td>{{ trainee.email }}</td>
                 <td>
                     <a href="{{ path('trainee_show', {'id': trainee.id}) }}">show</a>
                     <a href="{{ path('trainee_edit', {'id': trainee.id}) }}">edit</a>
@@ -29,7 +29,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
