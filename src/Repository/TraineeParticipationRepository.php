@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Trainer;
+use App\Entity\TraineeParticipation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
- * @method Trainer|null find($id, $lockMode = null, $lockVersion = null)
- * @method Trainer|null findOneBy(array $criteria, array $orderBy = null)
- * @method Trainer[]    findAll()
- * @method Trainer[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method TraineeParticipation|null find($id, $lockMode = null, $lockVersion = null)
+ * @method TraineeParticipation|null findOneBy(array $criteria, array $orderBy = null)
+ * @method TraineeParticipation[]    findAll()
+ * @method TraineeParticipation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TrainerRepository extends ServiceEntityRepository
+class TraineeParticipationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Trainer::class);
+        parent::__construct($registry, TraineeParticipation::class);
     }
 
     // /**
-    //  * @return Trainer[] Returns an array of Trainer objects
+    //  * @return TraineeParticipation[] Returns an array of TraineeParticipation objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class TrainerRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Trainer
+    public function findOneBySomeField($value): ?TraineeParticipation
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.exampleField = :val')

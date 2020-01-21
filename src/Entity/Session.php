@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,6 +45,23 @@ class Session
      * @ORM\JoinColumn(nullable=false)
      */
     private $location;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Instructor", inversedBy="sessions")
+     */
+    private $instructors;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\TraineeParticipation", inversedBy="session")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $traineeParticipation;
+
+    public function __construct()
+    {
+        $this->instructors = new ArrayCollection();
+        $this->trainees = new ArrayCollection();
+    }
 
     public function __toString() {
         return $this->training;
@@ -109,6 +128,44 @@ class Session
     public function setLocation(?SessionLocation $location): self
     {
         $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Instructor[]
+     */
+    public function getInstructors(): Collection
+    {
+        return $this->instructors;
+    }
+
+    public function addInstructor(Instructor $instructor): self
+    {
+        if (!$this->instructors->contains($instructor)) {
+            $this->instructors[] = $instructor;
+        }
+
+        return $this;
+    }
+
+    public function removeInstructor(Instructor $instructor): self
+    {
+        if ($this->instructors->contains($instructor)) {
+            $this->instructors->removeElement($instructor);
+        }
+
+        return $this;
+    }
+
+    public function getTraineeParticipation(): ?TraineeParticipation
+    {
+        return $this->traineeParticipation;
+    }
+
+    public function setTraineeParticipation(?TraineeParticipation $traineeParticipation): self
+    {
+        $this->traineeParticipation = $traineeParticipation;
 
         return $this;
     }

@@ -2,25 +2,30 @@
 
 namespace App\Form;
 
-use App\Entity\Trainer;
+use App\Entity\Session;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TrainerType extends AbstractType
+class Session1Type extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('last_name')
-            ->add('first_name')
+            ->add('start_date')
+            ->add('end_date')
+            ->add('comment')
+            ->add('training')
+            ->add('location')
+            ->add('instructors')
+            ->add('traineeParticipation')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Trainer::class,
+            'data_class' => Session::class,
         ]);
     }
 }
