@@ -21,6 +21,7 @@ class Trainee
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @ORM\JoinColumn(name="last_name")
      */
     private $last_name;
 
