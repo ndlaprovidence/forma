@@ -50,7 +50,7 @@ class Company
     private $phone_number;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Trainee", mappedBy="company", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Trainee", mappedBy="company")
      */
     private $trainees;
     
@@ -58,6 +58,10 @@ class Company
     public function __construct()
     {
         $this->trainees = new ArrayCollection();
+    }
+
+    public function __toString() {
+        return $this->corporate_name;
     }
 
     public function getId(): ?int

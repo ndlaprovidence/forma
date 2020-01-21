@@ -37,6 +37,7 @@ class Training
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Goal", inversedBy="trainings")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $goals;
 

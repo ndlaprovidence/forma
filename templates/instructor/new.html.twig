@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Instructor{% endblock %}
+
+{% block body %}
+    <h1>Create new Instructor</h1>
+
+    {{ include('instructor/_form.html.twig') }}
+
+    <a href="{{ path('instructor_index') }}">back to list</a>
+{% endblock %}

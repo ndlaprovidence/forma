@@ -7,10 +7,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="tbl_trainee")
- * @ORM\Entity(repositoryClass="App\Repository\TraineeRepository")
+ * @ORM\Table(name="tbl_instructor")
+ * @ORM\Entity(repositoryClass="App\Repository\InstructorRepository")
  */
-class Trainee
+class Instructor
 {
     /**
      * @ORM\Id()
@@ -30,19 +30,18 @@ class Trainee
     private $first_name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="trainees")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToMany(targetEntity="App\Entity\Session", mappedBy="instructors")
      */
-    private $company;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $email;
+    private $sessions;
 
     public function __construct()
     {
-        $this->traineeParticipations = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->last_name . " " . $this->first_name;
     }
 
     public function getId(): ?int
@@ -74,26 +73,30 @@ class Trainee
         return $this;
     }
 
-    public function getCompany(): ?Company
+    /**
+     * @return Collection|Session[]
+     */
+    public function getSessions(): Collection
     {
-        return $this->company;
+        return $this->sessions;
     }
 
-    public function setCompany(?Company $company): self
+    public function addSession(Session $session): self
     {
-        $this->company = $company;
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->addInstructor($this);
+        }
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function removeSession(Session $session): self
     {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
+        if ($this->sessions->contains($session)) {
+            $this->sessions->removeElement($session);
+            $session->removeInstructor($this);
+        }
 
         return $this;
     }
