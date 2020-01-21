@@ -13,7 +13,6 @@ class GoalType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('trainings')
         ;
     }
 

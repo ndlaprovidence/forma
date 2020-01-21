@@ -7,10 +7,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="tbl_sessionLocation")
- * @ORM\Entity(repositoryClass="App\Repository\SessionLocationRepository")
+ * @ORM\Table(name="tbl_instructor")
+ * @ORM\Entity(repositoryClass="App\Repository\InstructorRepository")
  */
-class SessionLocation
+class Instructor
 {
     /**
      * @ORM\Id()
@@ -22,20 +22,15 @@ class SessionLocation
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $street;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $postal_code;
+    private $last_name;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $city;
+    private $first_name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="location", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="App\Entity\Session", mappedBy="instructors")
      */
     private $sessions;
 
@@ -46,7 +41,7 @@ class SessionLocation
 
     public function __toString()
     {
-        return $this->postal_code . " - " . $this->city;
+        return $this->last_name . " " . $this->first_name;
     }
 
     public function getId(): ?int
@@ -54,38 +49,26 @@ class SessionLocation
         return $this->id;
     }
 
-    public function getStreet(): ?string
+    public function getLastName(): ?string
     {
-        return $this->street;
+        return $this->last_name;
     }
 
-    public function setStreet(string $street): self
+    public function setLastName(string $last_name): self
     {
-        $this->street = $street;
+        $this->last_name = $last_name;
 
         return $this;
     }
 
-    public function getPostalCode(): ?int
+    public function getFirstName(): ?string
     {
-        return $this->postal_code;
+        return $this->first_name;
     }
 
-    public function setPostalCode(int $postal_code): self
+    public function setFirstName(string $first_name): self
     {
-        $this->postal_code = $postal_code;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): self
-    {
-        $this->city = $city;
+        $this->first_name = $first_name;
 
         return $this;
     }
@@ -102,7 +85,7 @@ class SessionLocation
     {
         if (!$this->sessions->contains($session)) {
             $this->sessions[] = $session;
-            $session->setLocation($this);
+            $session->addInstructor($this);
         }
 
         return $this;
@@ -112,10 +95,7 @@ class SessionLocation
     {
         if ($this->sessions->contains($session)) {
             $this->sessions->removeElement($session);
-            // set the owning side to null (unless already changed)
-            if ($session->getLocation() === $this) {
-                $session->setLocation(null);
-            }
+            $session->removeInstructor($this);
         }
 
         return $this;

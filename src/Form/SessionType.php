@@ -3,10 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Session;
-use App\Entity\Training;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SessionType extends AbstractType
@@ -17,14 +15,11 @@ class SessionType extends AbstractType
             ->add('start_date')
             ->add('end_date')
             ->add('comment')
+            ->add('training')
             ->add('location')
+            ->add('instructors')
+            ->add('traineeParticipation')
         ;
-
-        $builder->add('training', EntityType::class, array(
-            'class' => Training::class,
-            'choice_label' => 'title',
-            'multiple' => false
-        ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

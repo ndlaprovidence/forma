@@ -23,6 +23,16 @@
                 <th>Category</th>
                 <td>{{ training.trainingCategory }}</td>
             </tr>
+            <tr>
+                <th>Goals</th>
+                <td>
+                {% for goal in training.goals %}
+                    {{ goal }}<br/>
+                {% endfor %}
+                </td>
+            </tr>
+
+            
         </tbody>
     </table>
 

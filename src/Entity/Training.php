@@ -37,6 +37,7 @@ class Training
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Goal", inversedBy="trainings")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $goals;
 
@@ -53,7 +54,7 @@ class Training
 
     public function __toString()
     {
-        return $this->training_category;
+        return $this->title;
     }
 
     public function getId(): ?int
