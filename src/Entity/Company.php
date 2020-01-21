@@ -40,12 +40,12 @@ class Company
     private $city;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $siret_number;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $phone_number;
 
@@ -113,24 +113,24 @@ class Company
         return $this;
     }
 
-    public function getSiretNumber(): ?int
+    public function getSiretNumber(): ?string
     {
         return $this->siret_number;
     }
 
-    public function setSiretNumber(?int $siret_number): self
+    public function setSiretNumber(?string $siret_number): self
     {
         $this->siret_number = $siret_number;
 
         return $this;
     }
 
-    public function getPhoneNumber(): ?int
+    public function getPhoneNumber(): ?string
     {
         return $this->phone_number;
     }
 
-    public function setPhoneNumber(?int $phone_number): self
+    public function setPhoneNumber(?string $phone_number): self
     {
         $this->phone_number = $phone_number;
 
