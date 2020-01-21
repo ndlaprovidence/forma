@@ -30,7 +30,7 @@ class Company
     private $street;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $postal_code;
 
@@ -89,12 +89,12 @@ class Company
         return $this;
     }
 
-    public function getPostalCode(): ?int
+    public function getPostalCode(): ?string
     {
         return $this->postal_code;
     }
 
-    public function setPostalCode(?int $postal_code): self
+    public function setPostalCode(?string $postal_code): self
     {
         $this->postal_code = $postal_code;
 

@@ -2,10 +2,13 @@
 
 namespace App\Command;
 
+
 use League\Csv\Reader;
 use App\Entity\Company;
 use App\Entity\Trainee;
 use Doctrine\ORM\EntityManagerInterface;
+//use Doctrine\Common\Annotations\Reader;
+//use Symfony\Component\CssSelector\Parser\Reader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -50,21 +53,21 @@ class CsvImportCommand extends Command
         foreach ($results as $row) {
 
             $trainee = (new Trainee())
-                ->setLastName($row['last_name'])
-                ->setFirstName($row['first_name'])
-                ->setEmail($row['email'])          
+                ->setLastName($row['Prénom'])
+                ->setFirstName($row['NOM'])
+                ->setEmail($row['Email'])          
             ;
 
 
             $this->em->persist($trainee);
 
             $company = (new Company())
-                ->setCorporateName($row['corporate_name'])
-                ->setStreet($row['street'])
-                ->setPostalCode($row['postal_code'])
-                ->setCity($row['city'])
-                ->setSiretNumber($row['siret'])
-                ->setPhoneNumber($row['phone'])
+                ->setCorporateName($row['Raison_sociale'])
+                ->setStreet($row['Adresse_1'])
+                ->setPostalCode($row['Code_Postal'])
+                ->setCity($row['Ville'])
+                ->setSiretNumber($row['Siret'])
+                ->setPhoneNumber($row['Téléphone'])
             ;
 
             $this->em->persist($company);
