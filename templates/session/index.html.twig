@@ -12,6 +12,8 @@
                 <th>Start_date</th>
                 <th>End_date</th>
                 <th>Comment</th>
+                <th>Training</th>
+                <th>Location</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -19,9 +21,11 @@
         {% for session in sessions %}
             <tr>
                 <td>{{ session.id }}</td>
-                <td>{{ session.startDate ? session.startDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ session.endDate ? session.endDate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ session.startDate ? session.startDate|date('Y-m-d') : '' }}</td>
+                <td>{{ session.endDate ? session.endDate|date('Y-m-d') : '' }}</td>
                 <td>{{ session.comment }}</td>
+                <td>{{ session.training }}</td>
+                <td>{{ session.location }}</td>
                 <td>
                     <a href="{{ path('session_show', {'id': session.id}) }}">show</a>
                     <a href="{{ path('session_edit', {'id': session.id}) }}">edit</a>

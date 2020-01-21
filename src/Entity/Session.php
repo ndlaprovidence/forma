@@ -44,6 +44,10 @@ class Session
      */
     private $location;
 
+    public function __toString() {
+        return $this->training;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

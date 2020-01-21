@@ -12,6 +12,7 @@
                 <th>Title</th>
                 <th>Platform</th>
                 <th>Category</th>
+                <th>Goals</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                 <td>{{ training.title }}</td>
                 <td>{{ training.platform }}</td>
                 <td>{{ training.trainingCategory }}</td>
+                <td>{{ training.goals|length }}</td>
                 <td>
                     <a href="{{ path('training_show', {'id': training.id}) }}">show</a>
                     <a href="{{ path('training_edit', {'id': training.id}) }}">edit</a>

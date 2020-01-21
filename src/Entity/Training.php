@@ -53,7 +53,7 @@ class Training
 
     public function __toString()
     {
-        return $this->training_category;
+        return $this->title;
     }
 
     public function getId(): ?int
