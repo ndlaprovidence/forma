@@ -19,13 +19,13 @@ class SessionTrainer
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Trainer")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $trainer;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Session")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $session;
 

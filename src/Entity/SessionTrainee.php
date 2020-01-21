@@ -24,13 +24,13 @@ class SessionTrainee
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Trainee")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $trainee;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Session")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $session;
 

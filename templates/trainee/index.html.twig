@@ -12,6 +12,7 @@
                 <th>Last_name</th>
                 <th>First_name</th>
                 <th>Email</th>
+                <th>Company</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                 <td>{{ trainee.lastName }}</td>
                 <td>{{ trainee.firstName }}</td>
                 <td>{{ trainee.email }}</td>
+                <td>{{ trainee.corporateName }}</td>
                 <td>
                     <a href="{{ path('trainee_show', {'id': trainee.id}) }}">show</a>
                     <a href="{{ path('trainee_edit', {'id': trainee.id}) }}">edit</a>

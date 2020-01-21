@@ -60,6 +60,10 @@ class Company
         $this->trainees = new ArrayCollection();
     }
 
+    public function __toString() {
+        return $this->corporate_name;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
