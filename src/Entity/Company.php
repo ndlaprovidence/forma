@@ -25,7 +25,7 @@ class Company
     private $corporate_name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $street;
 
@@ -35,7 +35,7 @@ class Company
     private $postal_code;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      */
     private $city;
 
