@@ -3,27 +3,21 @@
 {% block title %}{{'Welcome!'|trans}}{% endblock %}
 
 {% block body %}
-    <div class="example-wrapper">
+    <div class="grid">
 
-        <div class="jumbotron">
-            <h3>Forma</h3>
-            <hr class="my-4">
-            <h3>{{'Features'|trans}}</h3>
-            <ul>
-                <li>
-                    {{''|trans}}
-                </li>
-                <li>
-                    {{''|trans}}
-                </li>
-                <li>
-                    ...
-                </li>
-            </ul>
-
-            <a class="btn btn-primary float-md-right" href="{{ path('app_login') }}" role="button">{{ 'Let\'s start now'|trans}} <i class="fas fa-arrow-circle-right"></i></a>
+        <div class='text-center'>
+            <h2 class="card-title">Le logiciel de gestion des formations F.C. Pro</h2>
         </div>
+        <div class='text-center'>
+            <h5 class="card-title text-center">Importer un nouveau fichier .csv pour démarrer</h5>
+        </div>
+        <div class='text-center'>
+            <input type="file" class="btn btn-primary">Nouvelle session</button>
+        <div>
 
     </div>
+    
+    
+
 
 {% endblock %}
