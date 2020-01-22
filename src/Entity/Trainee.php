@@ -31,15 +31,15 @@ class Trainee
     private $first_name;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $email;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="trainees")
      * @ORM\JoinColumn(nullable=false)
      */
     private $company;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $email;
 
     public function __construct()
     {
@@ -75,18 +75,6 @@ class Trainee
         return $this;
     }
 
-    public function getCompany(): ?Company
-    {
-        return $this->company;
-    }
-
-    public function setCompany(?Company $company): self
-    {
-        $this->company = $company;
-
-        return $this;
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;
@@ -95,6 +83,18 @@ class Trainee
     public function setEmail(?string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }
