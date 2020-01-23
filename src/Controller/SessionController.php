@@ -45,6 +45,7 @@ class SessionController extends AbstractController
             $session->setUpload($upload);
             $entityManager->persist($session);
             $entityManager->flush();
+            
 
             // $traineeParticipation = new TraineeParticipation();
             // $traineeParticipation->addSession($session);
