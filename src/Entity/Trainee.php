@@ -36,7 +36,7 @@ class Trainee
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="trainees")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="trainees", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $company;
