@@ -82,6 +82,57 @@ class SessionController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+  
+    /**
+    * @Route("/test", name="session_test", methods={"GET"})
+    */
+   public function test(EntityManagerInterface $em)   
+   {
+
+        $reader = Reader::createFromPath('../public/data_formiris.csv');
+
+        $results = $reader->fetchAssoc();
+
+        $this->em = $em;
+
+        foreach ($results as $row) {
+
+            $trainee = (new Trainee())
+                ->setLastName($row["Nom de l'enseignant"])
+                ->setFirstName($row["Nom de l'enseignant"])
+                ->setEmail($row["Email de l'établissement"])          
+            ;
+
+            $this->em->persist($trainee);
+            
+            $company = (new Company())
+                ->setCorporateName($row['UP'])
+                // ->setStreet($row[''])
+                // ->setPostalCode($row[''])
+                // ->setCity($row[''])
+                // ->setSiretNumber($row[''])
+                // ->setPhoneNumber($row[''])
+            ;
+                
+            if ($row['UP'] == "Immaculee Conception ST JAMES 0501367P" ) {
+                
+            }else{
+                $this->em->persist($company);
+            }
+            
+
+
+            // $this->em->persist($company);
+            
+            $trainee->setCompany($company);
+        }
+        
+        $this->em->flush();
+
+        return $this->render('session/test.html.twig',[
+            'row' => $row
+        ]); 
+   }
 
     /**
      * @Route("/{id}", name="session_show", methods={"GET"})
