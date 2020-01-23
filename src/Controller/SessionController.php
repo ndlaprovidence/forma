@@ -2,20 +2,15 @@
 
 namespace App\Controller;
 
-use League\Csv\Reader;
-use App\Entity\Company;
+use App\Entity\Upload;
 use App\Entity\Session;
-use App\Entity\Trainee;
+use App\Entity\TraineeParticipation;
 use App\Form\SessionType;
-use Doctrine\ORM\EntityManager;
 use App\Repository\SessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocator;
 
@@ -34,15 +29,42 @@ class SessionController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
-        $upload = dump($request->query->get('upload'));
-
         $session = new Session();
+
+        if ( $request->query->has('file_name') ) {
+            $fileName = $request->query->get('file_name');
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $upload = new Upload();
+            $upload->setFileName($fileName);
+            $session->setUpload($upload);
+            $entityManager->persist($session);
+            $entityManager->flush();
+            
+
+            // $traineeParticipation = new TraineeParticipation();
+            // $traineeParticipation->addSession($session);
+            // $traineeParticipation->setConvocation('blabla');
+            // $entityManager->persist($traineeParticipation);
+            // $entityManager->flush();
+        }
+
+        
+        // Ouvrir le fichier CSV
+        // OPCALIA / FORMIRIS
+        // Importer chaque ligne utilisateur
+        // Si il est dans la base ne pas l'importer
+        // Extraire les utilisateurs du CSV pour l'afficher dans un tableau la page nouvelle session
+        // Ajouter dans la table traineeParticipation la nouvelle session et les stagiaires associés
+
+
+
+
         $form = $this->createForm(SessionType::class, $session);
         $form->handleRequest($request);
 
@@ -56,7 +78,7 @@ class SessionController extends AbstractController
 
         return $this->render('session/new.html.twig', [
             'session' => $session,
-            'upload' => $upload,
+            'file_name' => $fileName,
             'form' => $form->createView(),
         ]);
     }
@@ -67,7 +89,7 @@ class SessionController extends AbstractController
    public function test(EntityManagerInterface $em)   
    {
 
-        $reader = Reader::createFromPath('../public/data_formiris.csv', 'r');
+        $reader = Reader::createFromPath('../public/data_formiris.csv');
 
         $results = $reader->fetchAssoc();
 
@@ -155,69 +177,6 @@ class SessionController extends AbstractController
 
         return $this->redirectToRoute('session_index');
     }
-
-    // /**
-    //  * @Route("/test", name="session_test")
-    //  */
-    // public function execute()
-    // {
-    //     // $io = new SymfonyStyle($input, $output);
-
-    //     $reader = Reader::createFromPath('../public/data_formiris.csv');
-
-    //     $results = $reader->fetchAssoc();
-
-    //     $this->em = $em;
-
-    //     foreach ($results as $row) {
-
-    //         $trainee = (new Trainee())
-    //             ->setLastName($row["Nom de l'enseignant"])
-    //             ->setFirstName($row["Nom de l'enseignant"])
-    //             ->setEmail($row["Email de l'établissement"])          
-    //         ;
-
-    //         $this->em->persist($trainee);
-            
-    //         // $sql = '
-    //         //     SELECT corporate_name FROM company c
-    //         //     WHERE c.id = 12 ;';
-            
-
-    //         // $query = $qb->getQuery();
-
-    //         // return $query->execute();
-
-
-
-    //         $company = (new Company())
-    //             ->setCorporateName($row['UP'])
-    //             // ->setStreet($row[''])
-    //             // ->setPostalCode($row[''])
-    //             // ->setCity($row[''])
-    //             // ->setSiretNumber($row[''])
-    //             // ->setPhoneNumber($row[''])
-    //         ;
-                
-    //         // if ($row['UP'] != $sql ) {
-    //         //     $this->em->persist($company);
-    //         // }
-            
-    //         // $output->writeln($qb);
-
-    //         $this->em->persist($company);
-            
-    //         $trainee->setCompany($company);
-    //     }
-        
-    //     $this->em->flush();
-
-    //     // $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
-    // }
-
-    
-
-   
 
 
 }

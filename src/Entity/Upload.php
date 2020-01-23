@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 /**
+ * @ORM\Table(name="tbl_upload")
  * @ORM\Entity(repositoryClass="App\Repository\UploadRepository")
  */
 class Upload

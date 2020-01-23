@@ -12,7 +12,7 @@ before_script:
   - psql -c "GRANT ALL PRIVILEGES ON DATABASE forma TO forma;" -U postgres
 
 env:
-    - DATABASE_URL="pgsql://forma:db_password@127.0.0.1:5432/forma"
+    - DATABASE_URL="mysql://forma:db_password@127.0.0.1:5432/forma"
 
 script:
    - composer install
