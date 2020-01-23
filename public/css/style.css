@@ -1,5 +1,13 @@
+@font-face {
+    font-family: 'Segoe UI Light';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Segoe UI Light'), url('Segoe UI Light.woff') format('woff');
+}
+
 body {
     padding-top: 5rem;
+    font-family: 'Segoe UI Light';
 }
 
 .starter-template {
