@@ -63,7 +63,7 @@ class SessionController extends AbstractController
    public function test(EntityManagerInterface $em)   
    {
 
-        $reader = Reader::createFromPath('../public/data_formiris.csv', 'r');
+        $reader = Reader::createFromPath('../public/data_formiris.csv');
 
         $results = $reader->fetchAssoc();
 
