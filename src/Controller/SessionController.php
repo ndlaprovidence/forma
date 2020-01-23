@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Upload;
+use League\Csv\Reader;
+use App\Entity\Company;
 use App\Entity\Session;
-use App\Entity\TraineeParticipation;
+use App\Entity\Trainee;
 use App\Form\SessionType;
+use App\Entity\TraineeParticipation;
 use App\Repository\SessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,13 +35,14 @@ class SessionController extends AbstractController
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, EntityManagerInterface $em): Response
     {
         $session = new Session();
 
         if ( $request->query->has('file_name') ) {
             $fileName = $request->query->get('file_name');
 
+            // Create a new empty session
             $entityManager = $this->getDoctrine()->getManager();
             $upload = new Upload();
             $upload->setFileName($fileName);
@@ -46,12 +50,52 @@ class SessionController extends AbstractController
             $entityManager->persist($session);
             $entityManager->flush();
             
+            // Read CSV file
+            $reader = Reader::createFromPath('../public/uploads/'. $fileName);
+            $results = $reader->fetchAssoc();
+    
+            $this->em = $em;
+            foreach ($results as $row) {
 
-            // $traineeParticipation = new TraineeParticipation();
-            // $traineeParticipation->addSession($session);
-            // $traineeParticipation->setConvocation('blabla');
-            // $entityManager->persist($traineeParticipation);
-            // $entityManager->flush();
+                $trainee = (new Trainee())
+                    ->setLastName($row["Nom de l'enseignant"])
+                    ->setFirstName($row["Nom de l'enseignant"])
+                    ->setEmail($row["Email de l'établissement"])          
+                ;
+
+                $this->em->persist($trainee);
+                
+                if ($row['UP'] == "Immaculee Conception ST JAMES 0501367P" ) {
+                    $company = (new Company())
+                        ->setCorporateName('doublon');
+                        // ->setStreet($row[''])
+                        // ->setPostalCode($row[''])
+                        // ->setCity($row[''])
+                        // ->setSiretNumber($row[''])
+                        // ->setPhoneNumber($row[''])
+                        $this->em->persist($company);
+                }else{
+                    $company = (new Company())
+                    ->setCorporateName($row['UP']);
+                    // ->setStreet($row[''])
+                    // ->setPostalCode($row[''])
+                    // ->setCity($row[''])
+                    // ->setSiretNumber($row[''])
+                    // ->setPhoneNumber($row[''])
+                    $this->em->persist($company);
+                };
+
+                // $this->em->persist($company);
+                $trainee->setCompany($company);
+            }
+
+            $this->em->flush();
+
+            $traineeParticipation = new TraineeParticipation();
+            $traineeParticipation->addSession($session);
+            $traineeParticipation->setConvocation('blabla');
+            $entityManager->persist($traineeParticipation);
+            $entityManager->flush();
         }
 
         
@@ -82,57 +126,6 @@ class SessionController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-  
-    /**
-    * @Route("/test", name="session_test", methods={"GET"})
-    */
-   public function test(EntityManagerInterface $em)   
-   {
-
-        $reader = Reader::createFromPath('../public/data_formiris.csv');
-
-        $results = $reader->fetchAssoc();
-
-        $this->em = $em;
-
-        foreach ($results as $row) {
-
-            $trainee = (new Trainee())
-                ->setLastName($row["Nom de l'enseignant"])
-                ->setFirstName($row["Nom de l'enseignant"])
-                ->setEmail($row["Email de l'établissement"])          
-            ;
-
-            $this->em->persist($trainee);
-            
-            $company = (new Company())
-                ->setCorporateName($row['UP'])
-                // ->setStreet($row[''])
-                // ->setPostalCode($row[''])
-                // ->setCity($row[''])
-                // ->setSiretNumber($row[''])
-                // ->setPhoneNumber($row[''])
-            ;
-                
-            if ($row['UP'] == "Immaculee Conception ST JAMES 0501367P" ) {
-                
-            }else{
-                $this->em->persist($company);
-            }
-            
-
-
-            // $this->em->persist($company);
-            
-            $trainee->setCompany($company);
-        }
-        
-        $this->em->flush();
-
-        return $this->render('session/test.html.twig',[
-            'row' => $row
-        ]); 
-   }
 
     /**
      * @Route("/{id}", name="session_show", methods={"GET"})
