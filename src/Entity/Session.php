@@ -57,6 +57,13 @@ class Session
      */
     private $traineeParticipation;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Upload", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $upload;
+
+
     public function __construct()
     {
         $this->instructors = new ArrayCollection();
@@ -166,6 +173,30 @@ class Session
     public function setTraineeParticipation(?TraineeParticipation $traineeParticipation): self
     {
         $this->traineeParticipation = $traineeParticipation;
+
+        return $this;
+    }
+
+    public function getDataFile(): ?string
+    {
+        return $this->data_file;
+    }
+
+    public function setDataFile(string $data_file): self
+    {
+        $this->data_file = $data_file;
+
+        return $this;
+    }
+
+    public function getUpload(): ?Upload
+    {
+        return $this->upload;
+    }
+
+    public function setUpload(Upload $upload): self
+    {
+        $this->upload = $upload;
 
         return $this;
     }
