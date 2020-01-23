@@ -2,17 +2,19 @@
 
 namespace App\Controller;
 
+use League\Csv\Reader;
+use App\Entity\Company;
 use App\Entity\Session;
+use App\Entity\Trainee;
 use App\Form\SessionType;
+use Doctrine\ORM\EntityManager;
 use App\Repository\SessionRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Console\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/session")
@@ -99,23 +101,61 @@ class SessionController extends AbstractController
     /**
      * @Route("/test", name="session_test")
      */
-    public function indexAction(KernelInterface $kernel)
+    public function execute()
     {
-        $application = new Application($kernel);
-        $application->setAutoExit(false);
+        // $io = new SymfonyStyle($input, $output);
 
-        $input = new ArrayInput([
-            'command' => 'importFormiris:csv',
-        ]);
+        $reader = Reader::createFromPath('../public/data_formiris.csv');
 
-        // You can use NullOutput() if you don't need the output
-        $output = new BufferedOutput();
-        $application->run($input, $output);
+        $results = $reader->fetchAssoc();
 
-        // return the output, don't use if you used NullOutput()
-        $content = $output->fetch();
+        $this->em = $em;
 
-        // return new Response(""), if you used NullOutput()
-        return new Response($content);
+        foreach ($results as $row) {
+
+            $trainee = (new Trainee())
+                ->setLastName($row["Nom de l'enseignant"])
+                ->setFirstName($row["Nom de l'enseignant"])
+                ->setEmail($row["Email de l'établissement"])          
+            ;
+
+            $this->em->persist($trainee);
+            
+            // $sql = '
+            //     SELECT corporate_name FROM company c
+            //     WHERE c.id = 12 ;';
+            
+
+            // $query = $qb->getQuery();
+
+            // return $query->execute();
+
+
+
+            $company = (new Company())
+                ->setCorporateName($row['UP'])
+                // ->setStreet($row[''])
+                // ->setPostalCode($row[''])
+                // ->setCity($row[''])
+                // ->setSiretNumber($row[''])
+                // ->setPhoneNumber($row[''])
+            ;
+                
+            // if ($row['UP'] != $sql ) {
+            //     $this->em->persist($company);
+            // }
+            
+            // $output->writeln($qb);
+
+            $this->em->persist($company);
+            
+            $trainee->setCompany($company);
+        }
+        
+        $this->em->flush();
+
+        // $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
     }
+
+
 }
