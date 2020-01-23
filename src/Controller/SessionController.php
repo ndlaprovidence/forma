@@ -9,10 +9,12 @@ use App\Entity\Trainee;
 use App\Form\SessionType;
 use Doctrine\ORM\EntityManager;
 use App\Repository\SessionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -30,6 +32,7 @@ class SessionController extends AbstractController
             'sessions' => $sessionRepository->findAll(),
         ]);
     }
+
 
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
@@ -53,6 +56,57 @@ class SessionController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+  
+    /**
+    * @Route("/test", name="session_test", methods={"GET"})
+    */
+   public function test(EntityManagerInterface $em)   
+   {
+
+        $reader = Reader::createFromPath('../public/data_formiris.csv', 'r');
+
+        $results = $reader->fetchAssoc();
+
+        $this->em = $em;
+
+        foreach ($results as $row) {
+
+            $trainee = (new Trainee())
+                ->setLastName($row["Nom de l'enseignant"])
+                ->setFirstName($row["Nom de l'enseignant"])
+                ->setEmail($row["Email de l'établissement"])          
+            ;
+
+            $this->em->persist($trainee);
+            
+            $company = (new Company())
+                ->setCorporateName($row['UP'])
+                // ->setStreet($row[''])
+                // ->setPostalCode($row[''])
+                // ->setCity($row[''])
+                // ->setSiretNumber($row[''])
+                // ->setPhoneNumber($row[''])
+            ;
+                
+            if ($row['UP'] == "Immaculee Conception ST JAMES 0501367P" ) {
+                
+            }else{
+                $this->em->persist($company);
+            }
+            
+
+
+            // $this->em->persist($company);
+            
+            $trainee->setCompany($company);
+        }
+        
+        $this->em->flush();
+
+        return $this->render('session/test.html.twig',[
+            'row' => $row
+        ]); 
+   }
 
     /**
      * @Route("/{id}", name="session_show", methods={"GET"})
@@ -98,64 +152,68 @@ class SessionController extends AbstractController
         return $this->redirectToRoute('session_index');
     }
 
-    /**
-     * @Route("/test", name="session_test")
-     */
-    public function execute()
-    {
-        // $io = new SymfonyStyle($input, $output);
+    // /**
+    //  * @Route("/test", name="session_test")
+    //  */
+    // public function execute()
+    // {
+    //     // $io = new SymfonyStyle($input, $output);
 
-        $reader = Reader::createFromPath('../public/data_formiris.csv');
+    //     $reader = Reader::createFromPath('../public/data_formiris.csv');
 
-        $results = $reader->fetchAssoc();
+    //     $results = $reader->fetchAssoc();
 
-        $this->em = $em;
+    //     $this->em = $em;
 
-        foreach ($results as $row) {
+    //     foreach ($results as $row) {
 
-            $trainee = (new Trainee())
-                ->setLastName($row["Nom de l'enseignant"])
-                ->setFirstName($row["Nom de l'enseignant"])
-                ->setEmail($row["Email de l'établissement"])          
-            ;
+    //         $trainee = (new Trainee())
+    //             ->setLastName($row["Nom de l'enseignant"])
+    //             ->setFirstName($row["Nom de l'enseignant"])
+    //             ->setEmail($row["Email de l'établissement"])          
+    //         ;
 
-            $this->em->persist($trainee);
+    //         $this->em->persist($trainee);
             
-            // $sql = '
-            //     SELECT corporate_name FROM company c
-            //     WHERE c.id = 12 ;';
+    //         // $sql = '
+    //         //     SELECT corporate_name FROM company c
+    //         //     WHERE c.id = 12 ;';
             
 
-            // $query = $qb->getQuery();
+    //         // $query = $qb->getQuery();
 
-            // return $query->execute();
+    //         // return $query->execute();
 
 
 
-            $company = (new Company())
-                ->setCorporateName($row['UP'])
-                // ->setStreet($row[''])
-                // ->setPostalCode($row[''])
-                // ->setCity($row[''])
-                // ->setSiretNumber($row[''])
-                // ->setPhoneNumber($row[''])
-            ;
+    //         $company = (new Company())
+    //             ->setCorporateName($row['UP'])
+    //             // ->setStreet($row[''])
+    //             // ->setPostalCode($row[''])
+    //             // ->setCity($row[''])
+    //             // ->setSiretNumber($row[''])
+    //             // ->setPhoneNumber($row[''])
+    //         ;
                 
-            // if ($row['UP'] != $sql ) {
-            //     $this->em->persist($company);
-            // }
+    //         // if ($row['UP'] != $sql ) {
+    //         //     $this->em->persist($company);
+    //         // }
             
-            // $output->writeln($qb);
+    //         // $output->writeln($qb);
 
-            $this->em->persist($company);
+    //         $this->em->persist($company);
             
-            $trainee->setCompany($company);
-        }
+    //         $trainee->setCompany($company);
+    //     }
         
-        $this->em->flush();
+    //     $this->em->flush();
 
-        // $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
-    }
+    //     // $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+    // }
+
+    
+
+   
 
 
 }
