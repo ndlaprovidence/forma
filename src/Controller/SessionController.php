@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Argument\ServiceLocator;
 
 /**
  * @Route("/session")
@@ -39,6 +40,8 @@ class SessionController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        $upload = dump($request->query->get('upload'));
+
         $session = new Session();
         $form = $this->createForm(SessionType::class, $session);
         $form->handleRequest($request);
@@ -53,6 +56,7 @@ class SessionController extends AbstractController
 
         return $this->render('session/new.html.twig', [
             'session' => $session,
+            'upload' => $upload,
             'form' => $form->createView(),
         ]);
     }
