@@ -34,7 +34,6 @@ class DefaultController extends AbstractController
 
             $originalFile = $upload->getFileName();
             $fileName = time().'-'.rand(10000,99999).'.'.$originalFile->getClientOriginalExtension();
-            //$file->getClientOriginalName()
             $originalFile->move($this->getParameter('upload_directory'), $fileName);
             $upload->setFileName($fileName);
     

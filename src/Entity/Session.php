@@ -20,12 +20,12 @@ class Session
     private $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $start_date;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $end_date;
 
@@ -36,30 +36,31 @@ class Session
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Training", inversedBy="sessions")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $training;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SessionLocation", inversedBy="sessions")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $location;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Instructor", inversedBy="sessions")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $instructors;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\TraineeParticipation", inversedBy="session")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $traineeParticipation;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Upload", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $upload;
 
@@ -173,18 +174,6 @@ class Session
     public function setTraineeParticipation(?TraineeParticipation $traineeParticipation): self
     {
         $this->traineeParticipation = $traineeParticipation;
-
-        return $this;
-    }
-
-    public function getDataFile(): ?string
-    {
-        return $this->data_file;
-    }
-
-    public function setDataFile(string $data_file): self
-    {
-        $this->data_file = $data_file;
 
         return $this;
     }

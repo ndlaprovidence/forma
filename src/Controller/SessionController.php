@@ -2,13 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Upload;
 use App\Entity\Session;
+use App\Entity\TraineeParticipation;
 use App\Form\SessionType;
 use App\Repository\SessionRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocator;
 
 /**
@@ -31,15 +34,32 @@ class SessionController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $fileName = $request->query->get('file_name');
-
         $session = new Session();
 
+        if ( $request->query->has('file_name') ) {
+            $fileName = $request->query->get('file_name');
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $upload = new Upload();
+            $upload->setFileName($fileName);
+            $session->setUpload($upload);
+            $entityManager->persist($session);
+            $entityManager->flush();
+
+            // $traineeParticipation = new TraineeParticipation();
+            // $traineeParticipation->addSession($session);
+            // $traineeParticipation->setConvocation('blabla');
+            // $entityManager->persist($traineeParticipation);
+            // $entityManager->flush();
+        }
+
+        
         // Ouvrir le fichier CSV
-
-
-        // Importer chaque ligne utilisateur (si il n'est pas dans la base)
-        // Extraire les utilisateurs du CSV pour l'afficher dans le formulaire
+        // OPCALIA / FORMIRIS
+        // Importer chaque ligne utilisateur
+        // Si il est dans la base ne pas l'importer
+        // Extraire les utilisateurs du CSV pour l'afficher dans un tableau la page nouvelle session
+        // Ajouter dans la table traineeParticipation la nouvelle session et les stagiaires associés
 
 
 
