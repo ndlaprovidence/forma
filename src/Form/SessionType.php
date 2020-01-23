@@ -18,7 +18,6 @@ class SessionType extends AbstractType
             ->add('training')
             ->add('location')
             ->add('instructors')
-            ->add('traineeParticipation')
         ;
     }
 
