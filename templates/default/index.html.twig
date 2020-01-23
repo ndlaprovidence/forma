@@ -3,6 +3,7 @@
 {% block title %}{{'Welcome!'|trans}}{% endblock %}
 
 {% block body %}
+
     <div class="grid">
 
         <div class='text-center'>
@@ -11,15 +12,20 @@
         <div class='text-center'>
             <h5 class="card-title text-center font-italic">Importer un nouveau fichier .csv pour démarrer</h5>
         </div>
+
         <div class='text-center'>
-            {{ form_errors(form) }}
+            {{ form_start(form) }}
 
-            {{ form_errors(form.file_name) }}
-            {{ form_widget(form.file_name) }}
+                {{ form_errors(form) }}
 
-            {{ form_widget(form.submit) }}
+                {{ form_errors(form.file_name) }}
+                {{ form_widget(form.file_name) }}
 
-            {{ form_rest(form) }}
+                {{ form_widget(form.submit) }}
+
+                {{ form_rest(form) }}
+                
+            {{ form_end(form) }}
         <div>
 
     </div>

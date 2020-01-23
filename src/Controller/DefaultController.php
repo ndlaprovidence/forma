@@ -6,9 +6,11 @@ use App\Entity\Upload;
 use App\Form\UploadType;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DefaultController extends AbstractController
 {
@@ -29,13 +31,15 @@ class DefaultController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $file = $upload->getFileName();
-            $fileName = time().'-'.rand(10000,99999).'.'.$file->guessExtension();
-            $file->move($this->getParameter('upload_directory'), $fileName);
+
+            $originalFile = $upload->getFileName();
+            $fileName = time().'-'.rand(10000,99999).'.'.$originalFile->getClientOriginalExtension();
+            //$file->getClientOriginalName()
+            $originalFile->move($this->getParameter('upload_directory'), $fileName);
             $upload->setFileName($fileName);
     
             return $this->redirectToRoute('session_new', [
-                'upload' => $fileName,
+                'file_name' => $fileName,
             ]);
         }
 

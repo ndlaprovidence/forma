@@ -31,9 +31,19 @@ class SessionController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $upload = dump($request->query->get('upload'));
+        $fileName = $request->query->get('file_name');
 
         $session = new Session();
+
+        // Ouvrir le fichier CSV
+
+
+        // Importer chaque ligne utilisateur (si il n'est pas dans la base)
+        // Extraire les utilisateurs du CSV pour l'afficher dans le formulaire
+
+
+
+
         $form = $this->createForm(SessionType::class, $session);
         $form->handleRequest($request);
 
@@ -47,7 +57,7 @@ class SessionController extends AbstractController
 
         return $this->render('session/new.html.twig', [
             'session' => $session,
-            'upload' => $upload,
+            'file_name' => $fileName,
             'form' => $form->createView(),
         ]);
     }
@@ -95,4 +105,6 @@ class SessionController extends AbstractController
 
         return $this->redirectToRoute('session_index');
     }
+
+
 }
