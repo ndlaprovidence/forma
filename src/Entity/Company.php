@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="tbl_company")
  * @ORM\Entity(repositoryClass="App\Repository\CompanyRepository")
  */
 class Company
@@ -24,7 +25,7 @@ class Company
     private $corporate_name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $street;
 
@@ -34,7 +35,7 @@ class Company
     private $postal_code;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $city;
 
@@ -44,7 +45,7 @@ class Company
     private $siret_number;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $phone_number;
 
@@ -56,6 +57,11 @@ class Company
     public function __construct()
     {
         $this->trainees = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->corporate_name;
     }
 
     public function getId(): ?int
@@ -80,7 +86,7 @@ class Company
         return $this->street;
     }
 
-    public function setStreet(string $street): self
+    public function setStreet(?string $street): self
     {
         $this->street = $street;
 
@@ -104,7 +110,7 @@ class Company
         return $this->city;
     }
 
-    public function setCity(string $city): self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
 
@@ -128,7 +134,7 @@ class Company
         return $this->phone_number;
     }
 
-    public function setPhoneNumber(string $phone_number): self
+    public function setPhoneNumber(?string $phone_number): self
     {
         $this->phone_number = $phone_number;
 
