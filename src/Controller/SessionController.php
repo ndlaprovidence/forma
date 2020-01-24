@@ -41,20 +41,19 @@ class SessionController extends AbstractController
 
         if ( $request->query->has('file_name') ) {
             $fileName = $request->query->get('file_name');
+            $this->em = $em;
 
-            // Create a new empty session
-            $entityManager = $this->getDoctrine()->getManager();
+            // Create a new empty session with the upload linked
             $upload = new Upload();
             $upload->setFileName($fileName);
             $session->setUpload($upload);
-            $entityManager->persist($session);
-            $entityManager->flush();
+            $this->em->persist($session);
+            $this->em->flush();
             
             // Read CSV file
             $reader = Reader::createFromPath('../public/uploads/'. $fileName);
             $results = $reader->fetchAssoc();
     
-            $this->em = $em;
             foreach ($results as $row) {
 
                 $trainee = (new Trainee())
@@ -62,47 +61,39 @@ class SessionController extends AbstractController
                     ->setFirstName($row["Nom de l'enseignant"])
                     ->setEmail($row["Email de l'établissement"])          
                 ;
-
                 $this->em->persist($trainee);
                 
-                if ($row['UP'] == "Immaculee Conception ST JAMES 0501367P" ) {
-                    $company = (new Company())
-                        ->setCorporateName('doublon');
-                        // ->setStreet($row[''])
-                        // ->setPostalCode($row[''])
-                        // ->setCity($row[''])
-                        // ->setSiretNumber($row[''])
-                        // ->setPhoneNumber($row[''])
-                        $this->em->persist($company);
-                }else{
-                    $company = (new Company())
+                $company = (new Company())
                     ->setCorporateName($row['UP']);
                     // ->setStreet($row[''])
                     // ->setPostalCode($row[''])
                     // ->setCity($row[''])
                     // ->setSiretNumber($row[''])
                     // ->setPhoneNumber($row[''])
-                    $this->em->persist($company);
-                };
+                ;
+                $this->em->persist($company);
 
-                // $this->em->persist($company);
+                // Associate the trainee with the company
                 $trainee->setCompany($company);
+
+                $traineeParticipation = new TraineeParticipation();
+                
+                $traineeParticipation->setSession($session);
+                $traineeParticipation->setTrainee($trainee);
+                $traineeParticipation->setConvocation($trainee->getLastName().'_'.$session->getId());
+                $this->em->persist($traineeParticipation);
+                $this->em->flush();
             }
-
             $this->em->flush();
-
-            $traineeParticipation = new TraineeParticipation();
-            $traineeParticipation->addSession($session);
-            $traineeParticipation->setConvocation('blabla');
-            $entityManager->persist($traineeParticipation);
-            $entityManager->flush();
         }
 
         
-        // Ouvrir le fichier CSV
-        // OPCALIA / FORMIRIS
-        // Importer chaque ligne utilisateur
-        // Si il est dans la base ne pas l'importer
+        // FINSIED - INSERT LA SESSION VIDE
+        // FINSIED - Ouvrir le fichier CSV
+        // DIFFERENCE OPCALIA / FORMIRIS
+        // FINSIED - Importer chaque ligne utilisateur
+        // INSERT L'utilisateur si il n'y est pas
+        // FINSIED - ::TraineeParticipation INSERT LA SESSION ET INSERT LES UTILISATEURS
         // Extraire les utilisateurs du CSV pour l'afficher dans un tableau la page nouvelle session
         // Ajouter dans la table traineeParticipation la nouvelle session et les stagiaires associés
 

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200123162302 extends AbstractMigration
+final class Version20200124091713 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -25,7 +25,7 @@ final class Version20200123162302 extends AbstractMigration
         $this->addSql('CREATE TABLE tbl_company (id INT AUTO_INCREMENT NOT NULL, corporate_name VARCHAR(255) NOT NULL, street VARCHAR(255) DEFAULT NULL, postal_code VARCHAR(255) DEFAULT NULL, city VARCHAR(255) DEFAULT NULL, siret_number VARCHAR(255) DEFAULT NULL, phone_number VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE tbl_goal (id INT AUTO_INCREMENT NOT NULL, title LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE tbl_instructor (id INT AUTO_INCREMENT NOT NULL, last_name VARCHAR(255) NOT NULL, first_name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE tbl_session (id INT AUTO_INCREMENT NOT NULL, training_id INT DEFAULT NULL, location_id INT DEFAULT NULL, upload_id INT DEFAULT NULL, start_date DATE DEFAULT NULL, end_date DATE DEFAULT NULL, comment VARCHAR(255) DEFAULT NULL, INDEX IDX_8B17DDA0BEFD98D1 (training_id), INDEX IDX_8B17DDA064D218E (location_id), UNIQUE INDEX UNIQ_8B17DDA0CCCFBA31 (upload_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tbl_session (id INT AUTO_INCREMENT NOT NULL, training_id INT DEFAULT NULL, location_id INT DEFAULT NULL, upload_id INT NOT NULL, start_date DATE DEFAULT NULL, end_date DATE DEFAULT NULL, comment VARCHAR(255) DEFAULT NULL, INDEX IDX_8B17DDA0BEFD98D1 (training_id), INDEX IDX_8B17DDA064D218E (location_id), UNIQUE INDEX UNIQ_8B17DDA0CCCFBA31 (upload_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE session_instructor (session_id INT NOT NULL, instructor_id INT NOT NULL, INDEX IDX_D16A4886613FECDF (session_id), INDEX IDX_D16A48868C4FC193 (instructor_id), PRIMARY KEY(session_id, instructor_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE tbl_sessionLocation (id INT AUTO_INCREMENT NOT NULL, street VARCHAR(255) NOT NULL, postal_code INT NOT NULL, city VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE tbl_trainee (id INT AUTO_INCREMENT NOT NULL, company_id INT NOT NULL, last_name VARCHAR(255) NOT NULL, first_name VARCHAR(255) NOT NULL, email VARCHAR(255) DEFAULT NULL, INDEX IDX_1D958593979B1AD6 (company_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB');
@@ -41,8 +41,8 @@ final class Version20200123162302 extends AbstractMigration
         $this->addSql('ALTER TABLE session_instructor ADD CONSTRAINT FK_D16A4886613FECDF FOREIGN KEY (session_id) REFERENCES tbl_session (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE session_instructor ADD CONSTRAINT FK_D16A48868C4FC193 FOREIGN KEY (instructor_id) REFERENCES tbl_instructor (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE tbl_trainee ADD CONSTRAINT FK_1D958593979B1AD6 FOREIGN KEY (company_id) REFERENCES tbl_company (id)');
-        $this->addSql('ALTER TABLE trainee_participation ADD CONSTRAINT FK_844835F36C682D0 FOREIGN KEY (trainee_id) REFERENCES tbl_trainee (id)');
-        $this->addSql('ALTER TABLE trainee_participation ADD CONSTRAINT FK_844835F613FECDF FOREIGN KEY (session_id) REFERENCES tbl_session (id)');
+        $this->addSql('ALTER TABLE trainee_participation ADD CONSTRAINT FK_844835F36C682D0 FOREIGN KEY (trainee_id) REFERENCES tbl_trainee (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE trainee_participation ADD CONSTRAINT FK_844835F613FECDF FOREIGN KEY (session_id) REFERENCES tbl_session (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE tbl_training ADD CONSTRAINT FK_82216CA2B62DE735 FOREIGN KEY (training_category_id) REFERENCES tbl_trainingCategory (id)');
         $this->addSql('ALTER TABLE training_goal ADD CONSTRAINT FK_F346AC6DBEFD98D1 FOREIGN KEY (training_id) REFERENCES tbl_training (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE training_goal ADD CONSTRAINT FK_F346AC6D667D1AFE FOREIGN KEY (goal_id) REFERENCES tbl_goal (id) ON DELETE CASCADE');
