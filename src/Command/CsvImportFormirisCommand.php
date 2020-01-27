@@ -39,21 +39,7 @@ class CsvImportFormirisCommand extends Command
         ;
     }
 
-    public function findSameCompany()
-    {
-
-    $qb = $this->createQueryBuilder('c')
-        ->where('c.company > :price')
-        ->setParameter('price', $price)
-        ->orderBy('p.price', 'ASC');
-
-    $query = $qb->getQuery();
-
-    return $query->execute();
-
-    // to get just one result:
-    // $product = $query->setMaxResults(1)->getOneOrNullResult();
-}
+    
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
