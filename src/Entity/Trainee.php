@@ -41,9 +41,19 @@ class Trainee
      */
     private $company;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Session", mappedBy="trainees")
+     */
+    private $sessions;
+
     public function __construct()
     {
-        $this->traineeParticipations = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->last_name.' '.$this->first_name;
     }
 
     public function getId(): ?int
@@ -95,6 +105,34 @@ class Trainee
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Session[]
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): self
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->addTrainee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): self
+    {
+        if ($this->sessions->contains($session)) {
+            $this->sessions->removeElement($session);
+            $session->removeTrainee($this);
+        }
 
         return $this;
     }

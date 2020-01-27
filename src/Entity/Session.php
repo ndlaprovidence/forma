@@ -58,15 +58,16 @@ class Session
      */
     private $upload;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Trainee", inversedBy="sessions")
+     */
+    private $trainees;
+
 
     public function __construct()
     {
         $this->instructors = new ArrayCollection();
         $this->trainees = new ArrayCollection();
-    }
-
-    public function __toString() {
-        return $this->training;
     }
 
     public function getId(): ?int
@@ -168,6 +169,32 @@ class Session
     public function setUpload(Upload $upload): self
     {
         $this->upload = $upload;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trainee[]
+     */
+    public function getTrainees(): Collection
+    {
+        return $this->trainees;
+    }
+
+    public function addTrainee(Trainee $trainee): self
+    {
+        if (!$this->trainees->contains($trainee)) {
+            $this->trainees[] = $trainee;
+        }
+
+        return $this;
+    }
+
+    public function removeTrainee(Trainee $trainee): self
+    {
+        if ($this->trainees->contains($trainee)) {
+            $this->trainees->removeElement($trainee);
+        }
 
         return $this;
     }
