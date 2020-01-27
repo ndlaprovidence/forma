@@ -7,7 +7,6 @@ use App\Entity\Company;
 use App\Entity\Session;
 use App\Entity\Trainee;
 use App\Form\SessionType;
-use App\Entity\TraineeParticipation;
 use App\Repository\SessionRepository;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -15,9 +14,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocator;
-use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
 
 /**
  * @Route("/session")
@@ -82,29 +81,38 @@ class SessionController extends AbstractController
                     return ('Erreur');
                 }
 
-
                 // AJOUT A LA BDD SELON LE FORMAT CSV
                 if ($plateform == 1) {
                     for ($i = 1; $i<= sizeof($sheetData)-1; $i++)
                     {
-                        $trainee = (new Trainee())
-                            ->setLastName($sheetData[$i][2])
-                            ->setFirstName($sheetData[$i][1])
-                            ->setEmail($sheetData[$i][5])          
-                        ;
+                        $lastName = strtoupper($sheetData[$i][2]);
+                        $firstName = strtolower($sheetData[$i][1]); 
+                        $firstName = ucfirst($firstName);
+                        $email = strtolower($sheetData[$i][5]); 
+
+                        $trainee = new Trainee();
+                        $trainee
+                            ->setLastName($lastName)
+                            ->setFirstName($firstName)
+                            ->setEmail($email);
                         $this->em->persist($trainee);
-        
-                        $company = (new Company())
+
+                        
+                        $street = strtolower($sheetData[$i][9]);
+                        $city = strtoupper($sheetData[$i][12]);
+                        
+                        $company = new Company();
+                        $company
                             ->setCorporateName($sheetData[$i][7])
-                            ->setStreet($sheetData[$i][9])
+                            ->setStreet($street)
                             ->setPostalCode($sheetData[$i][11])
-                            ->setCity($sheetData[$i][12])
+                            ->setCity($city)
                             ->setSiretNumber($sheetData[$i][8])
-                            ->setPhoneNumber($sheetData[$i][4])
-                        ;
+                            ->setPhoneNumber($sheetData[$i][4]);
                         $this->em->persist($company);
                     
                         $trainee->setCompany($company);
+                        $session->addTrainee($trainee);
 
                         $this->em->flush();
                     }
@@ -114,11 +122,16 @@ class SessionController extends AbstractController
                     {
                         // Sépare le nom et le prénom
                         $names = explode(" ", $sheetData[$i][4]);
-                        $trainee = (new Trainee())
-                            ->setLastName($names[0])
-                            ->setFirstName($names[1])
-                            ->setEmail($sheetData[$i][7])
-                        ;
+                        $lastName = strtoupper($names[0]);
+                        $firstName = strtolower($names[1]); 
+                        $firstName = ucfirst($firstName);
+                        $email = strtolower($sheetData[$i][7]); 
+
+                        $trainee = new Trainee();
+                        $trainee
+                            ->setLastName($lastName)
+                            ->setFirstName($firstName)
+                            ->setEmail($email);
                         $this->em->persist($trainee);
     
                         // Sépare le nom et la ville
@@ -138,19 +151,13 @@ class SessionController extends AbstractController
                             }
                         }
 
-                        $company = (new Company())
+                        $company = new Company();
+                        $company
                             ->setCorporateName($corporateName)
-                            ->setCity($city)
-                        ;
+                            ->setCity($city);
                         $this->em->persist($company);
                         $trainee->setCompany($company);
-
-                        $traineeParticipation = (new TraineeParticipation())
-                            ->setTrainee($trainee)
-                            ->setSession($session)
-                            ->setConvocation($trainee->getFirstName().'-'.$trainee->getLastName().'-'.$session->getId())
-                        ;
-                        $this->em->persist($traineeParticipation);
+                        $session->addTrainee($trainee);
 
                         $this->em->flush();
                     }
