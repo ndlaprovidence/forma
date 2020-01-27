@@ -3,7 +3,6 @@
 namespace App\Command;
 
 
-use League\Csv\Reader;
 use App\Entity\Company;
 use App\Entity\Trainee;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
@@ -41,7 +40,7 @@ class CsvImportOpcaliaCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        Cell::setValueBinder(new AdvancedValueBinder());
+        // Cell::setValueBinder(new AdvancedValueBinder());
         
         $io = new SymfonyStyle($input, $output);
         $io->title('Attempting to import the feed') ;
@@ -57,11 +56,7 @@ class CsvImportOpcaliaCommand extends Command
         $spreadsheet = $reader->load($inputFileName);
       
         $loadedSheetNames = $spreadsheet->getSheetNames();
-        
-        /**  Load the file to a Spreadsheet Object  **/
 
-        $output->writeln($loadedSheetNames);
-        
         $i = 1;
         // $helper->log($spreadsheet->getSheetCount() . ' worksheet' . (($spreadsheet->getSheetCount() == 1) ? '' : 's') . ' loaded');
 
@@ -69,37 +64,37 @@ class CsvImportOpcaliaCommand extends Command
             // $helper->log('<b>Worksheet #' . $sheetIndex . ' -> ' . $loadedSheetName . ' (Formatted)</b>');
             $spreadsheet->setActiveSheetIndexByName($loadedSheetName);            
             $sheetData = $spreadsheet->getActiveSheet()->toArray();
-            for ($i = 1; $i<= sizeof($sheetData)-1; $i++)
-            {
-                $trainee = (new Trainee())
-                    ->setLastName($sheetData[$i][2])
-                    ->setFirstName($sheetData[$i][1])
-                    ->setEmail($sheetData[$i][5])          
-                ;
+            // for ($i = 1; $i<= sizeof($sheetData)-1; $i++)
+            // {
+            //     $trainee = (new Trainee())
+            //         ->setLastName($sheetData[$i][2])
+            //         ->setFirstName($sheetData[$i][1])
+            //         ->setEmail($sheetData[$i][5])          
+            //     ;
 
-                $this->em->persist($trainee);
+            //     $this->em->persist($trainee);
 
-                $company = (new Company())
-                    ->setCorporateName($sheetData[$i][7])
-                    ->setStreet($sheetData[$i][9])
-                    ->setPostalCode($sheetData[$i][11])
-                    ->setCity($sheetData[$i][12])
-                    ->setSiretNumber($sheetData[$i][8])
-                    ->setPhoneNumber($sheetData[$i][4])
+            //     $company = (new Company())
+            //         ->setCorporateName($sheetData[$i][7])
+            //         ->setStreet($sheetData[$i][9])
+            //         ->setPostalCode($sheetData[$i][11])
+            //         ->setCity($sheetData[$i][12])
+            //         ->setSiretNumber($sheetData[$i][8])
+            //         ->setPhoneNumber($sheetData[$i][4])
                 
-                ;
+            //     ;
 
-                $this->em->persist($company);
+            //     $this->em->persist($company);
             
-                $trainee->setCompany($company);
+            //     $trainee->setCompany($company);
 
-            }
+            // }
 
             
 
-            $this->em->flush();
+            // $this->em->flush();
             
-            // var_dump($sheetData);
+            var_dump($sheetData[0][0]);
         }
     
     }
