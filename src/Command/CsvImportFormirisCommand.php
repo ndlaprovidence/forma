@@ -64,25 +64,36 @@ class CsvImportFormirisCommand extends Command
 
         $output->writeln($loadedSheetNames);
         
-
         // $helper->log($spreadsheet->getSheetCount() . ' worksheet' . (($spreadsheet->getSheetCount() == 1) ? '' : 's') . ' loaded');
-
         $i=1;
         foreach ($loadedSheetNames as $sheetIndex => $loadedSheetName) {
             // $helper->log('<b>Worksheet #' . $sheetIndex . ' -> ' . $loadedSheetName . ' (Formatted)</b>');
-            $spreadsheet->setActiveSheetIndexByName($loadedSheetName);
+            $spreadsheet->setActiveSheetIndexByName($loadedSheetName);            
             $sheetData = $spreadsheet->getActiveSheet()->toArray();
-            foreach ($sheetData as $row) {
+            for ($i = 1; $i<= sizeof($sheetData)-1; $i++)
+            {
                 $trainee = (new Trainee())
                     ->setLastName($sheetData[$i][4])
                     ->setFirstName($sheetData[$i][4])
                     ->setEmail($sheetData[$i][7])          
                 ;
-                $i++;
-                var_dump($i);
+
+                $this->em->persist($trainee);
+
+                $company = (new Company())
+                ->setCorporateName($sheetData[$i][6])
+                
+                ;
+
+                $this->em->persist($company);
+            
+                $trainee->setCompany($company);
+
             }
 
-            var_dump($sheetData);
+            $this->em->flush();
+            
+            // var_dump($sheetData[1][4]);
         }
         // foreach ($spreadsheet as $row) {
 
