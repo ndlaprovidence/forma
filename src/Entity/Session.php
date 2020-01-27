@@ -53,8 +53,8 @@ class Session
     private $instructors;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Upload", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToOne(targetEntity="App\Entity\Upload", inversedBy="session", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $upload;
 

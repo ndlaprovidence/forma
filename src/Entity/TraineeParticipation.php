@@ -24,14 +24,14 @@ class TraineeParticipation
     private $convocation;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Trainee", inversedBy="traineeParticipation")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Trainee", inversedBy="traineeParticipation", cascade={"remove"})
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
     private $trainee;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Session", inversedBy="traineeParticipation")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Session", inversedBy="traineeParticipation", cascade={"remove"}) 
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
     private $session;
 

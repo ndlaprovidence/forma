@@ -24,6 +24,11 @@ class Upload
      */
     private $file_name;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Session", mappedBy="upload", cascade={"persist", "remove"})
+     */
+    private $session;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -37,6 +42,23 @@ class Upload
     public function setFileName($file_name)
     {
         $this->file_name = $file_name;
+
+        return $this;
+    }
+
+    public function getSession(): ?Session
+    {
+        return $this->session;
+    }
+
+    public function setSession(Session $session): self
+    {
+        $this->session = $session;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $session->getUpload()) {
+            $session->setUpload($this);
+        }
 
         return $this;
     }
