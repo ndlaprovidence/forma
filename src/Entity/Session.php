@@ -53,12 +53,6 @@ class Session
     private $instructors;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\TraineeParticipation", inversedBy="session")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $traineeParticipation;
-
-    /**
      * @ORM\OneToOne(targetEntity="App\Entity\Upload", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
@@ -162,18 +156,6 @@ class Session
         if ($this->instructors->contains($instructor)) {
             $this->instructors->removeElement($instructor);
         }
-
-        return $this;
-    }
-
-    public function getTraineeParticipation(): ?TraineeParticipation
-    {
-        return $this->traineeParticipation;
-    }
-
-    public function setTraineeParticipation(?TraineeParticipation $traineeParticipation): self
-    {
-        $this->traineeParticipation = $traineeParticipation;
 
         return $this;
     }
