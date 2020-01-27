@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Upload;
+use League\Csv\Reader;
+use App\Entity\Company;
 use App\Entity\Session;
-use App\Entity\TraineeParticipation;
+use App\Entity\Trainee;
 use App\Form\SessionType;
+use App\Entity\TraineeParticipation;
 use App\Repository\SessionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,7 +92,7 @@ class SessionController extends AbstractController
    public function test(EntityManagerInterface $em)   
    {
 
-        $reader = Reader::createFromPath('../public/data_formiris.csv');
+        $reader = Reader::createFromPath('../public/data_formiris_1.csv');
 
         $results = $reader->fetchAssoc();
 
@@ -114,11 +117,11 @@ class SessionController extends AbstractController
                 // ->setPhoneNumber($row[''])
             ;
                 
-            if ($row['UP'] == "Immaculee Conception ST JAMES 0501367P" ) {
+            // if ($row['UP'] == "Immaculee Conception ST JAMES 0501367P" ) {
                 
-            }else{
-                $this->em->persist($company);
-            }
+            // }else{
+            //     $this->em->persist($company);
+            // }
             
 
 

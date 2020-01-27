@@ -3,9 +3,10 @@
 namespace App\Command;
 
 
-use League\Csv\Reader;
 use App\Entity\Company;
 use App\Entity\Trainee;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -13,6 +14,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
 
 class CsvImportFormirisCommand extends Command
 {
@@ -39,23 +41,53 @@ class CsvImportFormirisCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        Cell::setValueBinder(new AdvancedValueBinder());
+        
         $io = new SymfonyStyle($input, $output);
         $io->title('Attempting to import the feed') ;
 
-        $reader = Reader::createFromPath('%kernel.root_dir%/../public/data_formiris.csv');
+        
 
-        $results = $reader->fetchAssoc();
+        $inputFileType = 'Csv';
+        $inputFileName = './public/data_formiris_1.csv';
 
+        /**  Create a new Reader of the type defined in $inputFileType  **/
+        $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+        /**  Set the delimiter to a TAB character  **/
+        $reader->setDelimiter(";");
+        $spreadsheet = $reader->load($inputFileName);
+      
+        $loadedSheetNames = $spreadsheet->getSheetNames();
+        
+        /**  Load the file to a Spreadsheet Object  **/
 
-        foreach ($results as $row) {
+        $output->writeln($loadedSheetNames);
+        
 
+        // $helper->log($spreadsheet->getSheetCount() . ' worksheet' . (($spreadsheet->getSheetCount() == 1) ? '' : 's') . ' loaded');
+
+        foreach ($loadedSheetNames as $sheetIndex => $loadedSheetName) {
+            // $helper->log('<b>Worksheet #' . $sheetIndex . ' -> ' . $loadedSheetName . ' (Formatted)</b>');
+            $spreadsheet->setActiveSheetIndexByName($loadedSheetName);
+            $sheetData = $spreadsheet->getActiveSheet()->toArray();
             $trainee = (new Trainee())
-                ->setLastName($row["Nom de l'enseignant"])
-                ->setFirstName($row["Nom de l'enseignant"])
-                ->setEmail($row["Email de l'établissement"])          
-            ;
+                    ->setLastName($sheetData[1][4])
+                    ->setFirstName($sheetData[1][4])
+                    ->setEmail($sheetData[1][7])          
+                ;
+            var_dump($sheetData[1][4]);
+        }
+        // foreach ($spreadsheet as $row) {
 
-            $this->em->persist($trainee);
+        //     $trainee = (new Trainee())
+        //         ->setLastName($row["Nom de l'enseignant"])
+        //         ->setFirstName($row["Nom de l'enseignant"])
+        //         ->setEmail($row["Email de l'établissement"])          
+        //     ;
+
+            
+            // $this->em->persist($trainee);
             
             // $sql = '
             //     SELECT corporate_name FROM company c
@@ -68,14 +100,10 @@ class CsvImportFormirisCommand extends Command
 
 
 
-            $company = (new Company())
-                ->setCorporateName($row['UP'])
-                // ->setStreet($row[''])
-                // ->setPostalCode($row[''])
-                // ->setCity($row[''])
-                // ->setSiretNumber($row[''])
-                // ->setPhoneNumber($row[''])
-            ;
+            // $company = (new Company())
+            //     ->setCorporateName($row['UP'])
+                
+            // ;
                 
             // if ($row['UP'] != $sql ) {
             //     $this->em->persist($company);
@@ -83,13 +111,13 @@ class CsvImportFormirisCommand extends Command
             
             // $output->writeln($qb);
 
-            $this->em->persist($company);
+            // $this->em->persist($company);
             
-            $trainee->setCompany($company);
-        }
+            // $trainee->setCompany($company);
+        // }
         
-        $this->em->flush();
+        // $this->em->flush();
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        // $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
     }
 }
