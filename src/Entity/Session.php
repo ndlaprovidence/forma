@@ -70,10 +70,6 @@ class Session
         $this->trainees = new ArrayCollection();
     }
 
-    public function __toString() {
-        return $this->training;
-    }
-
     public function getId(): ?int
     {
         return $this->id;
