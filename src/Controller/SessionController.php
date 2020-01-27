@@ -7,12 +7,15 @@ use App\Entity\Company;
 use App\Entity\Session;
 use App\Entity\Trainee;
 use App\Form\SessionType;
-use App\Entity\TraineeParticipation;
 use App\Repository\SessionRepository;
+use App\Repository\CompanyRepository;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocator;
 
@@ -34,7 +37,7 @@ class SessionController extends AbstractController
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
-    public function new(Request $request, EntityManagerInterface $em): Response
+    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr): Response
     {
         $session = new Session();
 
@@ -48,14 +51,151 @@ class SessionController extends AbstractController
             $session->setUpload($upload);
             $this->em->persist($session);
             $this->em->flush();
+
+            // START READING CSV
+            Cell::setValueBinder(new AdvancedValueBinder());
+
+            $inputFileType = 'Csv';
+            $inputFileName = '../public/uploads/'.$fileName;
+
+            /**  Create a new Reader of the type defined in $inputFileType  **/
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+            /**  Set the delimiter to a TAB character  **/
+            $reader->setDelimiter(";");
+            $spreadsheet = $reader->load($inputFileName);
+        
+            $loadedSheetNames = $spreadsheet->getSheetNames();
+            
+            foreach ($loadedSheetNames as $sheetIndex => $loadedSheetName) {
+                $spreadsheet->setActiveSheetIndexByName($loadedSheetName);            
+                $sheetData = $spreadsheet->getActiveSheet()->toArray();
+
+                // COMPARATIF DES DEUX FORMATS CSV POSSIBLES
+                if ($sheetData[0][0] == 'Civilité') {
+                    // Opcalia
+                    $plateform = 1;
+                } else if ( $sheetData[0][0] == 'Prestation' ) {
+                    // Formiris
+                    $plateform = 2;
+                } else {
+                    return ('Erreur');
+                }
+
+
+                // AJOUT A LA BDD SELON LE FORMAT CSV
+                if ($plateform == 1) {
+                    for ($i = 1; $i<= sizeof($sheetData)-1; $i++)
+                    {
+                        $trainee = (new Trainee())
+                            //Nom de famille
+                            ->setLastName($sheetData[$i][2])
+                            //Prénom
+                            ->setFirstName($sheetData[$i][1])
+                            //Adresse email
+                            ->setEmail($sheetData[$i][5])          
+                        ;
+                        $this->em->persist($trainee);
+        
+                        $company = (new Company())
+                            //raison sociale
+                            ->setCorporateName($sheetData[$i][7])
+                            //Numéro et nom de rue
+                            ->setStreet($sheetData[$i][9])
+                            //Code postal
+                            ->setPostalCode($sheetData[$i][11])
+                            //Ville
+                            ->setCity($sheetData[$i][12])
+                            //Numéro de siret
+                            ->setSiretNumber($sheetData[$i][8])
+                            //Numéro de téléphone
+                            ->setPhoneNumber($sheetData[$i][4])
+                        ;
+                        $this->em->persist($company);
+                    
+                        $trainee->setCompany($company);
+
+                        $this->em->flush();
+                    }
+
+                } else if ($plateform == 2) {
+                    for ($i = 1; $i< sizeof($sheetData); $i++)
+                    {
+                        // Sépare le nom et le prénom
+                        $names = explode(" ", $sheetData[$i][4]);
+                        $trainee = (new Trainee())
+                            //Nom de famille
+                            ->setLastName($names[0])
+                            //Prénom
+                            ->setFirstName($names[1])
+                            //Adresse Email
+                            ->setEmail($sheetData[$i][7])
+                        ;
+                        $this->em->persist($trainee);
+    
+                        // Sépare le nom et la ville
+                        $names = explode(" ", $sheetData[$i][6]);
+                        $count = count($names);
+                        for ($j = 0; $j<=$count; $j++) {
+                            $city = NULL;
+                            // Si la chaine de caractère est en majuscule (c'est la ville)
+                            if (ctype_upper ( $names[$j] ) == true) {
+                                $corporateName = $names[0];
+                                // On récupère toutes les précedentes infos avant la ville pour former le nom
+                                for ($k = 1; $k<$j; $k++) {
+                                    $corporateName = $corporateName.' '.$names[$k];
+                                }
+                                $city = $names[$j];
+                                break;
+                            }
+                        }
+
+                        $company = new Company();
+                            //Raison sociale
+                            $company->setCorporateName($corporateName)
+                            //Ville
+                            ->setCity($city);
+                        
+                            $temp = $cr->findSameCompany($corporateName);
+                            // var_dump($temp);
+                            var_dump("'<br/>corporateName ='".$corporateName."'<br/>");
+
+                            
+                        if ($temp)
+                        {
+                            
+                        }
+                        else
+                        {
+                            $this->em->persist($company);
+                            $trainee->setCompany($company);
+
+                            
+                        }
+                        $this->em->flush();
+
+                        // $this->em->persist($company);
+                        // $trainee->setCompany($company);
+
+                        // $traineeParticipation = (new TraineeParticipation())
+                        //     ->setTrainee($trainee)
+                        //     ->setSession($session)
+                        //     ->setConvocation($trainee->getFirstName().'-'.$trainee->getLastName().'-'.$session->getId())
+                        // ;
+                        // $this->em->persist($traineeParticipation);
+
+                        // $this->em->flush();
+                    }
+                }
+            }
         }
         
-        // FINSIED - INSERT LA SESSION VIDE
-        // FINSIED - Ouvrir le fichier CSV
-        // DIFFERENCE OPCALIA / FORMIRIS
-        // FINSIED - Importer chaque ligne utilisateur
+        // FINISHED - INSERT LA SESSION VIDE
+        // FINISHED - Ouvrir le fichier CSV
+        // FINISHED DIFFERENCE OPCALIA / FORMIRIS
+        // FINISHED - Importer chaque ligne utilisateur
         // INSERT L'utilisateur si il n'y est pas
-        // FINSIED - ::TraineeParticipation INSERT LA SESSION ET INSERT LES UTILISATEURS
+        // FINISHED - ::TraineeParticipation INSERT LA SESSION ET INSERT LES UTILISATEURS
         // Extraire les utilisateurs du CSV pour l'afficher dans un tableau la page nouvelle session
         // Ajouter dans la table traineeParticipation la nouvelle session et les stagiaires associés
 

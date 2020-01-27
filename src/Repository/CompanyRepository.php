@@ -47,4 +47,15 @@ class CompanyRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findSameCompany($value)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->where('c.corporate_name = :val')
+            ->setParameter('val', $value);
+            
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
 }

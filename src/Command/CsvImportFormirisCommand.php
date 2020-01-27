@@ -39,6 +39,8 @@ class CsvImportFormirisCommand extends Command
         ;
     }
 
+    
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
@@ -62,8 +64,7 @@ class CsvImportFormirisCommand extends Command
         
         /**  Load the file to a Spreadsheet Object  **/
 
-        $output->writeln($loadedSheetNames);
-        
+        $i = 1;
         // $helper->log($spreadsheet->getSheetCount() . ' worksheet' . (($spreadsheet->getSheetCount() == 1) ? '' : 's') . ' loaded');
         $i=1;
         foreach ($loadedSheetNames as $sheetIndex => $loadedSheetName) {
@@ -82,18 +83,34 @@ class CsvImportFormirisCommand extends Command
 
                 $company = (new Company())
                 ->setCorporateName($sheetData[$i][6])
-                
                 ;
 
-                $this->em->persist($company);
-            
-                $trainee->setCompany($company);
+                if ($company->getCorporateName($sheetData[$i][6]))
+                {
+                    $output->writeln('erreur');
+                }
+                else
+                {
+                    $this->em->persist($company);
+                    $trainee->setCompany($company);
 
+                    $this->em->flush();
+                }
+
+                
+                // $this->em->persist($company);
+            
+                
             }
+            // if ($row['UP'] != $sql ) {
+            //     $this->em->persist($company);
+            // }
 
-            $this->em->flush();
             
-            // var_dump($sheetData[1][4]);
+
+            
+            
+            // var_dump($sheetData);
         }
         // foreach ($spreadsheet as $row) {
 
