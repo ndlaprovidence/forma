@@ -9,12 +9,15 @@ use App\Entity\Trainee;
 use App\Form\SessionType;
 use App\Entity\TraineeParticipation;
 use App\Repository\SessionRepository;
+use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocator;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 /**
  * @Route("/session")
@@ -48,6 +51,82 @@ class SessionController extends AbstractController
             $session->setUpload($upload);
             $this->em->persist($session);
             $this->em->flush();
+
+            // START READING CSV
+            Cell::setValueBinder(new AdvancedValueBinder());
+
+            $inputFileType = 'Csv';
+            $inputFileName = './public/uploads/'.$fileName;
+
+            /**  Create a new Reader of the type defined in $inputFileType  **/
+            $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
+
+            /**  Set the delimiter to a TAB character  **/
+            $reader->setDelimiter(";");
+            $spreadsheet = $reader->load($inputFileName);
+        
+            $loadedSheetNames = $spreadsheet->getSheetNames();
+            
+            /**  Load the file to a Spreadsheet Object  **/
+            $output->writeln($loadedSheetNames);
+            
+            foreach ($loadedSheetNames as $sheetIndex => $loadedSheetName) {
+                $spreadsheet->setActiveSheetIndexByName($loadedSheetName);            
+                $sheetData = $spreadsheet->getActiveSheet()->toArray();
+
+                // COMPARATIF DES DEUX FORMATS CSV POSSIBLES
+                if ($sheetData[0][0] == "Civilité") {
+                    // Opcalia
+                    $plateform = 1;
+                } else if ( $sheetData[0][0] == "Prestation" ) {
+                    // Formiris
+                    $plateform = 2;
+                } else {
+                    return ('Erreur');
+                }
+
+
+                // AJOUT A LA BDD SELON LE FORMAT CSV
+                if ($plateform == 1) {
+                    for ($i = 1; $i<= sizeof($sheetData)-1; $i++)
+                    {
+                        $trainee = (new Trainee())
+                            ->setLastName($sheetData[$i][4])
+                            ->setFirstName($sheetData[$i][4])
+                            ->setEmail($sheetData[$i][7])          
+                        ;
+                        $this->em->persist($trainee);
+    
+                        $company = (new Company())
+                            ->setCorporateName($sheetData[$i][6])
+                        ;
+    
+                        $this->em->persist($company);
+                        $trainee->setCompany($company);
+                    }
+    
+                    $this->em->flush();
+                } else if ($plateform == 2) {
+                    for ($i = 1; $i<= sizeof($sheetData)-1; $i++)
+                    {
+                        $trainee = (new Trainee())
+                            ->setLastName($sheetData[$i][2])
+                            ->setFirstName($sheetData[$i][1])
+                            ->setEmail($sheetData[$i][5])          
+                        ;
+                        $this->em->persist($trainee);
+    
+                        $company = (new Company())
+                            ->setCorporateName($sheetData[$i][6])
+                        ;
+    
+                        $this->em->persist($company);
+                        $trainee->setCompany($company);
+                    }
+    
+                    $this->em->flush();
+                }
+            }
         }
         
         // FINSIED - INSERT LA SESSION VIDE

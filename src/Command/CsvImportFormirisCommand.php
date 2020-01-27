@@ -47,8 +47,6 @@ class CsvImportFormirisCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('Attempting to import the feed') ;
 
-        
-
         $inputFileType = 'Csv';
         $inputFileName = './public/data_formiris_1.csv';
 
@@ -61,11 +59,9 @@ class CsvImportFormirisCommand extends Command
         $loadedSheetNames = $spreadsheet->getSheetNames();
         
         /**  Load the file to a Spreadsheet Object  **/
-
         $output->writeln($loadedSheetNames);
         
         // $helper->log($spreadsheet->getSheetCount() . ' worksheet' . (($spreadsheet->getSheetCount() == 1) ? '' : 's') . ' loaded');
-        $i=1;
         foreach ($loadedSheetNames as $sheetIndex => $loadedSheetName) {
             // $helper->log('<b>Worksheet #' . $sheetIndex . ' -> ' . $loadedSheetName . ' (Formatted)</b>');
             $spreadsheet->setActiveSheetIndexByName($loadedSheetName);            
@@ -77,18 +73,14 @@ class CsvImportFormirisCommand extends Command
                     ->setFirstName($sheetData[$i][4])
                     ->setEmail($sheetData[$i][7])          
                 ;
-
                 $this->em->persist($trainee);
 
                 $company = (new Company())
-                ->setCorporateName($sheetData[$i][6])
-                
+                    ->setCorporateName($sheetData[$i][6])
                 ;
 
                 $this->em->persist($company);
-            
                 $trainee->setCompany($company);
-
             }
 
             $this->em->flush();
