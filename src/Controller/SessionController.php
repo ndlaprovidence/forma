@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Upload;
-use League\Csv\Reader;
 use App\Entity\Company;
 use App\Entity\Session;
 use App\Entity\Trainee;
@@ -49,52 +48,7 @@ class SessionController extends AbstractController
             $session->setUpload($upload);
             $this->em->persist($session);
             $this->em->flush();
-            
-            // Read CSV file
-            $reader = Reader::createFromPath('../public/uploads/'. $fileName);
-            $results = $reader->fetchAssoc();
-
-            if ( $test["Nom de l'enseignant"] ) {
-                $trainee = (new Trainee())
-                    ->setLastName("header test true")
-                    ->setFirstName("header test true")
-                    ->setEmail("header test true")          
-            ;
-            }
-
-            foreach ($results as $row) {
-
-                $trainee = (new Trainee())
-                    ->setLastName($row["Nom de l'enseignant"])
-                    ->setFirstName($row["Nom de l'enseignant"])
-                    ->setEmail($row["Email de l'établissement"])          
-                ;
-                $this->em->persist($trainee);
-                
-                $company = (new Company())
-                    ->setCorporateName($row['UP']);
-                    // ->setStreet($row[''])
-                    // ->setPostalCode($row[''])
-                    // ->setCity($row[''])
-                    // ->setSiretNumber($row[''])
-                    // ->setPhoneNumber($row[''])
-                ;
-                $this->em->persist($company);
-
-                // Associate the trainee with the company
-                $trainee->setCompany($company);
-
-                $traineeParticipation = new TraineeParticipation();
-                
-                $traineeParticipation->setSession($session);
-                $traineeParticipation->setTrainee($trainee);
-                $traineeParticipation->setConvocation($trainee->getLastName().'_'.$session->getId());
-                $this->em->persist($traineeParticipation);
-                $this->em->flush();
-            }
-            $this->em->flush();
         }
-
         
         // FINSIED - INSERT LA SESSION VIDE
         // FINSIED - Ouvrir le fichier CSV
@@ -104,9 +58,6 @@ class SessionController extends AbstractController
         // FINSIED - ::TraineeParticipation INSERT LA SESSION ET INSERT LES UTILISATEURS
         // Extraire les utilisateurs du CSV pour l'afficher dans un tableau la page nouvelle session
         // Ajouter dans la table traineeParticipation la nouvelle session et les stagiaires associés
-
-
-
 
         $form = $this->createForm(SessionType::class, $session);
         $form->handleRequest($request);
