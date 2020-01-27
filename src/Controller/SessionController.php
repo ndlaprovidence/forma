@@ -53,7 +53,15 @@ class SessionController extends AbstractController
             // Read CSV file
             $reader = Reader::createFromPath('../public/uploads/'. $fileName);
             $results = $reader->fetchAssoc();
-    
+
+            if ( $test["Nom de l'enseignant"] ) {
+                $trainee = (new Trainee())
+                    ->setLastName("header test true")
+                    ->setFirstName("header test true")
+                    ->setEmail("header test true")          
+            ;
+            }
+
             foreach ($results as $row) {
 
                 $trainee = (new Trainee())
