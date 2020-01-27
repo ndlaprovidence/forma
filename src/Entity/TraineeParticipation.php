@@ -30,14 +30,10 @@ class TraineeParticipation
     private $trainee;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="traineeParticipation")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Session", inversedBy="traineeParticipation")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $session;
-
-    public function __construct()
-    {
-        $this->session = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -68,33 +64,14 @@ class TraineeParticipation
         return $this;
     }
 
-    /**
-     * @return Collection|Session[]
-     */
-    public function getSession(): Collection
+    public function getSession(): ?Session
     {
         return $this->session;
     }
 
-    public function addSession(Session $session): self
+    public function setSession(?Session $session): self
     {
-        if (!$this->session->contains($session)) {
-            $this->session[] = $session;
-            $session->setTraineeParticipation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSession(Session $session): self
-    {
-        if ($this->session->contains($session)) {
-            $this->session->removeElement($session);
-            // set the owning side to null (unless already changed)
-            if ($session->getTraineeParticipation() === $this) {
-                $session->setTraineeParticipation(null);
-            }
-        }
+        $this->session = $session;
 
         return $this;
     }
