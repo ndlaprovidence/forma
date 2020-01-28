@@ -42,7 +42,6 @@ class SessionController extends AbstractController
     {
         $session = new Session();
 
-
         if ( $request->query->has('file_name') ) {
             $fileName = $request->query->get('file_name');
             $this->em = $em;
