@@ -7,9 +7,24 @@
 
     {{ file_name }}
 
-    {% for trainee in session.trainees %}
-        {{ trainee }}<br/>
-    {% endfor %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Civilité</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Raison sociale</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trainee in session.trainees %}
+                <td>{{ trainee.Email }}</td>
+                <td>{{ trainee.first_name }}</td>
+                <td>{{ trainee.last_name }}</td>
+                {# <td>{{ trainee.Email }}</td> #}
+            {% endfor %}
+        </tbody>
 
     {{ include('session/_form.html.twig') }}
 
