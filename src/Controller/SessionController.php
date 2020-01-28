@@ -160,6 +160,7 @@ class SessionController extends AbstractController
                             ->setCity($city);
 
                         $temp = $cr->findSameCompany($corporateName);
+                        
                         if ($temp)
                         {
                             // Ajouter le trainee a la company existante
