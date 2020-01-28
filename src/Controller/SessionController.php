@@ -7,8 +7,9 @@ use App\Entity\Company;
 use App\Entity\Session;
 use App\Entity\Trainee;
 use App\Form\SessionType;
-use App\Repository\SessionRepository;
 use App\Repository\CompanyRepository;
+use App\Repository\SessionRepository;
+use App\Repository\TraineeRepository;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,11 +38,10 @@ class SessionController extends AbstractController
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
-    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr): Response
+    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $tr): Response
     {
         $session = new Session();
 
-        $session = new Session();
 
         if ( $request->query->has('file_name') ) {
             $fileName = $request->query->get('file_name');
@@ -86,39 +86,63 @@ class SessionController extends AbstractController
 
                 // AJOUT A LA BDD SELON LE FORMAT CSV
                 if ($plateform == 1) {
-                    for ($i = 1; $i<= sizeof($sheetData)-1; $i++)
+                    for ($i = 1; $i< sizeof($sheetData); $i++)
                     {
                         $lastName = strtoupper($sheetData[$i][2]);
                         $firstName = strtolower($sheetData[$i][1]); 
                         $firstName = ucfirst($firstName);
                         $email = strtolower($sheetData[$i][5]); 
 
-                        $trainee = new Trainee();
-                        $trainee
-                            ->setLastName($lastName)
-                            ->setFirstName($firstName)
-                            ->setEmail($email);
-                        $this->em->persist($trainee);
+                        // Créer un trainee si il n'existe pas déjà
+                        $temp = $tr->findSameTrainee($lastName,$firstName,$email);
 
-                        
+                        if ($temp)
+                        {
+                            $existingTrainee = $temp;
+                            $trainee = $tr->findOneById($existingTrainee);
+                            $this->em->persist($trainee);
+                        } else {
+                            $trainee = new Trainee();
+                            $trainee
+                                ->setLastName($lastName)
+                                ->setFirstName($firstName)
+                                ->setEmail($email);
+                            $this->em->persist($trainee);
+                        }
+    
+                        $corporateName = $sheetData[$i][7];
                         $street = strtolower($sheetData[$i][9]);
                         $city = strtoupper($sheetData[$i][12]);
-                        
-                        $company = new Company();
-                        $company
-                            ->setCorporateName($sheetData[$i][7])
-                            ->setStreet($street)
-                            ->setPostalCode($sheetData[$i][11])
-                            ->setCity($city)
-                            ->setSiretNumber($sheetData[$i][8])
-                            ->setPhoneNumber($sheetData[$i][4]);
-                        $this->em->persist($company);
-                    
-                        $trainee->setCompany($company);
+
+                        // Créer une company si il n'existe pas déjà
+                        $temp = $cr->findSameCompany($corporateName,$city);
+
+                        if ($temp)
+                        {
+                            $existingCompany = $temp;
+                            $company = $cr->findOneById($existingCompany);
+                            $this->em->persist($company);
+                            $trainee->setCompany($company);
+                            $this->em->persist($trainee);
+                        } else {
+                            $company = new Company();
+                            $company
+                                ->setCorporateName($corporateName)
+                                ->setStreet($street)
+                                ->setPostalCode($sheetData[$i][11])
+                                ->setCity($city)
+                                ->setSiretNumber($sheetData[$i][8])
+                                ->setPhoneNumber($sheetData[$i][4]);
+                            $this->em->persist($company);
+                            $trainee->setCompany($company);
+                        }
+
                         $session->addTrainee($trainee);
 
                         $this->em->flush();
                     }
+
+                    //////////////////////////////////////////////////////////////////////////////
 
                 } else if ($plateform == 2) {
                     for ($i = 1; $i< sizeof($sheetData); $i++)
@@ -130,12 +154,22 @@ class SessionController extends AbstractController
                         $firstName = ucfirst($firstName);
                         $email = strtolower($sheetData[$i][7]); 
 
-                        $trainee = new Trainee();
-                        $trainee
-                            ->setLastName($lastName)
-                            ->setFirstName($firstName)
-                            ->setEmail($email);
-                        $this->em->persist($trainee);
+                        // Créer un trainee si il n'existe pas déjà
+                        $temp = $tr->findSameTrainee($lastName,$firstName,$email);
+
+                        if ($temp)
+                        {
+                            $existingTrainee = $temp;
+                            $trainee = $tr->findOneById($existingTrainee);
+                            $this->em->persist($trainee);
+                        } else {
+                            $trainee = new Trainee();
+                            $trainee
+                                ->setLastName($lastName)
+                                ->setFirstName($firstName)
+                                ->setEmail($email);
+                            $this->em->persist($trainee);
+                        }
     
                         // Sépare le nom et la ville
                         $names = explode(" ", $sheetData[$i][6]);
@@ -154,22 +188,25 @@ class SessionController extends AbstractController
                             }
                         }
 
-                        $company = new Company();
-                        $company
-                            ->setCorporateName($corporateName)
-                            ->setCity($city);
+                        // Créer une company si il n'existe pas déjà
+                        $temp = $cr->findSameCompany($corporateName,$city);
 
-                        $temp = $cr->findSameCompany($corporateName);
-                        
                         if ($temp)
                         {
-                            // Ajouter le trainee a la company existante
-                            $trainee->setCompany($company->getId());
+                            $existingCompany = $temp;
+                            $company = $cr->findOneById($existingCompany);
+                            $this->em->persist($company);
+                            $trainee->setCompany($company);
                             $this->em->persist($trainee);
                         } else {
+                            $company = new Company();
+                            $company
+                                ->setCorporateName($corporateName)
+                                ->setCity($city);
                             $this->em->persist($company);
                             $trainee->setCompany($company);
                         }
+
                         $session->addTrainee($trainee);
 
                         $this->em->flush();
@@ -177,15 +214,6 @@ class SessionController extends AbstractController
                 }
             }
         }
-        
-        // FINISHED - INSERT LA SESSION VIDE
-        // FINISHED - Ouvrir le fichier CSV
-        // FINISHED DIFFERENCE OPCALIA / FORMIRIS
-        // FINISHED - Importer chaque ligne utilisateur
-        // INSERT L'utilisateur si il n'y est pas
-        // FINISHED - ::TraineeParticipation INSERT LA SESSION ET INSERT LES UTILISATEURS
-        // Extraire les utilisateurs du CSV pour l'afficher dans un tableau la page nouvelle session
-        // Ajouter dans la table traineeParticipation la nouvelle session et les stagiaires associés
 
         $form = $this->createForm(SessionType::class, $session);
         $form->handleRequest($request);
