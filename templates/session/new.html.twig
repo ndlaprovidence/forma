@@ -7,26 +7,34 @@
 
     {{ file_name }}
 
+
+    {{ include('session/_form.html.twig') }}
+
+    
     <table class="table">
         <thead>
             <tr>
-                <th>Civilité</th>
-                <th>Nom</th>
-                <th>Prénom</th>
+                <th>Civility</th>
+                <th>Last name</th>
+                <th>First name</th>
                 <th>Email</th>
-                <th>Raison sociale</th>
+                <th>Corporate name</th>
             </tr>
         </thead>
         <tbody>
-            {% for trainee in session.trainees %}
-                <td>{{ trainee.Email }}</td>
-                <td>{{ trainee.first_name }}</td>
-                <td>{{ trainee.last_name }}</td>
-                {# <td>{{ trainee.Email }}</td> #}
-            {% endfor %}
+            
+                {% for trainee in session.trainees %}
+                <tr>
+                    <td></td>
+                    <td>{{ trainee.LastName }}</td>   
+                    <td>{{ trainee.FirstName }}</td>
+                    <td>{{ trainee.Email }}</td>
+                    <td>{{ trainee.Company }}</td>
+                </tr>
+                {% endfor %}
+            
         </tbody>
-
-    {{ include('session/_form.html.twig') }}
+    </table>
 
     <a href="{{ path('session_index') }}">back to list</a>
 {% endblock %}
