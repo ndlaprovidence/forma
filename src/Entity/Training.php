@@ -31,13 +31,13 @@ class Training
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\TrainingCategory", inversedBy="trainings")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $training_category;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Goal", inversedBy="trainings")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $goals;
 

@@ -36,15 +36,24 @@ class TrainingCategoryRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?TrainingCategory
+    public function findOneById($id): ?TrainingCategory
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('tc')
+            ->andWhere('tc.id = :val')
+            ->setParameter('val', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
+    public function findSameTrainingCategory($trainingCategoryTitle)
+    {
+        $qb = $this->createQueryBuilder('tc')
+            ->where('tc.title = :val')
+            ->setParameter('val', $trainingCategoryTitle);
+
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
 }

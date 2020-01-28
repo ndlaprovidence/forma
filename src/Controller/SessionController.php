@@ -6,16 +6,21 @@ use App\Entity\Upload;
 use App\Entity\Company;
 use App\Entity\Session;
 use App\Entity\Trainee;
+use App\Entity\Training;
 use App\Form\SessionType;
+use App\Entity\TrainingCategory;
 use App\Repository\CompanyRepository;
 use App\Repository\SessionRepository;
 use App\Repository\TraineeRepository;
+use App\Repository\TrainingRepository;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use App\Repository\TrainingCategoryRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\DateTime;
 use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocator;
@@ -38,13 +43,13 @@ class SessionController extends AbstractController
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
-    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $tr): Response
+    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr): Response
     {
-        $session = new Session();
-
         if ( $request->query->has('file_name') ) {
             $fileName = $request->query->get('file_name');
             $this->em = $em;
+
+            $session = new Session();
 
             // Create a new empty session with the upload linked
             $upload = new Upload();
@@ -87,18 +92,57 @@ class SessionController extends AbstractController
                 if ($plateform == 1) {
                     for ($i = 1; $i< sizeof($sheetData); $i++)
                     {
+
+                        // Créer la category de formation si elle n'existe pas déjà
+                        $trainingCategoryTitle = $sheetData[$i][14]; 
+
+                        $temp = $tgcr->findSameTrainingCategory($trainingCategoryTitle);
+
+                        if ($temp)
+                        {
+                            $existingTrainingCategory = $temp;
+                            $trainingCategory = $tgcr->findOneById($existingTrainingCategory);
+                            $this->em->persist($trainingCategory);
+                        } else {
+                            $trainingCategory = new TrainingCategory();
+                            $trainingCategory
+                                ->setTitle($trainingCategoryTitle);
+                            $this->em->persist($trainingCategory);
+                        }
+
+
+                        // Créer la formation si elle n'existe pas déjà
+                        $trainingTitle = $sheetData[$i][15]; 
+
+                        $temp = $tgr->findSameTraining($trainingTitle);
+
+                        if ($temp)
+                        {
+                            $existingTraining = $temp;
+                            $training = $tgr->findOneById($existingTraining);
+                            $this->em->persist($training);
+                        } else {
+                            $training = new Training();
+                            $training
+                                ->setTitle($trainingTitle)
+                                ->setPlatform('Opcalia')
+                                ->setTrainingCategory($trainingCategory);
+                            $this->em->persist($training);
+                        }
+
+
+                        // Créer un trainee si il n'existe pas déjà
                         $lastName = strtoupper($sheetData[$i][2]);
                         $firstName = strtolower($sheetData[$i][1]); 
                         $firstName = ucfirst($firstName);
                         $email = strtolower($sheetData[$i][5]); 
 
-                        // Créer un trainee si il n'existe pas déjà
-                        $temp = $tr->findSameTrainee($lastName,$firstName,$email);
+                        $temp = $ter->findSameTrainee($lastName,$firstName,$email);
 
                         if ($temp)
                         {
                             $existingTrainee = $temp;
-                            $trainee = $tr->findOneById($existingTrainee);
+                            $trainee = $ter->findOneById($existingTrainee);
                             $this->em->persist($trainee);
                         } else {
                             $trainee = new Trainee();
@@ -109,11 +153,12 @@ class SessionController extends AbstractController
                             $this->em->persist($trainee);
                         }
     
+
+                        // Créer une company si il n'existe pas déjà
                         $corporateName = $sheetData[$i][7];
                         $street = strtolower($sheetData[$i][9]);
                         $city = strtoupper($sheetData[$i][12]);
 
-                        // Créer une company si il n'existe pas déjà
                         $temp = $cr->findSameCompany($corporateName,$city);
 
                         if ($temp)
@@ -136,7 +181,11 @@ class SessionController extends AbstractController
                             $trainee->setCompany($company);
                         }
 
-                        $session->addTrainee($trainee);
+
+                        // Ajoute la formation et les stagiaire à la session
+                        $session
+                            ->addTrainee($trainee)
+                            ->setTraining($training);
 
                         $this->em->flush();
                     }
@@ -146,20 +195,39 @@ class SessionController extends AbstractController
                 } else if ($plateform == 2) {
                     for ($i = 1; $i< sizeof($sheetData); $i++)
                     {
-                        // Sépare le nom et le prénom
+
+                        // Créer la formation si elle n'existe pas déjà
+                        $trainingTitle = $sheetData[$i][0]; 
+
+                        $temp = $tgr->findSameTraining($trainingTitle);
+
+                        if ($temp)
+                        {
+                            $existingTraining = $temp;
+                            $training = $tgr->findOneById($existingTraining);
+                            $this->em->persist($training);
+                        } else {
+                            $training = new Training();
+                            $training
+                                ->setTitle($trainingTitle)
+                                ->setPlatform('Formiris');
+                            $this->em->persist($training);
+                        }
+
+
+                        // Créer un trainee si il n'existe pas déjà
                         $names = explode(" ", $sheetData[$i][4]);
                         $lastName = strtoupper($names[0]);
                         $firstName = strtolower($names[1]); 
                         $firstName = ucfirst($firstName);
                         $email = strtolower($sheetData[$i][7]); 
 
-                        // Créer un trainee si il n'existe pas déjà
-                        $temp = $tr->findSameTrainee($lastName,$firstName,$email);
+                        $temp = $ter->findSameTrainee($lastName,$firstName,$email);
 
                         if ($temp)
                         {
                             $existingTrainee = $temp;
-                            $trainee = $tr->findOneById($existingTrainee);
+                            $trainee = $ter->findOneById($existingTrainee);
                             $this->em->persist($trainee);
                         } else {
                             $trainee = new Trainee();
@@ -170,7 +238,8 @@ class SessionController extends AbstractController
                             $this->em->persist($trainee);
                         }
     
-                        // Sépare le nom et la ville
+
+                        // Créer une company si il n'existe pas déjà
                         $names = explode(" ", $sheetData[$i][6]);
                         $count = count($names);
                         for ($j = 0; $j<=$count; $j++) {
@@ -187,7 +256,6 @@ class SessionController extends AbstractController
                             }
                         }
 
-                        // Créer une company si il n'existe pas déjà
                         $temp = $cr->findSameCompany($corporateName,$city);
 
                         if ($temp)
@@ -196,7 +264,6 @@ class SessionController extends AbstractController
                             $company = $cr->findOneById($existingCompany);
                             $this->em->persist($company);
                             $trainee->setCompany($company);
-                            $this->em->persist($trainee);
                         } else {
                             $company = new Company();
                             $company
@@ -206,7 +273,12 @@ class SessionController extends AbstractController
                             $trainee->setCompany($company);
                         }
 
-                        $session->addTrainee($trainee);
+                        // Ajoute la formation et les stagiaire à la session
+                        $session
+                            ->setComment('26-05-2020')
+                            ->addTrainee($trainee)
+                            ->setTraining($training);
+                        $this->em->persist($session);
 
                         $this->em->flush();
                     }
