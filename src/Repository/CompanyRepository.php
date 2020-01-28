@@ -36,23 +36,23 @@ class CompanyRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Company
+    public function findOneById($id): ?Company
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('c.id = :val')
+            ->setParameter('val', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
 
-    public function findSameCompany($value)
+    public function findSameCompany($corporateName,$city)
     {
         $qb = $this->createQueryBuilder('c')
-            ->where('c.corporate_name = :val')
-            ->setParameter('val', $value);
+            ->where('c.corporate_name = :val1')
+            ->setParameter('val1', $corporateName)
+            ->andWhere('c.city = :val2')
+            ->setParameter('val2', $city);
             
         $query = $qb->getQuery();
 

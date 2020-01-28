@@ -36,15 +36,28 @@ class TraineeRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Trainee
+    public function findOneById($id): ?Trainee
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('t.id = :val')
+            ->setParameter('val', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
+    public function findSameTrainee($lastName,$firstName,$email)
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->where('t.last_name = :val1')
+            ->setParameter('val1', $lastName)
+            ->andWhere('t.first_name = :val2')
+            ->setParameter('val2', $firstName)
+            ->andWhere('t.email = :val3')
+            ->setParameter('val3', $email);
+
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
 }
