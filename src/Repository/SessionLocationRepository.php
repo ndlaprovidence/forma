@@ -36,15 +36,28 @@ class SessionLocationRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?SessionLocation
+    public function findOneById($id): ?SessionLocation
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('sl')
+            ->andWhere('sl.id = :val')
+            ->setParameter('val', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
+    public function findSameSessionLocation($city,$codePostal,$street)
+    {
+        $qb = $this->createQueryBuilder('sl')
+            ->where('sl.postal_code = :val1')
+            ->setParameter('val1', $codePostal)
+            ->andWhere('sl.city = :val2')
+            ->setParameter('val2', $city)
+            ->andWhere('sl.street = :val3')
+            ->setParameter('val3', $street);
+
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
 }
