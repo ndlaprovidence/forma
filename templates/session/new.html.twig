@@ -7,11 +7,36 @@
 
     {{ file_name }}
 
-    {# {% for trainee in session.trainees %}
-        {{ trainee }}<br/>
-    {% endfor %} #}
-
     {{ include('session/_form.html.twig') }}
 
     <a href="{{ path('session_index') }}">back to list</a>
+    
+    {# Tableau qui répertorie les stagiaires participant à la session #}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Civility</th>
+                <th>Last name</th>
+                <th>First name</th>
+                <th>Email</th>
+                <th>Corporate name</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+                {% for trainee in session.trainees %}
+                <tr>
+                    <td></td>
+                    <td>{{ trainee.LastName }}</td>   
+                    <td>{{ trainee.FirstName }}</td>
+                    <td>{{ trainee.Email }}</td>
+                    <td>{{ trainee.Company }}</td>
+                </tr>
+                {% endfor %}
+            
+        </tbody>
+    </table>
+
+    
+
 {% endblock %}
