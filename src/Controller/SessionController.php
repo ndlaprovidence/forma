@@ -8,7 +8,9 @@ use App\Entity\Session;
 use App\Entity\Trainee;
 use App\Entity\Training;
 use App\Form\SessionType;
+use App\Entity\SessionLocation;
 use App\Entity\TrainingCategory;
+use App\Repository\UploadRepository;
 use App\Repository\CompanyRepository;
 use App\Repository\SessionRepository;
 use App\Repository\TraineeRepository;
@@ -16,6 +18,7 @@ use App\Repository\TrainingRepository;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\SessionLocationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\TrainingCategoryRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,20 +46,26 @@ class SessionController extends AbstractController
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
-    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr): Response
+    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr, SessionLocationRepository $slr, UploadRepository $ur): Response
     {
         if ( $request->query->has('file_name') ) {
             $fileName = $request->query->get('file_name');
             $this->em = $em;
 
-            $session = new Session();
+            // Créer un upload si il n'existe pas déjà
+            $temp = $ur->findSameUpload($fileName);
 
-            // Create a new empty session with the upload linked
-            $upload = new Upload();
-            $upload->setFileName($fileName);
-            $session->setUpload($upload);
-            $this->em->persist($session);
-            $this->em->flush();
+            if ($temp)
+            {
+                $existingUpload = $temp;
+                $upload = $ur->findOneById($existingUpload);
+                $this->em->persist($upload);
+            } else {
+                $upload = new Upload();
+                $upload->
+                    setFileName($fileName);
+                $this->em->persist($upload);
+            }
 
             // START READING CSV
             Cell::setValueBinder(new AdvancedValueBinder());
@@ -181,16 +190,17 @@ class SessionController extends AbstractController
                             $trainee->setCompany($company);
                         }
 
-
-                        // Ajoute la formation et les stagiaire à la session
-                        $startDate = new \DateTime('@'.strtotime($sheetData[$i][16]));
-                        $session
-                            ->addTrainee($trainee)
-                            ->setTraining($training)
-                            ->setStartDate($startDate);
-
                         $this->em->flush();
                     }
+
+                    $sessionsNbrTotal = 1;
+                    $startDate = new \DateTime('@'.strtotime($sheetData[1][16]));
+                    $session = new Session();
+                    $session
+                        ->setUpload($upload)
+                        ->addTrainee($trainee)
+                        ->setTraining($training)
+                        ->setStartDate($startDate);
 
                     //////////////////////////////////////////////////////////////////////////////
 
@@ -276,17 +286,61 @@ class SessionController extends AbstractController
                         }
 
 
-                        // Ajoute la formation et les stagiaire à la session
-                        $startDate = new \DateTime('@'.strtotime('2020-01-01'));
-                        $session
-                            ->addTrainee($trainee)
-                            ->setTraining($training)
-                            ->setStartDate($startDate);
+                        // Ajoute des dates de session et du lieu selon le nombre de sessions au total
+                        $sessionsDates = explode(", ", $sheetData[$i][16]);
+                        $sessionsNbrTotal = count($sessionsDates);
 
-                        $this->em->persist($session);
+                        if ( $request->query->has('current_session_number') ) {
+                            $currentSessionNbr = $request->query->get('current_session_number');
+                            $currentSessionNbr = intval($currentSessionNbr);
+                            $currentSession = explode(" ", $sessionsDates[$currentSessionNbr]);
+                        } else {
+                            $currentSession = explode(" ", $sessionsDates[0]);
+                        }
+                        
+                        $count = count($currentSession);
+
+                        $startDate = new \DateTime('@'.strtotime($currentSession[1]));
+                        $endDate = new \DateTime('@'.strtotime($currentSession[3]));
+                        $codePostal = $currentSession[5];
+
+                        $city = $currentSession[6];
+                        for ($j = 6; $j<$count-1; $j++) {
+                            $city = $city.' '.$currentSession[$j];
+                        }
+
+
+                        // Créer une session location si elle n'existe pas déjà
+                        $city = strtoupper($city);
+                        $street = 'non-renseignée';
+
+                        $temp = $slr->findSameSessionLocation($city,$codePostal,$street);
+
+                        if ($temp)
+                        {
+                            $existingSessionLocation = $temp;
+                            $sessionLocation = $slr->findOneById($existingSessionLocation);
+                            $this->em->persist($sessionLocation);
+                        } else {
+                            $sessionLocation = new SessionLocation();
+                            $sessionLocation
+                                ->setPostalCode($codePostal)
+                                ->setCity($city)
+                                ->setStreet($street);
+                            $this->em->persist($sessionLocation);
+                        }
 
                         $this->em->flush();
                     }
+                    
+                    $session = new Session();
+                    $session
+                        ->setUpload($upload)
+                        ->addTrainee($trainee)
+                        ->setLocation($sessionLocation)
+                        ->setTraining($training)
+                        ->setStartDate($startDate)
+                        ->setEndDate($endDate);
                 }
             }
         }
@@ -295,11 +349,29 @@ class SessionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($session);
-            $entityManager->flush();
+            $this->em->persist($session);
+            $this->em->flush();
 
-            return $this->redirectToRoute('session_index');
+            if ( $request->query->has('current_session_number') ) {
+                $currentSessionNbr = $request->query->get('current_session_number');
+                if ( $currentSessionNbr < $sessionsNbrTotal-1 ) {
+                    $currentSessionNbr = $currentSessionNbr+1;
+                    return $this->redirectToRoute('session_new', [
+                        'file_name' => $fileName,
+                        'current_session_number' => $currentSessionNbr
+                    ]);
+                }
+                return $this->redirectToRoute('session_index');
+            } else {
+                if ( $sessionsNbrTotal != 1 ) {
+                    $currentSessionNbr = 1;
+                    return $this->redirectToRoute('session_new', [
+                        'file_name' => $fileName,
+                        'current_session_number' => $currentSessionNbr
+                    ]);
+                }
+                return $this->redirectToRoute('session_index');
+            }
         }
 
         return $this->render('session/new.html.twig', [

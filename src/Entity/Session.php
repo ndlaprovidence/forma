@@ -53,15 +53,15 @@ class Session
     private $instructors;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Upload", inversedBy="session", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $upload;
-
-    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Trainee", inversedBy="sessions")
      */
     private $trainees;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Upload", inversedBy="sessions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $upload;
 
 
     public function __construct()
@@ -161,18 +161,6 @@ class Session
         return $this;
     }
 
-    public function getUpload(): ?Upload
-    {
-        return $this->upload;
-    }
-
-    public function setUpload(Upload $upload): self
-    {
-        $this->upload = $upload;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Trainee[]
      */
@@ -195,6 +183,18 @@ class Session
         if ($this->trainees->contains($trainee)) {
             $this->trainees->removeElement($trainee);
         }
+
+        return $this;
+    }
+
+    public function getUpload(): ?Upload
+    {
+        return $this->upload;
+    }
+
+    public function setUpload(?Upload $upload): self
+    {
+        $this->upload = $upload;
 
         return $this;
     }
