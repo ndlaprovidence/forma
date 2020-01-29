@@ -16,7 +16,7 @@ class SessionType extends AbstractType
             ->add('start_date', DateTimeType::Class , [
                 'data' => new \DateTime(),
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy'
+                'date_format' => 'dd/MM/yyyy'
             ])
             ->add('end_date')
             ->add('comment')
