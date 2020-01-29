@@ -308,6 +308,7 @@ class SessionController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    
 
     /**
      * @Route("/{id}", name="session_show", methods={"GET"})
