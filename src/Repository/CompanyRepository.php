@@ -58,4 +58,15 @@ class CompanyRepository extends ServiceEntityRepository
 
         return $query->execute();
     }
+
+    public function getIdCompany($value)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->where('c.corporate_name = :val')
+            ->setParameter('val', $value);
+            
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
 }
