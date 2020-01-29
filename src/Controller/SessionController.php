@@ -86,6 +86,8 @@ class SessionController extends AbstractController
                 $spreadsheet->setActiveSheetIndexByName($loadedSheetName);            
                 $sheetData = $spreadsheet->getActiveSheet()->toArray();
 
+                $session = new Session();
+
                 // COMPARATIF DES DEUX FORMATS CSV POSSIBLES
                 if ($sheetData[0][0] == 'Civilité') {
                     // Opcalia
@@ -161,7 +163,8 @@ class SessionController extends AbstractController
                                 ->setEmail($email);
                             $this->em->persist($trainee);
                         }
-    
+                        $session->addTrainee($trainee);
+
 
                         // Créer une company si il n'existe pas déjà
                         $corporateName = $sheetData[$i][7];
@@ -195,10 +198,8 @@ class SessionController extends AbstractController
 
                     $sessionsNbrTotal = 1;
                     $startDate = new \DateTime('@'.strtotime($sheetData[1][16]));
-                    $session = new Session();
                     $session
                         ->setUpload($upload)
-                        ->addTrainee($trainee)
                         ->setTraining($training)
                         ->setStartDate($startDate);
 
@@ -249,6 +250,7 @@ class SessionController extends AbstractController
                                 ->setEmail($email);
                             $this->em->persist($trainee);
                         }
+                        $session->addTrainee($trainee);
     
 
                         // Créer une company si il n'existe pas déjà
@@ -333,10 +335,8 @@ class SessionController extends AbstractController
                         $this->em->flush();
                     }
                     
-                    $session = new Session();
                     $session
                         ->setUpload($upload)
-                        ->addTrainee($trainee)
                         ->setLocation($sessionLocation)
                         ->setTraining($training)
                         ->setStartDate($startDate)
