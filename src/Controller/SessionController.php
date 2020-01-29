@@ -183,9 +183,11 @@ class SessionController extends AbstractController
 
 
                         // Ajoute la formation et les stagiaire à la session
+                        $startDate = new \DateTime('@'.strtotime($sheetData[$i][16]));
                         $session
                             ->addTrainee($trainee)
-                            ->setTraining($training);
+                            ->setTraining($training)
+                            ->setStartDate($startDate);
 
                         $this->em->flush();
                     }
@@ -273,11 +275,14 @@ class SessionController extends AbstractController
                             $trainee->setCompany($company);
                         }
 
+
                         // Ajoute la formation et les stagiaire à la session
+                        $startDate = new \DateTime('@'.strtotime('2020-01-01'));
                         $session
-                            ->setComment('26-05-2020')
                             ->addTrainee($trainee)
-                            ->setTraining($training);
+                            ->setTraining($training)
+                            ->setStartDate($startDate);
+
                         $this->em->persist($session);
 
                         $this->em->flush();
