@@ -8,20 +8,23 @@ use App\Entity\Session;
 use App\Entity\Trainee;
 use App\Entity\Training;
 use App\Form\SessionType;
+use PhpOffice\PhpWord\PhpWord;
 use App\Entity\TrainingCategory;
+use PhpOffice\PhpWord\IOFactory;
 use App\Repository\CompanyRepository;
 use App\Repository\SessionRepository;
 use App\Repository\TraineeRepository;
 use App\Repository\TrainingRepository;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\TrainingCategoryRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\DateTime;
 use PhpOffice\PhpSpreadsheet\Cell\AdvancedValueBinder;
+use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocator;
 
@@ -45,7 +48,7 @@ class SessionController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr): Response
     {
-        if ( $request->query->has('file_name') ) {
+        if ( $request->query->has('file_name')) {
             $fileName = $request->query->get('file_name');
             $this->em = $em;
 
@@ -308,7 +311,6 @@ class SessionController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    
 
     /**
      * @Route("/{id}", name="session_show", methods={"GET"})
