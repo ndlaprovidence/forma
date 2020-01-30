@@ -21,7 +21,7 @@
 
         {% if app.request.attributes.get('_route') != 'app_login' %}
 
-        <nav class="navbar navbar-expand-md navbar-light bg-nav border-nav fixed-top">
+        <nav class="navbar navbar-expand-md navbar-light custom-nav fixed-top">
             <img class="ml-5" width="50" src='{{ asset('images/logo.png') }}'> 
             <a class="navbar-brand" href="{{ path('default') }}">Forma</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">

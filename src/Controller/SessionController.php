@@ -53,6 +53,7 @@ class SessionController extends AbstractController
             $this->em = $em;
 
             // Créer un upload si il n'existe pas déjà
+            $todayDate = new \DateTime('@'.strtotime('now'));
             $temp = $ur->findSameUpload($fileName);
 
             if ($temp)
@@ -62,8 +63,10 @@ class SessionController extends AbstractController
                 $this->em->persist($upload);
             } else {
                 $upload = new Upload();
-                $upload->
-                    setFileName($fileName);
+                $upload
+                    ->setFileName($fileName)
+                    ->setDate($todayDate);
+                    
                 $this->em->persist($upload);
             }
 
@@ -88,260 +91,256 @@ class SessionController extends AbstractController
 
                 $session = new Session();
 
-                // COMPARATIF DES DEUX FORMATS CSV POSSIBLES
-                if ($sheetData[0][0] == 'Civilité') {
-                    // Opcalia
-                    $plateform = 1;
-                } else if ( $sheetData[0][0] == 'Prestation' ) {
-                    // Formiris
-                    $plateform = 2;
-                } else {
-                    return ('Erreur');
-                }
-
-                // AJOUT A LA BDD SELON LE FORMAT CSV
-                if ($plateform == 1) {
-                    for ($i = 1; $i< sizeof($sheetData); $i++)
-                    {
-
-                        // Créer la category de formation si elle n'existe pas déjà
-                        $trainingCategoryTitle = $sheetData[$i][14]; 
-
-                        $temp = $tgcr->findSameTrainingCategory($trainingCategoryTitle);
-
-                        if ($temp)
+                switch ($sheetData[0][0]) {
+                    case 'Civilité':
+                        for ($i = 1; $i< sizeof($sheetData); $i++)
                         {
-                            $existingTrainingCategory = $temp;
-                            $trainingCategory = $tgcr->findOneById($existingTrainingCategory);
-                            $this->em->persist($trainingCategory);
-                        } else {
-                            $trainingCategory = new TrainingCategory();
-                            $trainingCategory
-                                ->setTitle($trainingCategoryTitle);
-                            $this->em->persist($trainingCategory);
-                        }
+                            $currentTrainee = $sheetData[$i];
 
+                            // Créer la category de formation si elle n'existe pas déjà
+                            $trainingCategoryTitle = $currentTrainee[14]; 
 
-                        // Créer la formation si elle n'existe pas déjà
-                        $trainingTitle = $sheetData[$i][15]; 
+                            $temp = $tgcr->findSameTrainingCategory($trainingCategoryTitle);
 
-                        $temp = $tgr->findSameTraining($trainingTitle);
-
-                        if ($temp)
-                        {
-                            $existingTraining = $temp;
-                            $training = $tgr->findOneById($existingTraining);
-                            $this->em->persist($training);
-                        } else {
-                            $training = new Training();
-                            $training
-                                ->setTitle($trainingTitle)
-                                ->setPlatform('Opcalia')
-                                ->setTrainingCategory($trainingCategory);
-                            $this->em->persist($training);
-                        }
-
-
-                        // Créer un trainee si il n'existe pas déjà
-                        $lastName = strtoupper($sheetData[$i][2]);
-                        $firstName = strtolower($sheetData[$i][1]); 
-                        $firstName = ucfirst($firstName);
-                        $email = strtolower($sheetData[$i][5]); 
-
-                        $temp = $ter->findSameTrainee($lastName,$firstName,$email);
-
-                        if ($temp)
-                        {
-                            $existingTrainee = $temp;
-                            $trainee = $ter->findOneById($existingTrainee);
-                            $this->em->persist($trainee);
-                        } else {
-                            $trainee = new Trainee();
-                            $trainee
-                                ->setLastName($lastName)
-                                ->setFirstName($firstName)
-                                ->setEmail($email);
-                            $this->em->persist($trainee);
-                        }
-                        $session->addTrainee($trainee);
-
-
-                        // Créer une company si il n'existe pas déjà
-                        $corporateName = $sheetData[$i][7];
-                        $street = strtolower($sheetData[$i][9]);
-                        $city = strtoupper($sheetData[$i][12]);
-
-                        $temp = $cr->findSameCompany($corporateName,$city);
-
-                        if ($temp)
-                        {
-                            $existingCompany = $temp;
-                            $company = $cr->findOneById($existingCompany);
-                            $this->em->persist($company);
-                            $trainee->setCompany($company);
-                            $this->em->persist($trainee);
-                        } else {
-                            $company = new Company();
-                            $company
-                                ->setCorporateName($corporateName)
-                                ->setStreet($street)
-                                ->setPostalCode($sheetData[$i][11])
-                                ->setCity($city)
-                                ->setSiretNumber($sheetData[$i][8])
-                                ->setPhoneNumber($sheetData[$i][4]);
-                            $this->em->persist($company);
-                            $trainee->setCompany($company);
-                        }
-
-                        $this->em->flush();
-                    }
-
-                    $sessionsNbrTotal = 1;
-                    $startDate = new \DateTime('@'.strtotime($sheetData[1][16]));
-                    $session
-                        ->setUpload($upload)
-                        ->setTraining($training)
-                        ->setStartDate($startDate);
-
-                    //////////////////////////////////////////////////////////////////////////////
-
-                } else if ($plateform == 2) {
-                    for ($i = 1; $i< sizeof($sheetData); $i++)
-                    {
-
-                        // Créer la formation si elle n'existe pas déjà
-                        $trainingTitle = $sheetData[$i][0]; 
-
-                        $temp = $tgr->findSameTraining($trainingTitle);
-
-                        if ($temp)
-                        {
-                            $existingTraining = $temp;
-                            $training = $tgr->findOneById($existingTraining);
-                            $this->em->persist($training);
-                        } else {
-                            $training = new Training();
-                            $training
-                                ->setTitle($trainingTitle)
-                                ->setPlatform('Formiris');
-                            $this->em->persist($training);
-                        }
-
-
-                        // Créer un trainee si il n'existe pas déjà
-                        $names = explode(" ", $sheetData[$i][4]);
-                        $lastName = strtoupper($names[0]);
-                        $firstName = strtolower($names[1]); 
-                        $firstName = ucfirst($firstName);
-                        $email = strtolower($sheetData[$i][7]); 
-
-                        $temp = $ter->findSameTrainee($lastName,$firstName,$email);
-
-                        if ($temp)
-                        {
-                            $existingTrainee = $temp;
-                            $trainee = $ter->findOneById($existingTrainee);
-                            $this->em->persist($trainee);
-                        } else {
-                            $trainee = new Trainee();
-                            $trainee
-                                ->setLastName($lastName)
-                                ->setFirstName($firstName)
-                                ->setEmail($email);
-                            $this->em->persist($trainee);
-                        }
-                        $session->addTrainee($trainee);
-    
-
-                        // Créer une company si il n'existe pas déjà
-                        $names = explode(" ", $sheetData[$i][6]);
-                        $count = count($names);
-                        for ($j = 0; $j<=$count; $j++) {
-                            $city = NULL;
-                            // Si la chaine de caractère est en majuscule (c'est la ville)
-                            if (ctype_upper ( $names[$j] ) == true) {
-                                $corporateName = $names[0];
-                                // On récupère toutes les précedentes infos avant la ville pour former le nom
-                                for ($k = 1; $k<$j; $k++) {
-                                    $corporateName = $corporateName.' '.$names[$k];
-                                }
-                                $city = $names[$j];
-                                break;
+                            if ($temp)
+                            {
+                                $existingTrainingCategory = $temp;
+                                $trainingCategory = $tgcr->findOneById($existingTrainingCategory);
+                                $this->em->persist($trainingCategory);
+                            } else {
+                                $trainingCategory = new TrainingCategory();
+                                $trainingCategory
+                                    ->setTitle($trainingCategoryTitle);
+                                $this->em->persist($trainingCategory);
                             }
+
+
+                            // Créer la formation si elle n'existe pas déjà
+                            $trainingTitle = $currentTrainee[15]; 
+
+                            $temp = $tgr->findSameTraining($trainingTitle);
+
+                            if ($temp)
+                            {
+                                $existingTraining = $temp;
+                                $training = $tgr->findOneById($existingTraining);
+                                $this->em->persist($training);
+                            } else {
+                                $training = new Training();
+                                $training
+                                    ->setTitle($trainingTitle)
+                                    ->setPlatform('Opcalia')
+                                    ->setTrainingCategory($trainingCategory);
+                                $this->em->persist($training);
+                            }
+
+
+                            // Créer un trainee si il n'existe pas déjà
+                            $lastName = strtoupper($currentTrainee[2]);
+                            $firstName = strtolower($currentTrainee[1]); 
+                            $firstName = ucfirst($firstName);
+                            $email = strtolower($currentTrainee[5]); 
+
+                            $temp = $ter->findSameTrainee($lastName,$firstName,$email);
+
+                            if ($temp)
+                            {
+                                $existingTrainee = $temp;
+                                $trainee = $ter->findOneById($existingTrainee);
+                                $this->em->persist($trainee);
+                            } else {
+                                $trainee = new Trainee();
+                                $trainee
+                                    ->setLastName($lastName)
+                                    ->setFirstName($firstName)
+                                    ->setEmail($email);
+                                $this->em->persist($trainee);
+                            }
+                            $session->addTrainee($trainee);
+
+
+                            // Créer une company si il n'existe pas déjà
+                            $corporateName = $currentTrainee[7];
+                            $street = strtolower($currentTrainee[9]);
+                            $city = strtoupper($currentTrainee[12]);
+
+                            $temp = $cr->findSameCompany($corporateName,$city);
+
+                            if ($temp)
+                            {
+                                $existingCompany = $temp;
+                                $company = $cr->findOneById($existingCompany);
+                                $this->em->persist($company);
+                                $trainee->setCompany($company);
+                                $this->em->persist($trainee);
+                            } else {
+                                $company = new Company();
+                                $company
+                                    ->setCorporateName($corporateName)
+                                    ->setStreet($street)
+                                    ->setPostalCode($currentTrainee[11])
+                                    ->setCity($city)
+                                    ->setSiretNumber($currentTrainee[8])
+                                    ->setPhoneNumber($currentTrainee[4]);
+                                $this->em->persist($company);
+                                $trainee->setCompany($company);
+                            }
+
+                            $this->em->flush();
                         }
 
-                        $temp = $cr->findSameCompany($corporateName,$city);
+                        $sessionsNbrTotal = 1;
+                        $startDate = new \DateTime('@'.strtotime($sheetData[1][16]));
+                        $session
+                            ->setUpload($upload)
+                            ->setTraining($training)
+                            ->setStartDate($startDate);
 
-                        if ($temp)
+                        break;
+
+                    case 'Prestation':
+                        for ($i = 1; $i< sizeof($sheetData); $i++)
                         {
-                            $existingCompany = $temp;
-                            $company = $cr->findOneById($existingCompany);
-                            $this->em->persist($company);
-                            $trainee->setCompany($company);
-                        } else {
-                            $company = new Company();
-                            $company
-                                ->setCorporateName($corporateName)
-                                ->setCity($city);
-                            $this->em->persist($company);
-                            $trainee->setCompany($company);
-                        }
-
-
-                        // Ajoute des dates de session et du lieu selon le nombre de sessions au total
-                        $sessionsDates = explode(", ", $sheetData[$i][16]);
-                        $sessionsNbrTotal = count($sessionsDates);
-
-                        if ( $request->query->has('current_session_number') ) {
-                            $currentSessionNbr = $request->query->get('current_session_number');
-                            $currentSessionNbr = intval($currentSessionNbr);
-                            $currentSession = explode(" ", $sessionsDates[$currentSessionNbr]);
-                        } else {
-                            $currentSession = explode(" ", $sessionsDates[0]);
+                            $currentTrainee = $sheetData[$i];
+    
+                            // Créer la formation si elle n'existe pas déjà
+                            $trainingTitle = $currentTrainee[0]; 
+    
+                            $temp = $tgr->findSameTraining($trainingTitle);
+    
+                            if ($temp)
+                            {
+                                $existingTraining = $temp;
+                                $training = $tgr->findOneById($existingTraining);
+                                $this->em->persist($training);
+                            } else {
+                                $training = new Training();
+                                $training
+                                    ->setTitle($trainingTitle)
+                                    ->setPlatform('Formiris');
+                                $this->em->persist($training);
+                            }
+    
+    
+                            // Créer un trainee si il n'existe pas déjà
+                            $names = explode(" ", $currentTrainee[4]);
+                            $lastName = strtoupper($names[0]);
+                            $firstName = strtolower($names[1]); 
+                            $firstName = ucfirst($firstName);
+                            $email = strtolower($currentTrainee[7]); 
+    
+                            $temp = $ter->findSameTrainee($lastName,$firstName,$email);
+    
+                            if ($temp)
+                            {
+                                $existingTrainee = $temp;
+                                $trainee = $ter->findOneById($existingTrainee);
+                                $this->em->persist($trainee);
+                            } else {
+                                $trainee = new Trainee();
+                                $trainee
+                                    ->setLastName($lastName)
+                                    ->setFirstName($firstName)
+                                    ->setEmail($email);
+                                $this->em->persist($trainee);
+                            }
+                            $session->addTrainee($trainee);
+        
+    
+                            // Créer une company si il n'existe pas déjà
+                            $names = explode(" ", $currentTrainee[6]);
+                            $count = count($names);
+                            for ($j = 0; $j<=$count; $j++) {
+                                $city = NULL;
+                                // Si la chaine de caractère est en majuscule (c'est la ville)
+                                if (ctype_upper ( $names[$j] ) == true) {
+                                    $corporateName = $names[0];
+                                    // On récupère toutes les précedentes infos avant la ville pour former le nom
+                                    for ($k = 1; $k<$j; $k++) {
+                                        $corporateName = $corporateName.' '.$names[$k];
+                                    }
+                                    $city = $names[$j];
+                                    break;
+                                }
+                            }
+    
+                            $temp = $cr->findSameCompany($corporateName,$city);
+    
+                            if ($temp)
+                            {
+                                $existingCompany = $temp;
+                                $company = $cr->findOneById($existingCompany);
+                                $this->em->persist($company);
+                                $trainee->setCompany($company);
+                            } else {
+                                $company = new Company();
+                                $company
+                                    ->setCorporateName($corporateName)
+                                    ->setCity($city);
+                                $this->em->persist($company);
+                                $trainee->setCompany($company);
+                            }
+    
+    
+                            // Ajoute des dates de session et du lieu selon le nombre de sessions au total
+                            $sessionsDates = explode(", ", $currentTrainee[16]);
+                            $sessionsNbrTotal = count($sessionsDates);
+    
+                            if ( $request->query->has('current_session_number') ) {
+                                $currentSessionNbr = $request->query->get('current_session_number');
+                                $currentSessionNbr = intval($currentSessionNbr);
+                                $currentSession = explode(" ", $sessionsDates[$currentSessionNbr]);
+                            } else {
+                                $currentSession = explode(" ", $sessionsDates[0]);
+                            }
+                            
+                            $count = count($currentSession);
+    
+                            $startDate = new \DateTime('@'.strtotime($currentSession[1]));
+                            $endDate = new \DateTime('@'.strtotime($currentSession[3]));
+                            $codePostal = $currentSession[5];
+    
+                            $city = $currentSession[6];
+                            for ($j = 6; $j<$count-1; $j++) {
+                                $city = $city.' '.$currentSession[$j];
+                            }
+    
+    
+                            // Créer une session location si elle n'existe pas déjà
+                            $city = strtoupper($city);
+                            $street = 'non-renseignée';
+    
+                            $temp = $slr->findSameSessionLocation($city,$codePostal,$street);
+    
+                            if ($temp)
+                            {
+                                $existingSessionLocation = $temp;
+                                $sessionLocation = $slr->findOneById($existingSessionLocation);
+                                $this->em->persist($sessionLocation);
+                            } else {
+                                $sessionLocation = new SessionLocation();
+                                $sessionLocation
+                                    ->setPostalCode($codePostal)
+                                    ->setCity($city)
+                                    ->setStreet($street);
+                                $this->em->persist($sessionLocation);
+                            }
+    
+                            $this->em->flush();
                         }
                         
-                        $count = count($currentSession);
-
-                        $startDate = new \DateTime('@'.strtotime($currentSession[1]));
-                        $endDate = new \DateTime('@'.strtotime($currentSession[3]));
-                        $codePostal = $currentSession[5];
-
-                        $city = $currentSession[6];
-                        for ($j = 6; $j<$count-1; $j++) {
-                            $city = $city.' '.$currentSession[$j];
-                        }
-
-
-                        // Créer une session location si elle n'existe pas déjà
-                        $city = strtoupper($city);
-                        $street = 'non-renseignée';
-
-                        $temp = $slr->findSameSessionLocation($city,$codePostal,$street);
-
-                        if ($temp)
-                        {
-                            $existingSessionLocation = $temp;
-                            $sessionLocation = $slr->findOneById($existingSessionLocation);
-                            $this->em->persist($sessionLocation);
-                        } else {
-                            $sessionLocation = new SessionLocation();
-                            $sessionLocation
-                                ->setPostalCode($codePostal)
-                                ->setCity($city)
-                                ->setStreet($street);
-                            $this->em->persist($sessionLocation);
-                        }
-
-                        $this->em->flush();
-                    }
+                        $session
+                            ->setUpload($upload)
+                            ->setLocation($sessionLocation)
+                            ->setTraining($training)
+                            ->setStartDate($startDate)
+                            ->setEndDate($endDate);
+                        break;
                     
-                    $session
-                        ->setUpload($upload)
-                        ->setLocation($sessionLocation)
-                        ->setTraining($training)
-                        ->setStartDate($startDate)
-                        ->setEndDate($endDate);
-                }
+                    default:
+                        # code...
+                        break;
+                };
             }
         }
 

@@ -4,24 +4,21 @@
 
 {% block body %}
 
-    <div class="grid">
+    <div class="grid text-center">
 
-        <div class='text-center'>
             <h2 class="card-title">Le logiciel de gestion des formations F.C. Pro</h2>
-        </div>
-        <div class='text-center'>
-            <h5 class="card-title text-center font-italic">Importer un nouveau fichier .csv pour démarrer</h5>
-        </div>
+            <h5 class="card-title text-center font-italic mb-5">Importer un nouveau fichier .csv pour démarrer</h5>
 
         <div class='text-center'>
             {{ form_start(form) }}
 
+                
+
+                {{ form_widget(form.file_name, {'attr': {'class': 'mb-4'}}) }}
+
+                {{ form_widget(form.submit, {'attr': {'class': 'rad-rounded-xs btn-lg btn-primary px-5'}}) }}
                 {{ form_errors(form) }}
-
                 {{ form_errors(form.file_name) }}
-                {{ form_widget(form.file_name) }}
-
-                {{ form_widget(form.submit) }}
 
                 {{ form_rest(form) }}
                 
@@ -33,5 +30,12 @@
     <div class="text-center fixed-bottom">
         <h5 class="h5 font-weight-normal">©{{ "now"|date("Y") }} - Forma</h5>
     </div>
+
+    <script>
+        $('#upload_file_name').on('change',function(){
+            var fileName = $(this).val();
+            $(this).next('.custom-file-label').html(fileName);
+        })
+    </script>
 
 {% endblock %}
