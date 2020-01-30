@@ -46,7 +46,7 @@ class SessionLocation
 
     public function __toString()
     {
-        return $this->postal_code . " - " . $this->city;
+        return $this->postal_code . " - " . $this->city . " - " . $this->street;
     }
 
     public function getId(): ?int

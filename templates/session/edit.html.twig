@@ -3,11 +3,16 @@
 {% block title %}Edit Session{% endblock %}
 
 {% block body %}
-    <h1>Edit Session</h1>
+    <div class='row justify-content-center mb-3'>
+        <div class='col text-center'>
+            <a href="{{ path('session_show', {'id': session.id}) }}"><button class="btn btn-lg btn-primary rad-rounded-xs px-5">Back to list</button></a>
+        </div>
+    </div>
+    <h1 class="text-center mb-5">Edit Session</h1>
+
 
     {{ include('session/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('session_index') }}">back to list</a>
-
     {{ include('session/_delete_form.html.twig') }}
+    
 {% endblock %}

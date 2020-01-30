@@ -13,6 +13,9 @@ class SessionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {   
         $builder
+            ->add('training')
+            ->add('location')
+            ->add('instructors')
             ->add('start_date', DateType::Class , [
                 'widget' => 'single_text',
             ])
@@ -20,9 +23,6 @@ class SessionType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('comment')
-            ->add('training')
-            ->add('location')
-            ->add('instructors')
         ;
     }
 

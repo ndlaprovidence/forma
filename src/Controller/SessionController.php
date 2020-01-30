@@ -92,7 +92,10 @@ class SessionController extends AbstractController
                 $session = new Session();
 
                 switch ($sheetData[0][0]) {
+
+                    // OPCALIA CSV's
                     case 'Civilité':
+                        $platformName = 'Opcalia';
                         for ($i = 1; $i< sizeof($sheetData); $i++)
                         {
                             $currentTrainee = $sheetData[$i];
@@ -198,7 +201,9 @@ class SessionController extends AbstractController
 
                         break;
 
+                    // FORMIRIS CSV's
                     case 'Prestation':
+                        $platformName = 'Formiris';
                         for ($i = 1; $i< sizeof($sheetData); $i++)
                         {
                             $currentTrainee = $sheetData[$i];
@@ -376,6 +381,7 @@ class SessionController extends AbstractController
         return $this->render('session/new.html.twig', [
             'session' => $session,
             'file_name' => $fileName,
+            'platform_name' => $platformName,
             'form' => $form->createView(),
         ]);
     }
