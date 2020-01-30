@@ -36,6 +36,11 @@ class Upload
      */
     private $sessions;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
@@ -102,6 +107,18 @@ class Upload
                 $session->setUpload(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }
