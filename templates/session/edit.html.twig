@@ -3,11 +3,9 @@
 {% block title %}Edit Session{% endblock %}
 
 {% block body %}
-    <div class='row justify-content-center mb-3'>
-        <div class='col text-center'>
-            <a href="{{ path('session_show', {'id': session.id}) }}"><button class="btn btn-lg btn-primary rad-rounded-xs px-5">Back to list</button></a>
-        </div>
-    </div>
+
+    <a href="{{ path('session_show', {'id': session.id}) }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+
     <h1 class="text-center mb-5">Edit Session</h1>
 
 

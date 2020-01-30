@@ -61,12 +61,17 @@ body {
     border-radius: 10px;
 }
 
-.btn-delete {
+.btn-no-bg {
     border: 1px solid #ced4da;
 }
 
-.btn-delete:hover {
+.hover-del:hover {
     background-color: rgb(190, 0, 0);
+    color: #ffffff;
+}
+
+.hover-pr:hover {
+    background-color: rgb(0, 123, 255);
     color: #ffffff;
 }
 
@@ -111,5 +116,10 @@ body {
     color: inherit;
     background-color: transparent;
     text-decoration: none;
-  }
+}
+
+.back-btn {
+    float: left;
+    line-height: -5px;
+}
   

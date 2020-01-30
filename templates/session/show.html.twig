@@ -3,19 +3,19 @@
 {% block title %}Session{% endblock %}
 
 {% block body %}
+
+    <a href="{{ path('session_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+    
     <div class='row justify-content-center mb-5'>
         <div class='col text-center'>
-            <a href="{{ path('session_index') }}"><button class="btn btn-lg btn-primary rad-rounded-xs px-5">Back to list</button></a>
+            <a href="{{ path('session_edit', {'id': session.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
         </div>
         <div class='col text-center'>
-            <a href="{{ path('session_edit', {'id': session.id}) }}"><button class="btn btn-lg btn-primary rad-rounded-xs px-5">Editer</button></a>
-        </div>
-        <div class='col text-center'>
-            <a href="#"><button class="btn btn-lg btn-primary rad-rounded-xs px-5">Feuille d'émargement</button></a>
+            <a href="#"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Feuille d'émargement</button></a>
         </div>
     </div>
 
-    <h1 class="text-center">{{ session.training }}</h1>
+    <h1 class="text-center mb-3">{{ session.training }}</h1>
 
     <div class='row mb-5 justify-content-center'>
         <h5 class='platform-name py-2 px-4'>{{ session.training.platform }}</h5>
