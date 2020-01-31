@@ -3,35 +3,40 @@
 {% block title %}Instructor index{% endblock %}
 
 {% block body %}
-    <h1>Instructor index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Last_name</th>
-                <th>First_name</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for instructor in instructors %}
-            <tr>
-                <td>{{ instructor.id }}</td>
-                <td>{{ instructor.lastName }}</td>
-                <td>{{ instructor.firstName }}</td>
-                <td>
-                    <a href="{{ path('instructor_show', {'id': instructor.id}) }}">show</a>
-                    <a href="{{ path('instructor_edit', {'id': instructor.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class='row justify-content-center mb-3'>
+        <div class='col text-center'>
+            <a href="{{ path('instructor_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">New</button></a>
+        </div>
+    </div>
 
-    <a href="{{ path('instructor_new') }}">Create new</a>
+    <h1 class='text-center mb-3'>Instructor list</h1>
+
+    <div class="row text-center tab-header">
+        <div class="col-6 tab-cell-header px-2 py-2">
+            Last name
+        </div>
+        <div class="col-6 tab-cell-header px-2 py-2">
+            First name
+        </div>
+    </div>
+    {% for instructor in instructors %}
+        <a href="{{ path('instructor_show', {'id': instructor.id}) }}" class="link-unstyled">
+            <div class="row text-center tab-row link-style-disabled">
+                <div class="col-6 tab-cell px-2 py-2">
+                    {{ instructor.LastName }}
+                </div>
+                <div class="col-6 tab-cell px-2 py-2">
+                    {{ instructor.firstName }}
+                </div>
+            </div>
+        </a>
+    {% else %}
+        <div class='row justify-content-center mt-2'>
+            <div class='col text-center'>
+                <div class="alert alert-danger">No entry found</div>
+            </div>
+        </div>
+    {% endfor %}
+
 {% endblock %}
