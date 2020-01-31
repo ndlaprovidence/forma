@@ -3,36 +3,15 @@
 {% block title %}New Session{% endblock %}
 
 {% block body %}
-    <h1>Create new Session</h1>
-
-    {{ file_name }}
+    <div class="text-center mb-5">
+        <h1>Create new Session</h1>
+        <div class='row justify-content-center'>
+            <h5 class='platform-name py-2 px-4'>{{ platform_name }}</h5>
+        </div>
+    </div>
 
     {{ include('session/_form.html.twig') }}
 
-    <a href="{{ path('session_index') }}">back to list</a>
-    
-    {# Tableau qui répertorie les stagiaires participant à la session #}
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Last name</th>
-                <th>First name</th>
-                <th>Email</th>
-                <th>Corporate name</th>
-            </tr>
-        </thead>
-        <tbody>
-            
-                {% for trainee in session.trainees %}
-                <tr>
-                    <td>{{ trainee.LastName }}</td>   
-                    <td>{{ trainee.FirstName }}</td>
-                    <td>{{ trainee.Email }}</td>
-                    <td>{{ trainee.Company }}</td>
-                </tr>
-                {% endfor %}
-            
-        </tbody>
-    </table>
+    </div>
 
 {% endblock %}

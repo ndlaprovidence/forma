@@ -13,13 +13,13 @@ class SessionLocationFixtures extends Fixture
         $sessionLocation = new SessionLocation();
         $sessionLocation->setStreet('9 rue Chanoine Béranger');
         $sessionLocation->setPostalCode('50300');
-        $sessionLocation->setCity('Avranches');
+        $sessionLocation->setCity('AVRANCHES');
         $manager->persist($sessionLocation);
 
         $sessionLocation = new SessionLocation();
         $sessionLocation->setStreet('17 rue de la Consitution');
         $sessionLocation->setPostalCode('50100');
-        $sessionLocation->setCity('Cherbourg-en-Cotentin');
+        $sessionLocation->setCity('CHERBOURG');
         $manager->persist($sessionLocation);
 
         $manager->flush();
