@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\Upload;
 use App\Form\UploadType;
 use Psr\Log\LoggerInterface;
+use App\Repository\CompanyRepository;
+use App\Repository\SessionRepository;
+use App\Repository\TraineeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +25,7 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="default")
      */
-    public function index(Request $request)
+    public function index(Request $request, SessionRepository $sr, TraineeRepository $tr, CompanyRepository $cr)
     {
         $this->logger->info('Une info.');
 
@@ -45,6 +48,9 @@ class DefaultController extends AbstractController
         return $this->render('default/index.html.twig', [
             'controller_name' => 'DefaultController',
             'form' => $form->createView(),
+            'sessions' => $sr->findAll(),
+            'trainees' => $tr->findAll(),
+            'companies' => $cr->findAll()
             ]);
     }
 }

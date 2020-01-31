@@ -46,6 +46,11 @@ class Training
      */
     private $sessions;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $reference_number;
+
     public function __construct()
     {
         $this->goals = new ArrayCollection();
@@ -151,6 +156,18 @@ class Training
                 $session->setTraining(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getReferenceNumber(): ?string
+    {
+        return $this->reference_number;
+    }
+
+    public function setReferenceNumber(?string $reference_number): self
+    {
+        $this->reference_number = $reference_number;
 
         return $this;
     }
