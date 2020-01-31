@@ -94,7 +94,7 @@ class DefaultController extends AbstractController
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         
         // Path of saved file
-        $filePath = '../public/emargement.docx';
+        $filePath = '../public/documents/emargement.docx';
 
         // Write file into path
         $objWriter->save($filePath);
