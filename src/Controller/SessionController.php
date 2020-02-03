@@ -98,6 +98,7 @@ class SessionController extends AbstractController
 
                         $temp = $tgcr->findSameTrainingCategory($trainingCategoryTitle);
 
+
                         if ($temp)
                         {
                             $existingTrainingCategory = $temp;
@@ -312,8 +313,29 @@ class SessionController extends AbstractController
     /**
      * @Route("/{id}", name="session_show", methods={"GET"})
      */
-    public function show(Session $session): Response
+    public function show(Session $session, Request $request, SessionRepository $sr, EntityManagerInterface $em): Response
     {
+        $this->em = $em;
+        $idSession = $request->attributes->get('_route_params');
+
+        // var_dump($idSession);
+
+        $idSession = intval($idSession);
+        $currentSession = $sr->findOneById($idSession);
+        
+        $this->em->persist($currentSession);
+
+        
+        $titleTaining = $currentSession->getTraining()->getTitle();
+        var_dump($titleTaining);
+
+        $startDateTraining = $currentSession->getStartDate();
+        var_dump($startDateTraining);
+
+        $endDateTraining = $currentSession->getEndDate();
+        var_dump($endDateTraining);
+
+        
         return $this->render('session/show.html.twig', [
             'session' => $session,
         ]);
