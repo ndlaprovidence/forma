@@ -41,7 +41,7 @@ class Session
     private $training;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SessionLocation", inversedBy="sessions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Location", inversedBy="sessions")
      * @ORM\JoinColumn(nullable=true)
      */
     private $location;
@@ -128,12 +128,12 @@ class Session
         return $this;
     }
 
-    public function getLocation(): ?SessionLocation
+    public function getLocation(): ?Location
     {
         return $this->location;
     }
 
-    public function setLocation(?SessionLocation $location): self
+    public function setLocation(?Location $location): self
     {
         $this->location = $location;
 

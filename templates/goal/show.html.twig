@@ -3,24 +3,23 @@
 {% block title %}Goal{% endblock %}
 
 {% block body %}
-    <h1>Goal</h1>
+    <a href="{{ path('goal_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+    
+    <div class='row justify-content-center mb-5'>
+        <div class='col text-center'>
+            <a href="{{ path('goal_edit', {'id': goal.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ goal.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ goal.title }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h1 class="text-center mb-5">{{ goal.title }}</h1>
 
-    <a href="{{ path('goal_index') }}">back to list</a>
+    <h5>Associated trainings ({{ goal.trainings|length }})</h5>
+    {% if goal.trainings|length > 0 %}
+        {% for training in goal.trainings %}
+            <h6 class='font-italic light-bottom-border pb-2'>{{ training.title }}</h6>
+        {% endfor %}
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No training for this goal</h6>
+    {% endif %}
 
-    <a href="{{ path('goal_edit', {'id': goal.id}) }}">edit</a>
-
-    {{ include('goal/_delete_form.html.twig') }}
 {% endblock %}
