@@ -28,21 +28,6 @@ class Company
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $street;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $postal_code;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $city;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
     private $siret_number;
 
     /**
@@ -54,6 +39,21 @@ class Company
      * @ORM\OneToMany(targetEntity="App\Entity\Trainee", mappedBy="company")
      */
     private $trainees;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $street;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $postal_code;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $city;
 
     public function __construct()
     {
@@ -78,42 +78,6 @@ class Company
     public function setCorporateName(string $corporate_name): self
     {
         $this->corporate_name = $corporate_name;
-
-        return $this;
-    }
-
-    public function getStreet(): ?string
-    {
-        return $this->street;
-    }
-
-    public function setStreet(?string $street): self
-    {
-        $this->street = $street;
-
-        return $this;
-    }
-
-    public function getPostalCode(): ?string
-    {
-        return $this->postal_code;
-    }
-
-    public function setPostalCode(?string $postal_code): self
-    {
-        $this->postal_code = $postal_code;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(?string $city): self
-    {
-        $this->city = $city;
 
         return $this;
     }
@@ -169,6 +133,42 @@ class Company
                 $trainee->setCompany(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStreet(): ?string
+    {
+        return $this->street;
+    }
+
+    public function setStreet(?string $street): self
+    {
+        $this->street = $street;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postal_code;
+    }
+
+    public function setPostalCode(?string $postal_code): self
+    {
+        $this->postal_code = $postal_code;
+
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }

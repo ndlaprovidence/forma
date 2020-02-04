@@ -3,37 +3,52 @@
 {% block title %}Trainee index{% endblock %}
 
 {% block body %}
-    <h1>Trainee index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Last_name</th>
-                <th>First_name</th>
-                <th>Email</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for trainee in trainees %}
-            <tr>
-                <td>{{ trainee.id }}</td>
-                <td>{{ trainee.lastName }}</td>
-                <td>{{ trainee.firstName }}</td>
-                <td>{{ trainee.email }}</td>
-                <td>
-                    <a href="{{ path('trainee_show', {'id': trainee.id}) }}">show</a>
-                    <a href="{{ path('trainee_edit', {'id': trainee.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class='row justify-content-center mb-3'>
+        <div class='col text-center'>
+            <a href="{{ path('trainee_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">New</button></a>
+        </div>
+    </div>
 
-    <a href="{{ path('trainee_new') }}">Create new</a>
+    <h1 class='text-center mb-3'>Trainee list</h1>
+
+    <div class="row text-center tab-header">
+        <div class="col-2 tab-cell-header px-2 py-2">
+            Last name
+        </div>
+        <div class="col-2 tab-cell-header px-2 py-2">
+            First name
+        </div>
+        <div class="col-4 tab-cell-header px-2 py-2">
+            Email
+        </div>
+        <div class="col-4 tab-cell-header px-2 py-2">
+            Company
+        </div>
+    </div>
+    {% for trainee in trainees %}
+        <a href="{{ path('trainee_show', {'id': trainee.id}) }}" class="link-unstyled">
+            <div class="row text-center tab-row link-style-disabled">
+                <div class="col-2 tab-cell px-2 py-2">
+                    {{ trainee.lastName }}
+                </div>
+                <div class="col-2 tab-cell px-2 py-2">
+                    {{ trainee.firstName }}
+                </div>
+                <div class="col-4 tab-cell px-2 py-2">
+                    {{ trainee.email }}
+                </div>
+                <div class="col-4 tab-cell px-2 py-2">
+                    {{ trainee.company }}
+                </div>
+            </div>
+        </a>
+    {% else %}
+        <div class='row justify-content-center mt-2'>
+            <div class='col text-center'>
+                <div class="alert alert-danger">No entry found</div>
+            </div>
+        </div>
+    {% endfor %}
+
 {% endblock %}

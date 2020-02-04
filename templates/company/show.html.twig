@@ -3,44 +3,35 @@
 {% block title %}Company{% endblock %}
 
 {% block body %}
-    <h1>Company</h1>
+    <a href="{{ path('company_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+    
+    <div class='row justify-content-center mb-5'>
+        <div class='col text-center'>
+            <a href="{{ path('company_edit', {'id': company.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ company.id }}</td>
-            </tr>
-            <tr>
-                <th>Corporate_name</th>
-                <td>{{ company.corporateName }}</td>
-            </tr>
-            <tr>
-                <th>Street</th>
-                <td>{{ company.street }}</td>
-            </tr>
-            <tr>
-                <th>Postal_code</th>
-                <td>{{ company.postalCode }}</td>
-            </tr>
-            <tr>
-                <th>City</th>
-                <td>{{ company.city }}</td>
-            </tr>
-            <tr>
-                <th>Siret_number</th>
-                <td>{{ company.siretNumber }}</td>
-            </tr>
-            <tr>
-                <th>Phone_number</th>
-                <td>{{ company.phoneNumber }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h1 class="text-center mb-5">{{ company.corporateName }}</h1>
 
-    <a href="{{ path('company_index') }}">back to list</a>
+    <h5>Location</h5>
+    {% if (company.street) and (company.city) and (company.postalCode) %}
+        <h6 class='font-italic mb-5'>{{ company.street }}, {{ company.postalCode }} - {{ company.city}}</h6>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">Informations d'adresse incomplètes</h6>
+    {% endif %}
 
-    <a href="{{ path('company_edit', {'id': company.id}) }}">edit</a>
+    <h5>Phone number</h5>
+    {% if company.phoneNumber %}
+        <h6 class='font-italic mb-5'>0{{ company.phoneNumber }}</h6>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No phone number</h6>
+    {% endif %}
 
-    {{ include('company/_delete_form.html.twig') }}
+    <h5>Siret number</h5>
+    {% if company.siretNumber %}
+        <h6 class='font-italic mb-5'>{{ company.siretNumber }}</h6>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No siret number</h6>
+    {% endif %}
+
 {% endblock %}

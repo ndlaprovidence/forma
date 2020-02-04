@@ -3,28 +3,24 @@
 {% block title %}Instructor{% endblock %}
 
 {% block body %}
-    <h1>Instructor</h1>
+    <a href="{{ path('instructor_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+    
+    <div class='row justify-content-center mb-5'>
+        <div class='col text-center'>
+            <a href="{{ path('instructor_edit', {'id': instructor.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ instructor.id }}</td>
-            </tr>
-            <tr>
-                <th>Last_name</th>
-                <td>{{ instructor.lastName }}</td>
-            </tr>
-            <tr>
-                <th>First_name</th>
-                <td>{{ instructor.firstName }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h1 class="text-center mb-5">{{ instructor.lastName }} {{ instructor.firstName }}</h1>
 
-    <a href="{{ path('instructor_index') }}">back to list</a>
 
-    <a href="{{ path('instructor_edit', {'id': instructor.id}) }}">edit</a>
+    <h5>Associated sessions ({{ instructor.sessions|length }})</h5>
+    {% if instructor.sessions|length > 0 %}
+        {% for session in instructor.sessions %}
+            <h6 class='font-italic light-bottom-border pb-2'>{{ session.training.title }}</h6>
+        {% endfor %}
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No sessions for this instructor</h6>
+    {% endif %}
 
-    {{ include('instructor/_delete_form.html.twig') }}
 {% endblock %}

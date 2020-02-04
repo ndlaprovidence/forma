@@ -1,4 +1,23 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <label>Last name</label>
+    {{ form_errors(form.last_name) }}
+    {{ form_widget(form.last_name, {'attr': {'class': 'mb-3'}}) }}
+
+    <label>First name</label>
+    {{ form_errors(form.first_name) }}
+    {{ form_widget(form.first_name, {'attr': {'class': 'mb-3'}}) }}
+
+    <label>Email</label>
+    {{ form_errors(form.email) }}
+    {{ form_widget(form.email, {'attr': {'class': 'mb-3'}}) }}
+
+    <label>Company</label>
+    {{ form_errors(form.company) }}
+    {{ form_widget(form.company, {'attr': {'class': 'mb-5'}}) }}
+
+    <div class='row justify-content-center'>
+        <div class='col text-center'>
+            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save') }}</button>
+        </div>
+    </div>
 {{ form_end(form) }}
