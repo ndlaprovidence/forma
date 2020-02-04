@@ -1,4 +1,11 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <label>Title</label>
+    {{ form_errors(form.title) }}
+    {{ form_widget(form.title, {'attr': {'class': 'mb-5'}}) }}
+
+    <div class='row justify-content-center'>
+        <div class='col text-center'>
+            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save') }}</button>
+        </div>
+    </div>
 {{ form_end(form) }}

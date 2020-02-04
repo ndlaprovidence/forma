@@ -3,32 +3,25 @@
 {% block title %}Trainee{% endblock %}
 
 {% block body %}
-    <h1>Trainee</h1>
+    <a href="{{ path('trainee_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+    
+    <div class='row justify-content-center mb-5'>
+        <div class='col text-center'>
+            <a href="{{ path('trainee_edit', {'id': trainee.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ trainee.id }}</td>
-            </tr>
-            <tr>
-                <th>Last_name</th>
-                <td>{{ trainee.lastName }}</td>
-            </tr>
-            <tr>
-                <th>First_name</th>
-                <td>{{ trainee.firstName }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ trainee.email }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h1 class="text-center mb-5">{{ trainee.lastName }} {{ trainee.firstName }}</h1>
 
-    <a href="{{ path('trainee_index') }}">back to list</a>
+    <h5>Trainee email</h5>
+    {% if trainee.email %}
+        <h6 class='font-italic mb-5'>{{ trainee.email }}</h6>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No email for this trainee</h6>
+    {% endif %}
 
-    <a href="{{ path('trainee_edit', {'id': trainee.id}) }}">edit</a>
+    <h5>Trainee company</h5>
+    <h6 class="font-italic mb-5">{{ trainee.company }}</h6>
 
-    {{ include('trainee/_delete_form.html.twig') }}
+
 {% endblock %}

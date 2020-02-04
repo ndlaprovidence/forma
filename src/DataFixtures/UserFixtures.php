@@ -28,24 +28,6 @@ class UserFixtures extends Fixture
         ));
         $manager->persist($user);
 
-        $user = new User();
-        $user->setEmail('admin@domain.tld'); 
-        $user->setRoles(['ROLE_ADMIN']);
-        $user->setPassword($this->passwordEncoder->encodePassword(
-            $user,
-            'admin'
-        ));
-        $manager->persist($user);
-
-        $user = new User();
-        $user->setEmail('user@domain.tld'); 
-        $user->setRoles(['ROLE_USER']);
-        $user->setPassword($this->passwordEncoder->encodePassword(
-            $user,
-            'user'
-        ));
-        $manager->persist($user);
-
         $manager->flush();
     }
 }

@@ -3,9 +3,9 @@
 {% block title %}New Company{% endblock %}
 
 {% block body %}
-    <h1>Create new Company</h1>
+    <a href="{{ path('company_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+
+    <h1 class='text-center mb-5'>Create new Company</h1>
 
     {{ include('company/_form.html.twig') }}
-
-    <a href="{{ path('company_index') }}">back to list</a>
 {% endblock %}

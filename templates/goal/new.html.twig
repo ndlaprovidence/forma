@@ -3,9 +3,9 @@
 {% block title %}New Goal{% endblock %}
 
 {% block body %}
-    <h1>Create new Goal</h1>
+    <a href="{{ path('goal_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+
+    <h1 class='text-center mb-5'>Create new Goal</h1>
 
     {{ include('goal/_form.html.twig') }}
-
-    <a href="{{ path('goal_index') }}">back to list</a>
 {% endblock %}

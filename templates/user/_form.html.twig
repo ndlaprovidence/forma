@@ -1,4 +1,15 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+    <label>Email</label>
+    {{ form_errors(form.email) }}
+    {{ form_widget(form.email, {'attr': {'class': 'mb-3'}}) }}
+
+    <label>Roles</label>
+    {{ form_errors(form.roles) }}
+    {{ form_widget(form.roles, {'attr': {'class': 'mb-5'}}) }}
+
+    <div class='row justify-content-center'>
+        <div class='col text-center'>
+            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save') }}</button>
+        </div>
+    </div>
 {{ form_end(form) }}
