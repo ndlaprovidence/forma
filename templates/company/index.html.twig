@@ -3,42 +3,52 @@
 {% block title %}Company index{% endblock %}
 
 {% block body %}
-    <h1>Company index</h1>
-    
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Corporate_name</th>
-                <th>Street</th>
-                <th>Postal_code</th>
-                <th>City</th>
-                <th>Siret_number</th>
-                <th>Phone_number</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for company in companies %}
-            <tr>
-                <td>{{ company.id }}</td>
-                <td>{{ company.corporateName }}</td>
-                <td>{{ company.street }}</td>
-                <td>{{ company.postalCode }}</td>
-                <td>{{ company.city }}</td>
-                <td>{{ company.siretNumber }}</td>
-                <td>{{ company.phoneNumber }}</td>
-                <td>
-                    <a href="{{ path('company_show', {'id': company.id}) }}">show</a>
-                    <a href="{{ path('company_edit', {'id': company.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <a href="{{ path('company_new') }}">Create new</a>
+
+    <div class='row justify-content-center mb-3'>
+        <div class='col text-center'>
+            <a href="{{ path('company_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">New</button></a>
+        </div>
+    </div>
+
+    <h1 class='text-center mb-3'>Company list</h1>
+
+    <div class="row text-center tab-header">
+        <div class="col-4 tab-cell-header px-2 py-2">
+            Corporate name
+        </div>
+        <div class="col-3 tab-cell-header px-2 py-2">
+            Street
+        </div>
+        <div class="col-2 tab-cell-header px-2 py-2">
+            Postal code
+        </div>
+        <div class="col-3 tab-cell-header px-2 py-2">
+            City
+        </div>
+    </div>
+    {% for company in companies %}
+        <a href="{{ path('company_show', {'id': company.id}) }}" class="link-unstyled">
+            <div class="row text-center tab-row link-style-disabled">
+                <div class="col-4 tab-cell px-2 py-2">
+                    {{ company.corporateName }}
+                </div>
+                <div class="col-3 tab-cell px-2 py-2">
+                    {{ company.street }}
+                </div>
+                <div class="col-2 tab-cell px-2 py-2">
+                    {{ company.postalCode }}
+                </div>
+                <div class="col-3 tab-cell px-2 py-2">
+                    {{ company.city }}
+                </div>
+            </div>
+        </a>
+    {% else %}
+        <div class='row justify-content-center mt-2'>
+            <div class='col text-center'>
+                <div class="alert alert-danger">No entry found</div>
+            </div>
+        </div>
+    {% endfor %}
+
 {% endblock %}

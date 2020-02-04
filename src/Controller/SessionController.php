@@ -6,19 +6,19 @@ use App\Entity\Upload;
 use App\Entity\Company;
 use App\Entity\Session;
 use App\Entity\Trainee;
+use App\Entity\Location;
 use App\Entity\Training;
 use App\Form\SessionType;
-use App\Entity\SessionLocation;
 use App\Entity\TrainingCategory;
 use App\Repository\UploadRepository;
 use App\Repository\CompanyRepository;
 use App\Repository\SessionRepository;
 use App\Repository\TraineeRepository;
+use App\Repository\LocationRepository;
 use App\Repository\TrainingRepository;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\SessionLocationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\TrainingCategoryRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +46,7 @@ class SessionController extends AbstractController
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
-    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr, SessionLocationRepository $slr, UploadRepository $ur): Response
+    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr, LocationRepository $lr, UploadRepository $ur): Response
     {
         if ( $request->query->has('file_name') ) {
             $fileName = $request->query->get('file_name');
@@ -120,8 +120,9 @@ class SessionController extends AbstractController
 
                             // Créer la formation si elle n'existe pas déjà
                             $trainingTitle = $currentTrainee[15]; 
+                            $trainingReferenceNumber = 'Non-renseigné'; 
 
-                            $temp = $tgr->findSameTraining($trainingTitle);
+                            $temp = $tgr->findSameTraining($trainingTitle, $trainingReferenceNumber);
 
                             if ($temp)
                             {
@@ -133,6 +134,7 @@ class SessionController extends AbstractController
                                 $training
                                     ->setTitle($trainingTitle)
                                     ->setPlatform('Opcalia')
+                                    ->setReferenceNumber($trainingReferenceNumber)
                                     ->setTrainingCategory($trainingCategory);
                                 $this->em->persist($training);
                             }
@@ -166,6 +168,9 @@ class SessionController extends AbstractController
                             $corporateName = $currentTrainee[7];
                             $street = strtolower($currentTrainee[9]);
                             $city = strtoupper($currentTrainee[12]);
+                            $postalCode = $currentTrainee[11];
+                            $siretNumber = $currentTrainee[8];
+                            $phoneNumber = $currentTrainee[4];
 
                             $temp = $cr->findSameCompany($corporateName,$city);
 
@@ -181,12 +186,33 @@ class SessionController extends AbstractController
                                 $company
                                     ->setCorporateName($corporateName)
                                     ->setStreet($street)
-                                    ->setPostalCode($currentTrainee[11])
+                                    ->setPostalCode($postalCode)
                                     ->setCity($city)
-                                    ->setSiretNumber($currentTrainee[8])
-                                    ->setPhoneNumber($currentTrainee[4]);
+                                    ->setSiretNumber($siretNumber)
+                                    ->setPhoneNumber($phoneNumber);
                                 $this->em->persist($company);
                                 $trainee->setCompany($company);
+                            }
+
+                            // Créer une location si il n'existe pas déjà
+                            $street = strtolower($currentTrainee[18]);
+                            $postalCode = strtoupper($currentTrainee[20]);
+                            $city = $currentTrainee[21];
+
+                            $temp = $lr->findSameLocation($city,$postalCode,$street);
+
+                            if ($temp)
+                            {
+                                $existingLocation = $temp;
+                                $location = $lr->findOneById($existingLocation);
+                                $this->em->persist($location);
+                            } else {
+                                $location = new Location();
+                                $location
+                                    ->setPostalCode($postalCode)
+                                    ->setCity($city)
+                                    ->setStreet($street);
+                                $this->em->persist($location);
                             }
 
                             $this->em->flush();
@@ -197,6 +223,7 @@ class SessionController extends AbstractController
                         $session
                             ->setUpload($upload)
                             ->setTraining($training)
+                            ->setLocation($location)
                             ->setStartDate($startDate);
 
                         break;
@@ -210,8 +237,9 @@ class SessionController extends AbstractController
     
                             // Créer la formation si elle n'existe pas déjà
                             $trainingTitle = $currentTrainee[0]; 
+                            $trainingReferenceNumber = $currentTrainee[2];
     
-                            $temp = $tgr->findSameTraining($trainingTitle);
+                            $temp = $tgr->findSameTraining($trainingTitle,$trainingReferenceNumber);
     
                             if ($temp)
                             {
@@ -222,7 +250,8 @@ class SessionController extends AbstractController
                                 $training = new Training();
                                 $training
                                     ->setTitle($trainingTitle)
-                                    ->setPlatform('Formiris');
+                                    ->setPlatform('Formiris')
+                                    ->setReferenceNumber($trainingReferenceNumber);
                                 $this->em->persist($training);
                             }
     
@@ -250,9 +279,9 @@ class SessionController extends AbstractController
                                 $this->em->persist($trainee);
                             }
                             $session->addTrainee($trainee);
-        
-    
-                            // Créer une company si il n'existe pas déjà
+
+                            
+                            // Créer une company si elle n'existe pas déjà
                             $names = explode(" ", $currentTrainee[6]);
                             $count = count($names);
                             for ($j = 0; $j<=$count; $j++) {
@@ -264,11 +293,16 @@ class SessionController extends AbstractController
                                     for ($k = 1; $k<$j; $k++) {
                                         $corporateName = $corporateName.' '.$names[$k];
                                     }
+
                                     $city = $names[$j];
+                                    for ($j = 6; $j<$count-1; $j++) {
+                                        $city = $city.' '.$currentTrainee[$j];
+                                    }
+                                    
                                     break;
                                 }
                             }
-    
+
                             $temp = $cr->findSameCompany($corporateName,$city);
     
                             if ($temp)
@@ -285,8 +319,8 @@ class SessionController extends AbstractController
                                 $this->em->persist($company);
                                 $trainee->setCompany($company);
                             }
-    
-    
+
+
                             // Ajoute des dates de session et du lieu selon le nombre de sessions au total
                             $sessionsDates = explode(", ", $currentTrainee[16]);
                             $sessionsNbrTotal = count($sessionsDates);
@@ -303,40 +337,12 @@ class SessionController extends AbstractController
     
                             $startDate = new \DateTime('@'.strtotime($currentSession[1]));
                             $endDate = new \DateTime('@'.strtotime($currentSession[3]));
-                            $codePostal = $currentSession[5];
-    
-                            $city = $currentSession[6];
-                            for ($j = 6; $j<$count-1; $j++) {
-                                $city = $city.' '.$currentSession[$j];
-                            }
-    
-    
-                            // Créer une session location si elle n'existe pas déjà
-                            $city = strtoupper($city);
-                            $street = 'non-renseignée';
-    
-                            $temp = $slr->findSameSessionLocation($city,$codePostal,$street);
-    
-                            if ($temp)
-                            {
-                                $existingSessionLocation = $temp;
-                                $sessionLocation = $slr->findOneById($existingSessionLocation);
-                                $this->em->persist($sessionLocation);
-                            } else {
-                                $sessionLocation = new SessionLocation();
-                                $sessionLocation
-                                    ->setPostalCode($codePostal)
-                                    ->setCity($city)
-                                    ->setStreet($street);
-                                $this->em->persist($sessionLocation);
-                            }
     
                             $this->em->flush();
                         }
                         
                         $session
                             ->setUpload($upload)
-                            ->setLocation($sessionLocation)
                             ->setTraining($training)
                             ->setStartDate($startDate)
                             ->setEndDate($endDate);
@@ -348,6 +354,8 @@ class SessionController extends AbstractController
                 };
             }
         }
+        $this->em->persist($session);
+
 
         $form = $this->createForm(SessionType::class, $session);
         $form->handleRequest($request);

@@ -1,4 +1,31 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }} 
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <label>Corporate name</label>
+    {{ form_errors(form.corporate_name) }}
+    {{ form_widget(form.corporate_name, {'attr': {'class': 'mb-3'}}) }}
+
+    <label>Street</label>
+    {{ form_errors(form.street) }}
+    {{ form_widget(form.street, {'attr': {'class': 'mb-3'}}) }}
+
+    <label>Postal code</label>
+    {{ form_errors(form.postal_code) }}
+    {{ form_widget(form.postal_code, {'attr': {'class': 'mb-3'}}) }}
+
+    <label>City</label>
+    {{ form_errors(form.city) }}
+    {{ form_widget(form.city, {'attr': {'class': 'mb-3'}}) }}
+
+    <label>Siret number</label>
+    {{ form_errors(form.siret_number) }}
+    {{ form_widget(form.siret_number, {'attr': {'class': 'mb-3'}}) }}
+
+    <label>Phone</label>
+    {{ form_errors(form.phone_number) }}
+    {{ form_widget(form.phone_number, {'attr': {'class': 'mb-5'}}) }}
+
+    <div class='row justify-content-center'>
+        <div class='col text-center'>
+            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save') }}</button>
+        </div>
+    </div>
 {{ form_end(form) }}

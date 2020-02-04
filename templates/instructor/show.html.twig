@@ -14,10 +14,10 @@
     <h1 class="text-center mb-5">{{ instructor.lastName }} {{ instructor.firstName }}</h1>
 
 
-    <h5>Instructor participation{% if instructor.sessions|length > 1 %}s{% endif %}</h5>
+    <h5>Associated sessions ({{ instructor.sessions|length }})</h5>
     {% if instructor.sessions|length > 0 %}
         {% for session in instructor.sessions %}
-            <h6 class='font-italic goal-border pb-2'>{{ session.training.title }}</h6>
+            <h6 class='font-italic light-bottom-border pb-2'>{{ session.training.title }}</h6>
         {% endfor %}
     {% else %}
         <h6 class="font-italic text-danger mb-5">No sessions for this instructor</h6>
