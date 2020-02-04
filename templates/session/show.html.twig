@@ -12,7 +12,7 @@
         </div>
         {% if session.training.platform != 'Formiris' %}
             <div class='col text-center'>
-                <a href="#"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Feuille d'émargement</button></a>
+                <a href="{{ path('session_emargement', {'id': session.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Feuille d'émargement</button></a>
             </div>
         {% endif %}
 

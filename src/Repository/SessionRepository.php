@@ -35,6 +35,17 @@ class SessionRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getNbTrainees($id)
+    {
+        return $this->createQueryBuilder('s')
+            ->select('COUNT(t.last_name)')
+            ->leftJoin('s.trainees', 't')
+            ->andWhere('s.id = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     public function findOneById($id): ?Session
     {
