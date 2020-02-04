@@ -7,10 +7,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="tbl_sessionLocation")
- * @ORM\Entity(repositoryClass="App\Repository\SessionLocationRepository")
+ * @ORM\Table(name="tbl_location")
+ * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
  */
-class SessionLocation
+class Location
 {
     /**
      * @ORM\Id()
@@ -46,7 +46,7 @@ class SessionLocation
 
     public function __toString()
     {
-        return $this->postal_code . " - " . $this->city . " - " . $this->street;
+        return  $this->street . ', ' . $this->postal_code . " - " . $this->city;
     }
 
     public function getId(): ?int

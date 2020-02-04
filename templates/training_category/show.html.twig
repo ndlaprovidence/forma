@@ -1,26 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}TrainingCategory{% endblock %}
+{% block title %}Training Category{% endblock %}
 
 {% block body %}
-    <h1>TrainingCategory</h1>
+    <a href="{{ path('training_category_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+    
+    <div class='row justify-content-center mb-5'>
+        <div class='col text-center'>
+            <a href="{{ path('training_category_edit', {'id': training_category.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ training_category.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ training_category.title }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <h1 class="text-center mb-5">{{ training_category.title }}</h1>
 
-    <a href="{{ path('training_category_index') }}">back to list</a>
+    <h5>Associated trainings ({{ training_category.trainings|length }})</h5>
+    {% if training_category.trainings|length > 0 %}
+        {% for training in training_category.trainings %}
+            <h6 class='font-italic light-bottom-border pb-2'>{{ training.title }}</h6>
+        {% endfor %}
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No training for this category</h6>
+    {% endif %}
 
-    <a href="{{ path('training_category_edit', {'id': training_category.id}) }}">edit</a>
-
-    {{ include('training_category/_delete_form.html.twig') }}
 {% endblock %}

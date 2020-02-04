@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\SessionLocation;
-use App\Form\SessionLocationType;
-use App\Repository\SessionLocationRepository;
+use App\Entity\Location;
+use App\Form\LocationType;
+use App\Repository\LocationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,15 +13,15 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/location")
  */
-class SessionLocationController extends AbstractController
+class LocationController extends AbstractController
 {
     /**
      * @Route("/", name="location_index", methods={"GET"})
      */
-    public function index(SessionLocationRepository $sessionLocationRepository): Response
+    public function index(LocationRepository $LocationRepository): Response
     {
         return $this->render('location/index.html.twig', [
-            'locations' => $sessionLocationRepository->findAll(),
+            'locations' => $LocationRepository->findAll(),
         ]);
     }
 
@@ -30,20 +30,20 @@ class SessionLocationController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $sessionLocation = new SessionLocation();
-        $form = $this->createForm(SessionLocationType::class, $sessionLocation);
+        $Location = new Location();
+        $form = $this->createForm(LocationType::class, $Location);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($sessionLocation);
+            $entityManager->persist($Location);
             $entityManager->flush();
 
             return $this->redirectToRoute('location_index');
         }
 
         return $this->render('location/new.html.twig', [
-            'location' => $sessionLocation,
+            'location' => $Location,
             'form' => $form->createView(),
         ]);
     }
@@ -51,19 +51,19 @@ class SessionLocationController extends AbstractController
     /**
      * @Route("/{id}", name="location_show", methods={"GET"})
      */
-    public function show(SessionLocation $sessionLocation): Response
+    public function show(Location $Location): Response
     {
         return $this->render('location/show.html.twig', [
-            'location' => $sessionLocation,
+            'location' => $Location,
         ]);
     }
 
     /**
      * @Route("/{id}/edit", name="location_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, SessionLocation $sessionLocation): Response
+    public function edit(Request $request, Location $Location): Response
     {
-        $form = $this->createForm(SessionLocationType::class, $sessionLocation);
+        $form = $this->createForm(LocationType::class, $Location);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -73,7 +73,7 @@ class SessionLocationController extends AbstractController
         }
 
         return $this->render('location/edit.html.twig', [
-            'location' => $sessionLocation,
+            'location' => $Location,
             'form' => $form->createView(),
         ]);
     }
@@ -81,11 +81,11 @@ class SessionLocationController extends AbstractController
     /**
      * @Route("/{id}", name="location_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, SessionLocation $sessionLocation): Response
+    public function delete(Request $request, Location $Location): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$sessionLocation->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'.$Location->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($sessionLocation);
+            $entityManager->remove($Location);
             $entityManager->flush();
         }
 

@@ -10,16 +10,30 @@
         <div class='col text-center'>
             <a href="{{ path('session_edit', {'id': session.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
         </div>
-        <div class='col text-center'>
-            <a href="#"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Feuille d'émargement</button></a>
-        </div>
+        {% if session.training.platform != 'Formiris' %}
+            <div class='col text-center'>
+                <a href="#"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Feuille d'émargement</button></a>
+            </div>
+        {% endif %}
+
     </div>
 
     <h1 class="text-center mb-3">{{ session.training }}</h1>
 
     <div class='row mb-5 justify-content-center'>
-        <h5 class='platform-name py-2 px-4'>{{ session.training.platform }}</h5>
+        {% if session.training.referenceNumber != 'Non-renseigné' %}
+            <h5 class="font-italic mb-5">{{ session.training.referenceNumber }}</h5>
+        {% else %}
+            <h5 class="font-italic text-danger mb-5">Réference de formation non-renseigné</h5>
+        {% endif %}
     </div>
+
+    <h5>Location</h5>
+    {% if session.location %}
+        <h6 class="font-italic mb-5">{{ session.location }}</h6>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No location set for this session</h6>
+    {% endif %}
 
     <h5>Category</h5>
     {% if session.training.trainingCategory %}
@@ -29,7 +43,7 @@
     {% endif %}
 
 
-    <h5>Instructor{% if session.instructors|length > 1 %}s{% endif %}</h5>
+    <h5>Instructors</h5>
     {% if session.instructors|length > 0 %}
         <h6>
         {% for instructor in session.instructors %}
@@ -41,10 +55,10 @@
     {% endif %}
 
     
-    <h5>Goal{% if session.training.goals|length > 1 %}s{% endif %}</h5>
+    <h5>Goals</h5>
     {% if session.training.goals|length > 0 %}
         {% for goal in session.training.goals %}
-            <h6 class='font-italic goal-border pb-2'>{{ goal.title }}</h6>
+            <h6 class='font-italic light-bottom-border pb-2'>{{ goal.title }}</h6>
         {% endfor %}
         <div class='mb-5'></div>
     {% else %}
