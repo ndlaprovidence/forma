@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User index{% endblock %}
+{% block title %}{{'Delete'|trans}}User index{% endblock %}
 
 {% block body %}
 
     <div class='row justify-content-center mb-3'>
         <div class='col text-center'>
-            <a href="{{ path('user_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">New</button></a>
+            <a href="{{ path('user_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Delete'|trans}}New</button></a>
         </div>
     </div>
 
-    <h1 class='text-center mb-3'>User list</h1>
+    <h1 class='text-center mb-3'>{{'User list'|trans}}</h1>
 
     <div class="row text-center tab-header">
         <div class="col-4 tab-cell-header px-2 py-2">
-            Email
+            {{'Email'|trans}}
         </div>
         <div class="col-8 tab-cell-header px-2 py-2">
-            Roles
+            {{'Roles'|trans}}
         </div>
     </div>
     {% for user in users %}
@@ -34,7 +34,7 @@
     {% else %}
         <div class='row justify-content-center mt-2'>
             <div class='col text-center'>
-                <div class="alert alert-danger">No entry found</div>
+                <div class="alert alert-danger">{{'No entry found'|trans}}</div>
             </div>
         </div>
     {% endfor %}

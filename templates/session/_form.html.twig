@@ -1,30 +1,30 @@
 {{ form_start(form) }}
-    <label>Training</label>
+    <label>{{'Training'|trans}}</label>
     {{ form_errors(form.training) }}
     {{ form_widget(form.training, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Location</label>
+    <label>{{'Location'|trans}}</label>
     {{ form_errors(form.location) }}
     {{ form_widget(form.location, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Instructors</label>
+    <label>{{'Instructors'|trans}}</label>
     {{ form_errors(form.instructors) }}
     {{ form_widget(form.instructors, {'attr': {'class': 'mb-3'}}) }}
 
     <div class='row justify-content-center'>
         <div class="col-3">
-        <label>Start date</label>
+        <label>{{'Start date'|trans}}</label>
             {{ form_errors(form.start_date) }}
             {{ form_widget(form.start_date, {'attr': {'class': 'mb-3'}}) }}
         </div>
         <div class="col-3">
-        <label>End date</label>
+        <label>{{'End date'|trans}}</label>
             {{ form_errors(form.end_date) }}
             {{ form_widget(form.end_date, {'attr': {'class': 'mb-3'}}) }}
         </div>
     </div>
 
-    <label>Comment</label>
+    <label>{{'Comment'|trans}}</label>
     {{ form_errors(form.comment) }}
     {{ form_widget(form.comment, {'attr': {'class': 'mb-3'}}) }}
 
@@ -36,16 +36,16 @@
 
     <div class="row text-center tab-header">
         <div class="col-2 tab-cell-header px-2 py-2">
-            Last name
+            {{'Last name'|trans}}
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
-            First name
+            {{'First name'|trans}}
         </div>
         <div class="col-4 tab-cell-header px-2 py-2">
-            Email
+            {{'Email'|trans}}
         </div>
         <div class="col-4 tab-cell-header px-2 py-2">
-            Company
+            {{'Company'|trans}}
         </div>
     </div>
     {% for trainee in session.trainees %}
@@ -66,7 +66,7 @@
     {% else %}
         <div class='row justify-content-center mt-2'>
             <div class='col text-center'>
-                <div class="alert alert-danger">No entry found</div>
+                <div class="alert alert-danger">{{'No entry found'|trans}}</div>
             </div>
         </div>
     {% endfor %}

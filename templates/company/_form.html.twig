@@ -1,25 +1,25 @@
 {{ form_start(form) }}
-    <label>Corporate name</label>
+    <label> {{'Corporate name'|trans}} </label>
     {{ form_errors(form.corporate_name) }}
     {{ form_widget(form.corporate_name, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Street</label>
+    <label>{{'Street'|trans}}</label>
     {{ form_errors(form.street) }}
     {{ form_widget(form.street, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Postal code</label>
+    <label>{{'Postal code'|trans}}</label>
     {{ form_errors(form.postal_code) }}
     {{ form_widget(form.postal_code, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>City</label>
+    <label>{{'City'|trans}}</label>
     {{ form_errors(form.city) }}
     {{ form_widget(form.city, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Siret number</label>
+    <label>{{'Siret number'|trans}}</label>
     {{ form_errors(form.siret_number) }}
     {{ form_widget(form.siret_number, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Phone</label>
+    <label>{{'Phone'|trans}}</label>
     {{ form_errors(form.phone_number) }}
     {{ form_widget(form.phone_number, {'attr': {'class': 'mb-5'}}) }}
 

@@ -1,43 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Training{% endblock %}
+{% block title %}{{'Training'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('training_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
     
     <div class='row justify-content-center mb-5'>
         <div class='col text-center'>
-            <a href="{{ path('training_edit', {'id': training.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+            <a href="{{ path('training_edit', {'id': training.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Edit'|trans}}</button></a>
         </div>
     </div>
 
     <h1 class="text-center mb-5">{{ training.title }}</h1>
 
-    <h5>Training platform</h5>
+    <h5>{{'Training platform'|trans}}</h5>
     <h6 class='font-italic mb-5'>{{ training.platform }}</h6>
 
-    <h5>Training reference number</h5>
+    <h5>{{'Training reference number'|trans}}</h5>
     {% if training.referenceNumber != 'Non-renseigné' %}
         <h6 class='font-italic mb-5'>{{ training.referenceNumber }}</h6>
     {% else %}
-        <h6 class="font-italic text-danger mb-5">No reference number for this training</h6>
+        <h6 class="font-italic text-danger mb-5">{{'No reference number for this training'|trans}}</h6>
     {% endif %}
 
-    <h5>Category</h5>
+    <h5>{{'Category'|trans}}</h5>
     {% if training.trainingCategory %}
         <h6 class='font-italic mb-5'>{{ training.trainingCategory }}</h6>
     {% else %}
-        <h6 class="font-italic text-danger mb-5">No category for this training</h6>
+        <h6 class="font-italic text-danger mb-5">{{'No category for this training'|trans}}</h6>
     {% endif %}
 
-    <h5>Goals ({{ training.goals|length }})</h5>
+    <h5>{{'v'|trans}} ({{ training.goals|length }})</h5>
     {% if training.goals|length > 0 %}
         {% for goal in training.goals %}
             <h6 class='font-italic light-bottom-border pb-2'>{{ goal.title }}</h6>
         {% endfor %}
         <div class='mb-5'></div>
     {% else %}
-        <h6 class="font-italic text-danger mb-5">No goal set for this session</h6>
+        <h6 class="font-italic text-danger mb-5">{{'No goal set for this session'|trans}}</h6>
     {% endif %}
 
 {% endblock %}

@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Trainee{% endblock %}
+{% block title %}{{'Edit Trainee'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('trainee_show', {'id': trainee.id}) }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
 
-    <h1 class='text-center mb-5'>Edit Trainee</h1>
+    <h1 class='text-center mb-5'>{{'Edit Trainee'|trans}}</h1>
 
     {{ include('trainee/_form.html.twig', {'button_label': 'Update'}) }}
 
