@@ -10,6 +10,7 @@ use App\Entity\Location;
 use App\Entity\Training;
 use App\Form\SessionType;
 use App\Entity\TrainingCategory;
+use PhpOffice\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use App\Repository\UploadRepository;
 use App\Repository\CompanyRepository;
@@ -399,8 +400,10 @@ class SessionController extends AbstractController
      */
     public function show(Session $session, Request $request,UploadRepository $ur, SessionRepository $sr, EntityManagerInterface $em, TraineeRepository $tr): Response
     {       
-        // $lastNameTrainee = $session->getTrainees()->getLastName();
-        // var_dump($lastNameTrainee);
+        $sessionStartDate = $session->getStartDate()->format('Y-m-d');
+                            setlocale(LC_TIME, "fr_FR");
+                            $sessionStartDate = strftime("%A %d %B %G", strtotime($sessionStartDate));
+        var_dump($sessionStartDate);
 
         return $this->render('session/show.html.twig', [
             'session' => $session,
@@ -430,8 +433,6 @@ class SessionController extends AbstractController
             $nbTrainees++;
         }
 
-        
-
         $uploadId = $session->getUpload()->getId();
         $upload = $ur->findOneById($uploadId);
         $this->em->persist($upload);
@@ -445,12 +446,12 @@ class SessionController extends AbstractController
         }
 
         $sessionStartDate = $session->getStartDate()->format('Y-m-d');
-                            setlocale(LC_TIME, "fr_FR");
-                            $sessionStartDate = strftime("%A %d %B %G", strtotime($sessionStartDate));
+                            // setlocale(LC_TIME, "fr_FR");
+                            // $sessionStartDate = strftime("%A %d %B %G", strtotime($sessionStartDate));
 
         $sessionEndDate = $session->getEndDate()->format('Y-m-d');
-                          setlocale(LC_TIME, "fr_FR");
-                          $sessionEndDate = strftime("%A %d %B %G", strtotime($sessionEndDate));
+                        //   setlocale(LC_TIME, "fr_FR");
+                        //   $sessionEndDate = strftime("%A %d %B %G", strtotime($sessionEndDate));
 
         $titleTraining = $session->getTraining()->getTitle();
 
@@ -460,6 +461,7 @@ class SessionController extends AbstractController
         $styleFirstRow = ['borderBottomColor' => '0000FF', 'bgColor' => 'cccccc'];
         $timeDay = ['align' => 'center', 'bgColor' => 'cccccc'];
         $header = ['size' => 18, 'bold' => true];
+        $nameTraining = ['size' => 15, 'bold' => true];
         $textLeft = ['align' => 'left'];
         $styleTable = ['borderSize' => 6, 'borderColor' => '000000'];
         $cellRowSpan = ['vMerge' => 'restart', 'bgColor' => 'cccccc'];
@@ -474,7 +476,6 @@ class SessionController extends AbstractController
         $lilText = ['size' => 9];
         $landscape = ['orientation' => 'landscape'];
 
-        // echo date('H:i:s'), ' Create new PhpWord object';
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
         $nbSession = $nbSessions;
@@ -506,7 +507,7 @@ class SessionController extends AbstractController
         
         $section->addTextBreak();
         
-        $section->addText(htmlspecialchars($titleTraining), $fontBold, $textCenter);
+        $section->addText(htmlspecialchars($titleTraining), $nameTraining, $textCenter);
         $section->addText(htmlspecialchars($sessionStartDate ." de 9h00 à 12h30 et de 13h30 à 17h00 à " . $sessionLocation ), $fontBold);
         $section->addText(htmlspecialchars($sessionEndDate . " de 9h00 à 12h30 et de 13h30 à 17h00 à " . $sessionLocation), $fontBold);
 
@@ -558,14 +559,10 @@ class SessionController extends AbstractController
         foreach ($traineesCollection as $trainee) {
             $lastNameTrainee = $trainee->getLastName();
             $firstNameTrainee = $trainee->getFirstName();
+            $companyTrainee = $trainee->getCompany();
             $table->addRow(750);
             $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars($lastNameTrainee . " " . $firstNameTrainee));
-            $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars(""));
-        // }
-        // for ($i = 1; $i <= $nbTrainee; $i++) {
-        //     $table->addRow(750);
-        //     $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars(" "));
-        //     $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars(" "));
+            $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars($companyTrainee));
 
             for ($j = 1; $j <= $nbSession; $j++) {
                 $table->addCell(2000)->addText(htmlspecialchars(" "));
@@ -573,12 +570,16 @@ class SessionController extends AbstractController
             }
         }    
 
-        $table->addRow(750);
-            $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars("Formateur :"), $textCenter);
-            $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars(" "));
-
+        $instructorCollection = $session->getInstructors();
+        foreach ($instructorCollection as $instructor) {
+            $firstNameInstructor = $instructor->getFirstName();
+            $lastNameInstructor = $instructor->getLastName();
+        
+            $table->addRow(750);
+            $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars("Formateur : " . $firstNameInstructor . " " . $lastNameInstructor), $textCenter);
+        }
         // $section->addTextBreak();
-        $section->addText("Cachet et signature du prestataire de formation :");
+        $section->addText("Cachet et signature du prestataire de formation:");
 
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         
