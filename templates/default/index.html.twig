@@ -6,8 +6,8 @@
 
     <div class="text-center">
 
-        <h2 class="card-title">Le logiciel de gestion des formations F.C. Pro</h2>
-        <h5 class="card-title text-center font-italic">Importer un nouveau fichier .csv pour démarrer</h5>
+        <h2 class="card-title">F.C. Pro training management software</h2>
+        <h5 class="card-title text-center font-italic">Import a new .csv file to get started</h5>
 
         {{ form_start(form) }}
 
@@ -25,17 +25,21 @@
             <div class="col">
                 <h1 class='stats-nb'>{{ sessions|length }}</h1>
                 <h4>Sessions</h4>
-                <h4>enregistrés</h4>
+                <h4>recorded</h4>
             </div>
             <div class="col">
                 <h1 class='stats-nb'>{{ trainees|length }}</h1>
-                <h4>Stagiaires</h4>
-                <h4>formés</h4>
+                <h4>Trainees</h4>
+                <h4>trained</h4>
             </div>
             <div class="col">
                 <h1 class='stats-nb'>{{ companies|length }}</h1>
-                <h4>Entreprises</h4>
-                <h4>participantes</h4>
+                {% if companies|length == 1 %}
+                    <h4>Company</h4>
+                {% else %}
+                    <h4>Companies</h4>
+                {% endif %}
+                <h4>participants</h4>
             </div>
         </div>
     </div>
