@@ -315,24 +315,33 @@ class SessionController extends AbstractController
      */
     public function show(Session $session, Request $request, SessionRepository $sr, EntityManagerInterface $em): Response
     {
-        $this->em = $em;
-        $idSession = $request->attributes->get('_route_params');
-
-        // var_dump($idSession);
+        // $this->em = $em;
+        
+        $idSession = $session->getId();
 
         $idSession = intval($idSession);
-        $currentSession = $sr->findOneById($idSession);
-        
-        $this->em->persist($currentSession);
 
-        
-        $titleTaining = $currentSession->getTraining()->getTitle();
+        var_dump($idSession);
+
+        $traineesCollection = $session->getTrainees();
+
+        foreach ($traineesCollection as $trainee) {
+
+            // Lors du parcours de la collection, tu disposes de chacun de ses objets de type Trainee
+
+            // tu peux donc ensuite faire appel aux méthodes de cette classe,
+
+            var_dump($trainee->getLastName());
+
+        }
+
+        $titleTaining = $session->getTraining()->getTitle();
         var_dump($titleTaining);
 
-        $startDateTraining = $currentSession->getStartDate();
+        $startDateTraining = $session->getStartDate();
         var_dump($startDateTraining);
 
-        $endDateTraining = $currentSession->getEndDate();
+        $endDateTraining = $session->getEndDate();
         var_dump($endDateTraining);
 
         
