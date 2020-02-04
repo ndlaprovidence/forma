@@ -6,23 +6,23 @@ use App\Entity\Session;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class SessionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {   
         $builder
-            ->add('start_date', DateTimeType::Class , [
-                'data' => new \DateTime(),
-                'widget' => 'single_text',
-                'date_format' => 'dd/MM/yyyy'
-            ])
-            ->add('end_date')
-            ->add('comment')
             ->add('training')
             ->add('location')
             ->add('instructors')
+            ->add('start_date', DateType::Class , [
+                'widget' => 'single_text',
+            ])
+            ->add('end_date', DateType::Class , [
+                'widget' => 'single_text',
+            ])
+            ->add('comment')
         ;
     }
 

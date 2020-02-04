@@ -3,32 +3,124 @@
 {% block title %}Session{% endblock %}
 
 {% block body %}
-    <h1>Session</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ session.id }}</td>
-            </tr>
-            <tr>
-                <th>Start_date</th>
-                <td>{{ session.startDate ? session.startDate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>End_date</th>
-                <td>{{ session.endDate ? session.endDate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Comment</th>
-                <td>{{ session.comment }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <a href="{{ path('session_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+    
+    <div class='row justify-content-center mb-5'>
+        <div class='col text-center'>
+            <a href="{{ path('session_edit', {'id': session.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+        </div>
+        {% if session.training.platform != 'Formiris' %}
+            <div class='col text-center'>
+                <a href="#"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Feuille d'émargement</button></a>
+            </div>
+        {% endif %}
 
-    <a href="{{ path('session_index') }}">back to list</a>
+    </div>
 
-    <a href="{{ path('session_edit', {'id': session.id}) }}">edit</a>
+    <h1 class="text-center mb-3">{{ session.training }}</h1>
 
-    {{ include('session/_delete_form.html.twig') }}
+    {% if app.request.get('alert') %}
+        <div class="alert alert-success alert-dismissable fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h2 class="alert-heading">This is an alert!</h2>
+            <p>I'm an alert!
+                <a href="#" class="alert-link">Click me!</a>
+            </p>
+        </div>
+    {% endif %}
+
+    <div class='row mb-5 justify-content-center'>
+        {% if session.training.referenceNumber != 'Non-renseigné' %}
+            <h5 class="font-italic mb-5">{{ session.training.referenceNumber }}</h5>
+        {% else %}
+            <h5 class="font-italic text-danger mb-5">Réference de formation non-renseigné</h5>
+        {% endif %}
+    </div>
+
+    <h5>Location</h5>
+    {% if session.location %}
+        <h6 class="font-italic mb-5">{{ session.location }}</h6>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No location set for this session</h6>
+    {% endif %}
+
+    <h5>Category</h5>
+    {% if session.training.trainingCategory %}
+        <h6 class="font-italic mb-5">{{ session.training.trainingCategory.title }}</h6>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No category set for this session</h6>
+    {% endif %}
+
+
+    <h5>Instructors</h5>
+    {% if session.instructors|length > 0 %}
+        <h6>
+        {% for instructor in session.instructors %}
+            {{ instructor.lastName }} {{ instructor.firstName }},
+        {% endfor %}
+        </h6><div class='mb-5'></div>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No instructor set for this session</h6>
+    {% endif %}
+
+    
+    <h5>Goals</h5>
+    {% if session.training.goals|length > 0 %}
+        {% for goal in session.training.goals %}
+            <h6 class='font-italic light-bottom-border pb-2'>{{ goal.title }}</h6>
+        {% endfor %}
+        <div class='mb-5'></div>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">No goal set for this session</h6>
+    {% endif %}
+
+
+    <a href='/uploads/{{ session.upload.fileName }}'><h5>{{ session.upload.fileName }} <i class="fas fa-download"></i></h5></a>
+
+    <div class="row text-center tab-header">
+        <div class="col-2 tab-cell-header px-2 py-2">
+            Last name
+        </div>
+        <div class="col-2 tab-cell-header px-2 py-2">
+            First name
+        </div>
+        <div class="col-3 tab-cell-header px-2 py-2">
+            Email
+        </div>
+        <div class="col-4 tab-cell-header px-2 py-2">
+            Company
+        </div>
+        <div class="col-1 tab-cell-header px-2 py-2">
+            Convention
+        </div>
+    </div>
+    {% for trainee in session.trainees %}
+        <div class="row text-center tab-row link-style-disabled">
+            <div class="col-2 tab-cell px-2 py-2">
+                {{ trainee.lastName }}
+            </div>
+            <div class="col-2 tab-cell px-2 py-2">
+                {{ trainee.firstName }}
+            </div>
+            <div class="col-3 tab-cell px-2 py-2">
+                {{ trainee.email }}
+            </div>
+            <div class="col-4 tab-cell px-2 py-2">
+                {{ trainee.company.corporateName }}
+            </div>
+            <div class="col-1 tab-cell px-2 py-2">
+                <a href="{{ path('session_word', {'id': session.id, 'trainee': trainee.id}) }}"><i class="fas fa-file-alt h5"></i></a>
+            </div>
+        </div>
+    {% else %}
+        <div class='row justify-content-center mt-2'>
+            <div class='col text-center'>
+                <div class="alert alert-danger">No entry found</div>
+            </div>
+        </div>
+    {% endfor %}
+    <div class="mb-5"></div>
 {% endblock %}

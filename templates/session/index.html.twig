@@ -3,37 +3,52 @@
 {% block title %}Session index{% endblock %}
 
 {% block body %}
-    <h1>Session index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Start_date</th>
-                <th>End_date</th>
-                <th>Comment</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for session in sessions %}
-            <tr>
-                <td>{{ session.id }}</td>
-                <td>{{ session.startDate ? session.startDate|date('Y-m-d') : '' }}</td>
-                <td>{{ session.endDate ? session.endDate|date('Y-m-d') : '' }}</td>
-                <td>{{ session.comment }}</td>
-                <td>
-                    <a href="{{ path('session_show', {'id': session.id}) }}">show</a>
-                    <a href="{{ path('session_edit', {'id': session.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <h1 class='text-center mb-3'>Sessions list</h1>
 
-    <a href="{{ path('session_new') }}">Create new</a>
+    <div class='row justify-content-center'>
+        <div class='col text-center mb-3'>
+            <a href="{{ path('session_index') }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Export to Excel</button></a>
+        </div>
+    </div>
+
+    <div class="row text-center tab-header">
+        <div class="col-5 tab-cell-header px-2 py-2">
+            Training
+        </div>
+        <div class="col-3 tab-cell-header px-2 py-2">
+            Training location
+        </div>
+        <div class="col-2 tab-cell-header px-2 py-2">
+            Start date
+        </div>
+        <div class="col-2 tab-cell-header px-2 py-2">
+            End date
+        </div>
+    </div>
+    {% for session in sessions %}
+        <a href="{{ path('session_show', {'id': session.id}) }}" class="link-unstyled">
+            <div class="row text-center tab-row link-style-disabled">
+                <div class="col-5 tab-cell px-2 py-2">
+                    {{ session.training }}
+                </div>
+                <div class="col-3 tab-cell px-2 py-2">
+                    {{ session.location }}
+                </div>
+                <div class="col-2 tab-cell px-2 py-2">
+                    {{ session.startDate ? session.startDate|date('d-m-Y') : '' }}
+                </div>
+                <div class="col-2 tab-cell px-2 py-2">
+                    {{ session.endDate ? session.endDate|date('d-m-Y') : '' }}
+                </div>
+            </div>
+        </a>
+    {% else %}
+        <div class='row justify-content-center mt-2'>
+            <div class='col text-center'>
+                <div class="alert alert-danger">No entry found</div>
+            </div>
+        </div>
+    {% endfor %}
+    
 {% endblock %}

@@ -19,7 +19,8 @@ class TrainingType extends AbstractType
             ->add('title')
             ->add('platform')
             ->add('training_category')
-            ->add('goals');
+            ->add('goals')
+            ->add('reference_number');
     }
 
     public function configureOptions(OptionsResolver $resolver)

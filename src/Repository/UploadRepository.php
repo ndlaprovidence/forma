@@ -36,15 +36,24 @@ class UploadRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Upload
+    public function findOneById($id): ?Upload
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('u.id = :val')
+            ->setParameter('val', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
+    public function findSameUpload($fileName)
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.file_name = :val')
+            ->setParameter('val', $fileName);
+
+        $query = $qb->getQuery();
+
+        return $query->execute();
+    }
 }

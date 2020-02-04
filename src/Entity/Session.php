@@ -41,7 +41,7 @@ class Session
     private $training;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SessionLocation", inversedBy="sessions")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Location", inversedBy="sessions")
      * @ORM\JoinColumn(nullable=true)
      */
     private $location;
@@ -53,21 +53,26 @@ class Session
     private $instructors;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Upload", inversedBy="session", cascade={"persist", "remove"}, orphanRemoval=true)
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $upload;
-
-    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Trainee", inversedBy="sessions")
      */
     private $trainees;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Upload", inversedBy="sessions")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $upload;
 
 
     public function __construct()
     {
         $this->instructors = new ArrayCollection();
         $this->trainees = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->getTraining()->getTitle();
     }
 
     public function getId(): ?int
@@ -123,12 +128,12 @@ class Session
         return $this;
     }
 
-    public function getLocation(): ?SessionLocation
+    public function getLocation(): ?Location
     {
         return $this->location;
     }
 
-    public function setLocation(?SessionLocation $location): self
+    public function setLocation(?Location $location): self
     {
         $this->location = $location;
 
@@ -161,18 +166,6 @@ class Session
         return $this;
     }
 
-    public function getUpload(): ?Upload
-    {
-        return $this->upload;
-    }
-
-    public function setUpload(Upload $upload): self
-    {
-        $this->upload = $upload;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Trainee[]
      */
@@ -195,6 +188,18 @@ class Session
         if ($this->trainees->contains($trainee)) {
             $this->trainees->removeElement($trainee);
         }
+
+        return $this;
+    }
+
+    public function getUpload(): ?Upload
+    {
+        return $this->upload;
+    }
+
+    public function setUpload(?Upload $upload): self
+    {
+        $this->upload = $upload;
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -28,6 +30,21 @@ class Upload
      * @ORM\OneToOne(targetEntity="App\Entity\Session", mappedBy="upload", cascade={"persist", "remove"})
      */
     private $session;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Session", mappedBy="upload", orphanRemoval=true)
+     */
+    private $sessions;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date;
+
+    public function __construct()
+    {
+        $this->sessions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +76,49 @@ class Upload
         if ($this !== $session->getUpload()) {
             $session->setUpload($this);
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Session[]
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): self
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->setUpload($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): self
+    {
+        if ($this->sessions->contains($session)) {
+            $this->sessions->removeElement($session);
+            // set the owning side to null (unless already changed)
+            if ($session->getUpload() === $this) {
+                $session->setUpload(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
 
         return $this;
     }

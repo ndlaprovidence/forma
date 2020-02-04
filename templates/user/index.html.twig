@@ -3,35 +3,40 @@
 {% block title %}User index{% endblock %}
 
 {% block body %}
-    <h1>User index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>
-                    <a href="{{ path('user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class='row justify-content-center mb-3'>
+        <div class='col text-center'>
+            <a href="{{ path('user_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">New</button></a>
+        </div>
+    </div>
 
-    <a href="{{ path('user_new') }}">Create new</a>
+    <h1 class='text-center mb-3'>User list</h1>
+
+    <div class="row text-center tab-header">
+        <div class="col-4 tab-cell-header px-2 py-2">
+            Email
+        </div>
+        <div class="col-8 tab-cell-header px-2 py-2">
+            Roles
+        </div>
+    </div>
+    {% for user in users %}
+        <a href="{{ path('user_show', {'id': user.id}) }}" class="link-unstyled">
+            <div class="row text-center tab-row link-style-disabled">
+                <div class="col-4 tab-cell px-2 py-2">
+                    {{ user.email }}
+                </div>
+                <div class="col-8 tab-cell px-2 py-2">
+                    {{ user.roles ? user.roles|json_encode : '' }}
+                </div>
+            </div>
+        </a>
+    {% else %}
+        <div class='row justify-content-center mt-2'>
+            <div class='col text-center'>
+                <div class="alert alert-danger">No entry found</div>
+            </div>
+        </div>
+    {% endfor %}
+
 {% endblock %}

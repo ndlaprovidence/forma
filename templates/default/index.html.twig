@@ -4,33 +4,70 @@
 
 {% block body %}
 
-    <div class="grid">
+    <div class="text-center">
 
-        <div class='text-center'>
-            <h2 class="card-title">Le logiciel de gestion des formations F.C. Pro</h2>
-        </div>
-        <div class='text-center'>
-            <h5 class="card-title text-center font-italic">Importer un nouveau fichier .csv pour démarrer</h5>
-        </div>
+        <h2 class="card-title">Le logiciel de gestion des formations F.C. Pro</h2>
+        <h5 class="card-title text-center font-italic">Importer un nouveau fichier .csv pour démarrer</h5>
 
-        <div class='text-center'>
-            {{ form_start(form) }}
+        {{ form_start(form) }}
 
-                {{ form_errors(form) }}
+            {{ form_widget(form.file_name, {'attr': {'class': 'mb-4'}}) }}
 
-                {{ form_errors(form.file_name) }}
-                {{ form_widget(form.file_name) }}
+            {{ form_widget(form.submit, {'attr': {'class': 'rad-rounded-xs btn-lg btn-primary px-5 my-5'}}) }}
+            {{ form_errors(form) }}
+            {{ form_errors(form.file_name) }}
 
-                {{ form_widget(form.submit) }}
-
-                {{ form_rest(form) }}
+            {{ form_rest(form) }}
                 
-            {{ form_end(form) }}
-        <div>
+        {{ form_end(form) }}
 
+        <div class="row mt-5">
+            <div class="col">
+                <h1 class='stats-nb'>{{ sessions|length }}</h1>
+                <h4>Sessions</h4>
+                <h4>enregistrés</h4>
+            </div>
+            <div class="col">
+                <h1 class='stats-nb'>{{ trainees|length }}</h1>
+                <h4>Stagiaires</h4>
+                <h4>formés</h4>
+            </div>
+            <div class="col">
+                <h1 class='stats-nb'>{{ companies|length }}</h1>
+                <h4>Entreprises</h4>
+                <h4>participantes</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="demoModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Please confirm!</h2>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>This is the modal body, do you like it?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Confirm</button>
+                </div>
+            </div>
+        </div>
     </div>
     
-    
+    <div class="text-center fixed-bottom">
+        <h5 class="h5 font-weight-normal">©{{ "now"|date("Y") }} - Forma</h5>
+    </div>
 
+    <script>
+        $('#upload_file_name').on('change',function(){
+            var fileName = $(this).val();
+            $(this).next('.custom-file-label').html(fileName);
+        })
+    </script>
 
 {% endblock %}
