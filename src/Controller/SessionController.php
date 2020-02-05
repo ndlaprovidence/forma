@@ -481,7 +481,7 @@ class SessionController extends AbstractController
         $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", $lilText);
         
         // Header content
-        $section->addImage("../public/resources/FC-PRO-logo.png", [
+        $section->addImage("../public/images/FC-PRO-logo.png", [
             'height' => 40,
             'width' => 80,
             'positioning' => 'absolute'
