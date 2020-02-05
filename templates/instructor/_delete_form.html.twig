@@ -3,7 +3,7 @@
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ instructor.id) }}">
     <div class='row justify-content-center'>
         <div class='col text-center'>
-            <button class="btn btn-lg hover-del btn-no-bg rad-rounded-xs px-5">Delete</button>
+            <button class="btn btn-lg hover-del btn-no-bg rad-rounded-xs px-5">{{'Delete'|trans}}</button>
         </div>
     </div>
 </form>

@@ -1,25 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Training Category{% endblock %}
+{% block title %}{{'Training Category'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('training_category_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
     
     <div class='row justify-content-center mb-5'>
         <div class='col text-center'>
-            <a href="{{ path('training_category_edit', {'id': training_category.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+            <a href="{{ path('training_category_edit', {'id': training_category.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Edit'|trans}}</button></a>
         </div>
     </div>
 
     <h1 class="text-center mb-5">{{ training_category.title }}</h1>
 
-    <h5>Associated trainings ({{ training_category.trainings|length }})</h5>
+    <h5>{{'Associated trainings'|trans}} ({{ training_category.trainings|length }})</h5>
     {% if training_category.trainings|length > 0 %}
         {% for training in training_category.trainings %}
             <h6 class='font-italic light-bottom-border pb-2'>{{ training.title }}</h6>
         {% endfor %}
     {% else %}
-        <h6 class="font-italic text-danger mb-5">No training for this category</h6>
+        <h6 class="font-italic text-danger mb-5">{{'No training for this category'|trans}}</h6>
     {% endif %}
 
 {% endblock %}

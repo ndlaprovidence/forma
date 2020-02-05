@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Session{% endblock %}
+{% block title %}{{'Edit Session'|trans}}{% endblock %}
 
 {% block body %}
 
     <a href="{{ path('session_show', {'id': session.id}) }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
 
-    <h1 class="text-center mb-5">Edit Session</h1>
+    <h1 class="text-center mb-5">{{'Edit Session'|trans}}</h1>
 
     {{ include('session/_form.html.twig', {'button_label': 'Update'}) }}
 

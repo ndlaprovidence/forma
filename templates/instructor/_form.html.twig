@@ -1,10 +1,10 @@
 {{ form_start(form) }}
 
-    <label>Last name</label>
+    <label>{{'Last name'|trans}}</label>
     {{ form_errors(form.last_name) }}
     {{ form_widget(form.last_name, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>First name</label>
+    <label>{{'First name'|trans}}</label>
     {{ form_errors(form.first_name) }}
     {{ form_widget(form.first_name, {'attr': {'class': 'mb-5'}}) }}
 

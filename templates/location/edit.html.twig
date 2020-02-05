@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Location{% endblock %}
+{% block title %}{{'Edit Location'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('location_show', {'id': location.id}) }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
 
-    <h1 class='text-center mb-5'>Edit Location</h1>
+    <h1 class='text-center mb-5'>{{'Edit Location'|trans}}</h1>
 
     {{ include('location/_form.html.twig', {'button_label': 'Update'}) }}
 
