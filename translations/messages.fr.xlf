@@ -339,7 +339,7 @@
       </trans-unit>
       <trans-unit id="lcYRcDG" resname="Locations">
         <source>Locations</source>
-        <target>Emplacement</target>
+        <target>lieux</target>
       </trans-unit>
       <trans-unit id="EWzTmCq" resname="Goals">
         <source>Goals</source>
@@ -447,7 +447,7 @@
       </trans-unit>
       <trans-unit id="FbYZdLJ" resname="Location">
         <source>Location</source>
-        <target>Emplacement</target>
+        <target>lieu</target>
       </trans-unit>
       <trans-unit id="3446Zja" resname="Incomplete address information">
         <source>Incomplete address information</source>
@@ -483,7 +483,7 @@
       </trans-unit>
       <trans-unit id="b6PL9FG" resname="Sessions">
         <source>Sessions</source>
-        <target>Session</target>
+        <target>Sessions</target>
       </trans-unit>
       <trans-unit id="PZakWBI" resname="recorded">
         <source>recorded</source>
@@ -587,23 +587,23 @@
       </trans-unit>
       <trans-unit id="wIFwG37" resname="Edit Location">
         <source>Edit Location</source>
-        <target>Modifier un emplacement</target>
+        <target>Modifier un lieu</target>
       </trans-unit>
       <trans-unit id="4V7dV2u" resname="Location index">
         <source>Location index</source>
-        <target>Emplcamement index</target>
+        <target>lieu index</target>
       </trans-unit>
       <trans-unit id="Wp4uq6H" resname="Location list">
         <source>Location list</source>
-        <target>Liste des emplacements</target>
+        <target>Liste des lieus</target>
       </trans-unit>
       <trans-unit id="qaYhJOT" resname="New Location">
         <source>New Location</source>
-        <target>Nouvel emplacement</target>
+        <target>Nouvel lieu</target>
       </trans-unit>
       <trans-unit id="fOWyDX_" resname="Create new Location">
         <source>Create new Location</source>
-        <target>Créer un nouvel emplacement</target>
+        <target>Créer un nouvel lieu</target>
       </trans-unit>
       <trans-unit id="Zj6hv.." resname="to">
         <source>to</source>
@@ -615,7 +615,7 @@
       </trans-unit>
       <trans-unit id="RCo5dLL" resname="No sessions for this location">
         <source>No sessions for this location</source>
-        <target>Aucune sessions pour cet emplacement</target>
+        <target>Aucune sessions pour cet lieu</target>
       </trans-unit>
       <trans-unit id="XMxgVYx" resname="Edit Session">
         <source>Edit Session</source>
@@ -635,7 +635,7 @@
       </trans-unit>
       <trans-unit id="s1UuFDQ" resname="Training location">
         <source>Training location</source>
-        <target>Formation emplacement</target>
+        <target>Formation lieu</target>
       </trans-unit>
       <trans-unit id="gWlpMQG" resname="Start date">
         <source>Start date</source>
@@ -663,7 +663,7 @@
       </trans-unit>
       <trans-unit id="I8AaOIq" resname="No location set for this session">
         <source>No location set for this session</source>
-        <target>Aucun emplacement défini pour cette session</target>
+        <target>Aucun lieu défini pour cette session</target>
       </trans-unit>
       <trans-unit id="KSwG8AR" resname="Category">
         <source>Category</source>
@@ -812,6 +812,14 @@
       <trans-unit id="i0uffNm" resname="Export to Excel">
         <source>Export to Excel</source>
         <target>Exporter en excel</target>
+      </trans-unit>
+      <trans-unit id="pCMpNcS" resname="recordeds">
+        <source>recordeds</source>
+        <target>enregistrées</target>
+      </trans-unit>
+      <trans-unit id="Ur601.Y" resname="traineds">
+        <source>traineds</source>
+        <target>formés</target>
       </trans-unit>
     </body>
   </file>
