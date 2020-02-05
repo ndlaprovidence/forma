@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>
-            {% block title %}Welcome!
+            {% block title %}{{'Welcome!'|trans}}
             {% endblock %}
         </title>
         {% block javascripts %}
@@ -40,7 +40,7 @@
                     </li>
                     <div class="nav-item dropdown px-4">
                         <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Administration
+                            {{'Administration'|trans}}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="{{ path('instructor_index') }}">{{ 'Instructors'|trans }}</a>
@@ -74,20 +74,23 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2 class="modal-title">About Forma</h2>
+                            <h2 class="modal-title">{{'About Forma'|trans}}</h2>
                             <button type="button" class="close" data-dismiss="modal">
                                 <span>&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <h5>Popover in a modal</h5>
-                            <p>This <a href="#" role="button" class="btn btn-secondary popover-test" title="Popover title" data-content="Popover body content is set in this attribute.">button</a> triggers a popover on click.</p>
+                            <p>Forma is a free software under an "insert name" license. It is developped with Symfony 4.</p>
                             <hr>
-                            <h5>Tooltips in a modal</h5>
-                            <p><a href="#" class="tooltip-test" title="Tooltip">This link</a> and <a href="#" class="tooltip-test" title="Tooltip">that link</a> have tooltips on hover.</p>
+                            <h5>Software developped by :</h5>
+                            <p>2020 - HOCHET Dylan & HEUVELINE Thomas</p>
+                            <hr>
+                            <h5>Libraries used :</h5>
+                            <label class='w-100'>phpoffice/phpspreadsheet</label>
+                            <label class='w-100'>phpoffice/phpword</label>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Confirm</button>
+                            <button type="button" class="btn btn-primary mx-auto" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>

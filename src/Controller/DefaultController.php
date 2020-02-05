@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Upload;
 use App\Form\UploadType;
 use Psr\Log\LoggerInterface;
+use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
 use App\Repository\CompanyRepository;
 use App\Repository\SessionRepository;
 use App\Repository\TraineeRepository;
@@ -44,7 +46,6 @@ class DefaultController extends AbstractController
                 'file_name' => $fileName,
             ]);
         }
-
         return $this->render('default/index.html.twig', [
             'controller_name' => 'DefaultController',
             'form' => $form->createView(),
@@ -53,4 +54,7 @@ class DefaultController extends AbstractController
             'companies' => $cr->findAll()
             ]);
     }
+
+    
+    
 }

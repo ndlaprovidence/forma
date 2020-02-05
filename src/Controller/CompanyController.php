@@ -26,29 +26,6 @@ class CompanyController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="company_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $company = new Company();
-        $form = $this->createForm(CompanyType::class, $company);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($company);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('company_index');
-        }
-
-        return $this->render('company/new.html.twig', [
-            'company' => $company,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
      * @Route("/{id}", name="company_show", methods={"GET"})
      */
     public function show(Company $company): Response
@@ -69,7 +46,9 @@ class CompanyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('company_index');
+            return $this->redirectToRoute('company_show', [
+                'id' => $company->getId(),
+            ]);
         }
 
         return $this->render('company/edit.html.twig', [

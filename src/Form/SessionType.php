@@ -7,6 +7,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class SessionType extends AbstractType
 {
@@ -16,10 +18,19 @@ class SessionType extends AbstractType
             ->add('training')
             ->add('location')
             ->add('instructors')
-            ->add('start_date', DateType::Class , [
+            ->add('date', DateType::Class , [
                 'widget' => 'single_text',
             ])
-            ->add('end_date', DateType::Class , [
+            ->add('start_time_am', TimeType::Class , [
+                'widget' => 'single_text',
+            ])
+            ->add('end_time_am', TimeType::Class , [
+                'widget' => 'single_text',
+            ])
+            ->add('start_time_pm', TimeType::Class , [
+                'widget' => 'single_text',
+            ])
+            ->add('end_time_pm', TimeType::Class , [
                 'widget' => 'single_text',
             ])
             ->add('comment')

@@ -34,6 +34,11 @@ class Instructor
      */
     private $sessions;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $profession;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
@@ -97,6 +102,18 @@ class Instructor
             $this->sessions->removeElement($session);
             $session->removeInstructor($this);
         }
+
+        return $this;
+    }
+
+    public function getProfession(): ?string
+    {
+        return $this->profession;
+    }
+
+    public function setProfession(?string $profession): self
+    {
+        $this->profession = $profession;
 
         return $this;
     }

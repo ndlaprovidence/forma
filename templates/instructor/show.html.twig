@@ -1,26 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Instructor{% endblock %}
+{% block title %}{{'Instructor'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('instructor_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
     
     <div class='row justify-content-center mb-5'>
         <div class='col text-center'>
-            <a href="{{ path('instructor_edit', {'id': instructor.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+            <a href="{{ path('instructor_edit', {'id': instructor.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Edit'|trans}}</button></a>
         </div>
     </div>
 
     <h1 class="text-center mb-5">{{ instructor.lastName }} {{ instructor.firstName }}</h1>
 
+    <div class='d-flex row mb-5 justify-content-around'>
 
-    <h5>Associated sessions ({{ instructor.sessions|length }})</h5>
-    {% if instructor.sessions|length > 0 %}
-        {% for session in instructor.sessions %}
-            <h6 class='font-italic light-bottom-border pb-2'>{{ session.training.title }}</h6>
-        {% endfor %}
-    {% else %}
-        <h6 class="font-italic text-danger mb-5">No sessions for this instructor</h6>
-    {% endif %}
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-user-tie fa-2x"></i><label class='h4 px-3'>Profession</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                {% if instructor.profession %}
+                    <h5>{{ instructor.profession }}</h5>
+                {% else %}
+                    <h5 class="font-italic text-danger">No profession for this instructor</h5>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-chalkboard-teacher fa-2x"></i><label class='h4 px-3'>{{'Associated sessions'|trans}}</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                <h5>Number : {{ instructor.sessions|length }}</h5>
+                <hr>
+                {% if instructor.sessions|length > 0 %}
+                    {% for session in instructor.sessions %}
+                        <h5>{{ session.training.title }}</h5>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <h5 class="font-italic text-danger">{{'No sessions for this instructor'|trans}}</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class TrainingType extends AbstractType
 {
@@ -17,7 +18,9 @@ class TrainingType extends AbstractType
     {
         $builder
             ->add('title')
-            ->add('platform')
+            ->add('platform', TextType::class, [
+                'disabled' => true
+            ])
             ->add('training_category')
             ->add('goals')
             ->add('reference_number');

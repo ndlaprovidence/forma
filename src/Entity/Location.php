@@ -39,6 +39,11 @@ class Location
      */
     private $sessions;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $name;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
@@ -117,6 +122,18 @@ class Location
                 $session->setLocation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

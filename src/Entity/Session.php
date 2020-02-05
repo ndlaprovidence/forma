@@ -22,12 +22,7 @@ class Session
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $start_date;
-
-    /**
-     * @ORM\Column(type="date", nullable=true)
-     */
-    private $end_date;
+    private $date;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -63,6 +58,26 @@ class Session
      */
     private $upload;
 
+    /**
+     * @ORM\Column(type="time")
+     */
+    private $start_time_am;
+
+    /**
+     * @ORM\Column(type="time")
+     */
+    private $end_time_am;
+
+    /**
+     * @ORM\Column(type="time")
+     */
+    private $start_time_pm;
+
+    /**
+     * @ORM\Column(type="time")
+     */
+    private $end_time_pm;
+
 
     public function __construct()
     {
@@ -80,26 +95,14 @@ class Session
         return $this->id;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getDate(): ?\DateTimeInterface
     {
-        return $this->start_date;
+        return $this->date;
     }
 
-    public function setStartDate(\DateTimeInterface $start_date): self
+    public function setDate(\DateTimeInterface $date): self
     {
-        $this->start_date = $start_date;
-
-        return $this;
-    }
-
-    public function getEndDate(): ?\DateTimeInterface
-    {
-        return $this->end_date;
-    }
-
-    public function setEndDate(\DateTimeInterface $end_date): self
-    {
-        $this->end_date = $end_date;
+        $this->date = $date;
 
         return $this;
     }
@@ -200,6 +203,54 @@ class Session
     public function setUpload(?Upload $upload): self
     {
         $this->upload = $upload;
+
+        return $this;
+    }
+
+    public function getStartTimeAm(): ?\DateTimeInterface
+    {
+        return $this->start_time_am;
+    }
+
+    public function setStartTimeAm(\DateTimeInterface $start_time_am): self
+    {
+        $this->start_time_am = $start_time_am;
+
+        return $this;
+    }
+
+    public function getEndTimeAm(): ?\DateTimeInterface
+    {
+        return $this->end_time_am;
+    }
+
+    public function setEndTimeAm(\DateTimeInterface $end_time_am): self
+    {
+        $this->end_time_am = $end_time_am;
+
+        return $this;
+    }
+
+    public function getStartTimePm(): ?\DateTimeInterface
+    {
+        return $this->start_time_pm;
+    }
+
+    public function setStartTimePm(\DateTimeInterface $start_time_pm): self
+    {
+        $this->start_time_pm = $start_time_pm;
+
+        return $this;
+    }
+
+    public function getEndTimePm(): ?\DateTimeInterface
+    {
+        return $this->end_time_pm;
+    }
+
+    public function setEndTimePm(\DateTimeInterface $end_time_pm): self
+    {
+        $this->end_time_pm = $end_time_pm;
 
         return $this;
     }
