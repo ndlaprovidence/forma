@@ -51,7 +51,7 @@ class Location
 
     public function __toString()
     {
-        return  $this->street . ', ' . $this->postal_code . " - " . $this->city;
+        return  $this->name . " - " . $this->postal_code . " " . $this->city;
     }
 
     public function getId(): ?int
