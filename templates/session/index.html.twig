@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Session index{% endblock %}
+{% block title %}{{'Session index'|trans}}{% endblock %}
 
 {% block body %}
 
-    <h1 class='text-center mb-3'>Sessions list</h1>
+    <h1 class='text-center mb-3'>{{'Sessions list'|trans}}</h1>
 
     <div class='row justify-content-center'>
         <div class='col text-center mb-3'>
-            <a href="{{ path('session_index') }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Export to Excel</button></a>
+            <a href="{{ path('session_index') }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Export to Excel'|trans}}</button></a>
         </div>
     </div>
 
     <div class="row text-center tab-header">
         <div class="col-5 tab-cell-header px-2 py-2">
-            Training
+            {{'Training'|trans}}
         </div>
         <div class="col-5 tab-cell-header px-2 py-2">
-            Training location
+            {{'Training location'|trans}}
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
             Date
@@ -40,7 +40,7 @@
     {% else %}
         <div class='row justify-content-center mt-2'>
             <div class='col text-center'>
-                <div class="alert alert-danger">No entry found</div>
+                <div class="alert alert-danger">{{'No entry found'|trans}}</div>
             </div>
         </div>
     {% endfor %}

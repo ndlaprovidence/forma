@@ -1,29 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Instructor index{% endblock %}
+{% block title %}{{'Instructor index'|trans}}{% endblock %}
 
 {% block body %}
 
     <div class='row justify-content-center mb-3'>
         <div class='col text-center'>
-            <a href="{{ path('instructor_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">New</button></a>
+            <a href="{{ path('instructor_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'New'|trans}}</button></a>
         </div>
     </div>
 
-    <h1 class='text-center mb-3'>Instructor list</h1>
+    <h1 class='text-center mb-3'>{{'Instructor list'|trans}}</h1>
 
     <div class="row text-center tab-header">
         <div class="col-4 tab-cell-header px-2 py-2">
-            Last name
+            {{'Last name'|trans}}
         </div>
         <div class="col-4 tab-cell-header px-2 py-2">
-            First name
+            {{'First name'|trans}}
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
             Profession
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
-            Trainings
+            {{'Trainings'|trans}}
         </div>
     </div>
     {% for instructor in instructors %}
@@ -46,7 +46,7 @@
     {% else %}
         <div class='row justify-content-center mt-2'>
             <div class='col text-center'>
-                <div class="alert alert-danger">No entry found</div>
+                <div class="alert alert-danger">{{'No entry found'|trans}}</div>
             </div>
         </div>
     {% endfor %}

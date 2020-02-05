@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Trainee{% endblock %}
+{% block title %}{{'Trainee'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('trainee_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
     
     <div class='row justify-content-center mb-5'>
         <div class='col text-center'>
-            <a href="{{ path('trainee_edit', {'id': trainee.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+            <a href="{{ path('trainee_edit', {'id': trainee.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Edit'|trans}}</button></a>
         </div>
     </div>
 
@@ -21,7 +21,7 @@
                 {% if trainee.email %}
                     <h5>{{ trainee.email }}</h5>
                 {% else %}
-                    <h5 class="font-italic text-danger">No email for this trainee</h5>
+                    <h5 class="font-italic text-danger">{{'No email for this trainee'|trans}}</h5>
                 {% endif %}
             </div>
         </div>

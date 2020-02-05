@@ -1,25 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Location{% endblock %}
+{% block title %}{{'Location'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('location_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
     
     <div class='row justify-content-center mb-5'>
         <div class='col text-center'>
-            <a href="{{ path('location_edit', {'id': location.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+            <a href="{{ path('location_edit', {'id': location.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Edit'|trans}}</button></a>
         </div>
     </div>
 
     <h1 class="text-center mb-5">{{ location.street }}, {{ location.postalCode }} - {{ location.city }}</h1>
 
-    <h5>Associated sessions ({{ location.sessions|length }})</h5>
+    <h5>{{'Associated sessions'|trans}} ({{ location.sessions|length }})</h5>
     {% if location.sessions|length > 0 %}
         {% for session in location.sessions %}
-            <h6 class='font-italic light-bottom-border pb-2'>{{ session.training.title }} du {{ session.date|date("d/m/Y") }}</h6>
+            <h6 class='font-italic light-bottom-border pb-2'>{{ session.training.title }} at {{ session.date|date("d/m/Y") }}</h6>
         {% endfor %}
     {% else %}
-        <h6 class="font-italic text-danger mb-5">No sessions for this location</h6>
+        <h6 class="font-italic text-danger mb-5">{{'No sessions for this location'|trans}}</h6>
     {% endif %}
 
     

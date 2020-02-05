@@ -1,9 +1,9 @@
 {{ form_start(form) }}
-    <h5>Email</h5>
+    <h5>{{'Email'|trans}}</h5>
     {{ form_errors(form.email) }}
     {{ form_widget(form.email, {'attr': {'class': 'mb-3'}}) }}
 
-    <h5>Roles</h5>
+    <h5>{{'Roles'|trans}}</h5>
     {{ form_errors(form.roles) }}
     {{ form_widget(form.roles, {'attr': {'class': 'mb-5'}}) }}
 

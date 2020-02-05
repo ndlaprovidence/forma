@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'New Location'|trans}}{% endblock %}
+
+{% block body %}
+    <a href="{{ path('location_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
+
+    <h1 class='text-center mb-5'>{{'Create new Location'|trans}}</h1>
+
+    {{ include('location/_form.html.twig') }}
+{% endblock %}

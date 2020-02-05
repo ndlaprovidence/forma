@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Session{% endblock %}
+{% block title %}{{'Session'|trans}}{% endblock %}
 
 {% block body %}
 
@@ -18,17 +18,18 @@
     
     <div class='row justify-content-center mb-5'>
         <div class='col text-center'>
-            <a href="{{ path('session_edit', {'id': session.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Editer</button></a>
+            <a href="{{ path('session_edit', {'id': session.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Edit'|trans}}</button></a>
         </div>
         {% if session.training.platform != 'Formiris' %}
             <div class='col text-center'>
-                <a href="#"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Feuille d'émargement</button></a>
+                <a href="#"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Tally sheet'|trans}}</button></a>
             </div>
         {% endif %}
     </div>
 
     <h1 class="text-center mb-5">{{ session.training }}</h1>
 
+<<<<<<< HEAD
     <div class='d-flex row mb-5 justify-content-around'>
     
         <div class='mb-4'>
@@ -54,6 +55,29 @@
                 {% endif %}
             </div>
         </div>
+=======
+    <div class='row mb-5 justify-content-center'>
+        {% if session.training.referenceNumber != 'Non-renseigné' %}
+            <h5 class="font-italic mb-5">{{ session.training.referenceNumber }}</h5>
+        {% else %}
+            <h5 class="font-italic text-danger mb-5">{{'Training number reference not given'|trans}}</h5>
+        {% endif %}
+    </div>
+
+    <h5>{{'Location'|trans}}</h5>
+    {% if session.location %}
+        <h6 class="font-italic mb-5">{{ session.location }}</h6>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">{{'No location set for this session'|trans}}</h6>
+    {% endif %}
+
+    <h5>{{'Category'|trans}}</h5>
+    {% if session.training.trainingCategory %}
+        <h6 class="font-italic mb-5">{{ session.training.trainingCategory.title }}</h6>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">{{'No category set for this session'|trans}}</h6>
+    {% endif %}
+>>>>>>> develop
 
         <div class='mb-4'>
             <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-map-marker-alt fa-2x"></i><label class='h4 px-3'>Location</label></div>
@@ -67,6 +91,7 @@
             </div>
         </div>
 
+<<<<<<< HEAD
         <div class='mb-4'>
             <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-list-ul fa-2x"></i><label class='h4 px-3'>Category</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
@@ -91,6 +116,29 @@
                 {% endif %}
             </div>
         </div>
+=======
+    <h5>{{'Instructors'|trans}}</h5>
+    {% if session.instructors|length > 0 %}
+        <h6>
+        {% for instructor in session.instructors %}
+            {{ instructor.lastName }} {{ instructor.firstName }},
+        {% endfor %}
+        </h6><div class='mb-5'></div>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">{{'No instructor set for this session'|trans}}</h6>
+    {% endif %}
+
+    
+    <h5>{{'Goals'|trans}}</h5>
+    {% if session.training.goals|length > 0 %}
+        {% for goal in session.training.goals %}
+            <h6 class='font-italic light-bottom-border pb-2'>{{ goal.title }}</h6>
+        {% endfor %}
+        <div class='mb-5'></div>
+    {% else %}
+        <h6 class="font-italic text-danger mb-5">{{'No goal set for this session'|trans}}</h6>
+    {% endif %}
+>>>>>>> develop
 
         <div class='mb-4'>
             <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>Objectifs</label></div>
@@ -112,19 +160,19 @@
 
     <div class="row text-center tab-header">
         <div class="col-2 tab-cell-header px-2 py-2">
-            Last name
+            {{'Last name'|trans}}
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
-            First name
+            {{'First name'|trans}}
         </div>
         <div class="col-3 tab-cell-header px-2 py-2">
-            Email
+            {{'Email'|trans}}
         </div>
         <div class="col-4 tab-cell-header px-2 py-2">
-            Company
+            {{'Company'|trans}}
         </div>
         <div class="col-1 tab-cell-header px-2 py-2">
-            Convention
+            {{'Convention'|trans}}
         </div>
     </div>
     {% for trainee in session.trainees %}
@@ -148,7 +196,7 @@
     {% else %}
         <div class='row justify-content-center mt-2'>
             <div class='col text-center'>
-                <div class="alert alert-danger">No entry found</div>
+                <div class="alert alert-danger">{{'No entry found'|trans}}</div>
             </div>
         </div>
     {% endfor %}

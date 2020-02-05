@@ -1,17 +1,17 @@
 {{ form_start(form) }}
-    <h5>Last name</h5>
+    <h5>{{'Last name'|trans}}</h5>
     {{ form_errors(form.last_name) }}
     {{ form_widget(form.last_name, {'attr': {'class': 'mb-3'}}) }}
 
-    <h5>First name</h5>
+    <h5>{{'First name'|trans}}</h5>
     {{ form_errors(form.first_name) }}
     {{ form_widget(form.first_name, {'attr': {'class': 'mb-3'}}) }}
 
-    <h5>Email</h5>
+    <h5>{{'Email'|trans}}</h5>
     {{ form_errors(form.email) }}
     {{ form_widget(form.email, {'attr': {'class': 'mb-3'}}) }}
 
-    <h5>Company</h5>
+    <h5>{{'Company'|trans}}</h5>
     {{ form_errors(form.company) }}
     {{ form_widget(form.company, {'attr': {'class': 'mb-5'}}) }}
 

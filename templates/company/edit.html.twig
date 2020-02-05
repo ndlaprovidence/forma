@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Company{% endblock %}
+{% block title %}{{'Edit Company'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('company_show', {'id': company.id}) }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
 
-    <h1 class='text-center mb-5'>Edit Company</h1>
+    <h1 class='text-center mb-5'>{{'Edit Company'|trans}}</h1>
 
     {{ include('company/_form.html.twig', {'button_label': 'Update'}) }}
 
