@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Goal{% endblock %}
+{% block title %}{{'New Goal'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('goal_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
 
-    <h1 class='text-center mb-5'>Create new Goal</h1>
+    <h1 class='text-center mb-5'>{{'Create new Goal'|trans}}</h1>
 
     {{ include('goal/_form.html.twig') }}
 {% endblock %}

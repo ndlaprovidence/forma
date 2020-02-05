@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Trainee{% endblock %}
+{% block title %}{{'New Trainee'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('trainee_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
 
-    <h1 class='text-center mb-5'>Create new Trainee</h1>
+    <h1 class='text-center mb-5'>{{'Create new Trainee'|trans}}</h1>
 
     {{ include('trainee/_form.html.twig') }}
 {% endblock %}

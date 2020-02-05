@@ -123,3 +123,9 @@ body {
     line-height: -5px;
 }
   
+.alert-fixed {
+    float: right;
+    position: fixed;
+    top: 67px;
+    right: 50px;
+}

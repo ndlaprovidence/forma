@@ -1,21 +1,21 @@
 {{ form_start(form) }}
-    <label>Title</label>
+    <label>{{'Title'|trans}}</label>
     {{ form_errors(form.title) }}
     {{ form_widget(form.title, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Platform</label>
+    <label>{{'Platform'|trans}}</label>
     {{ form_errors(form.platform) }}
     {{ form_widget(form.platform, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Reference number</label>
+    <label>{{'Reference number'|trans}}</label>
     {{ form_errors(form.reference_number) }}
     {{ form_widget(form.reference_number, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Category</label>
+    <label>{{'Category'|trans}}</label>
     {{ form_errors(form.training_category) }}
     {{ form_widget(form.training_category, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Goals</label>
+    <label>{{'Goals'|trans}}</label>
     {{ form_errors(form.goals) }}
     {{ form_widget(form.goals, {'attr': {'class': 'mb-5'}}) }}
 

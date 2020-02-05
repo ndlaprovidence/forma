@@ -1,23 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Training Category index{% endblock %}
+{% block title %}{{'Training Category index'|trans}}{% endblock %}
 
 {% block body %}
 
     <div class='row justify-content-center mb-3'>
         <div class='col text-center'>
-            <a href="{{ path('training_category_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">New</button></a>
+            <a href="{{ path('training_category_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'New'|trans}}</button></a>
         </div>
     </div>
 
-    <h1 class='text-center mb-3'>Training Category list</h1>
+    <h1 class='text-center mb-3'>{{'Training Category list'|trans}}</h1>
 
     <div class="row text-center tab-header">
         <div class="col-10 tab-cell-header px-2 py-2">
-            Title
+            {{'Title'|trans}}
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
-            Training
+            {{'Training'|trans}}
         </div>
     </div>
     {% for trainingCategory in training_categories %}
@@ -34,7 +34,7 @@
     {% else %}
         <div class='row justify-content-center mt-2'>
             <div class='col text-center'>
-                <div class="alert alert-danger">No entry found</div>
+                <div class="alert alert-danger">{{'No entry found'|trans}}</div>
             </div>
         </div>
     {% endfor %}

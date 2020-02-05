@@ -1,13 +1,13 @@
 {{ form_start(form) }}
-    <label>Street</label>
+    <label>{{'Street'|trans}}</label>
     {{ form_errors(form.street) }}
     {{ form_widget(form.street, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Postal code</label>
+    <label>{{'Postal code'|trans}}</label>
     {{ form_errors(form.postal_code) }}
     {{ form_widget(form.postal_code, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>City</label>
+    <label>{{'City'|trans}}</label>
     {{ form_errors(form.city) }}
     {{ form_widget(form.city, {'attr': {'class': 'mb-5'}}) }}
 

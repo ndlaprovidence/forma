@@ -1,9 +1,9 @@
 {{ form_start(form) }}
-    <label>Email</label>
+    <label>{{'Email'|trans}}</label>
     {{ form_errors(form.email) }}
     {{ form_widget(form.email, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Roles</label>
+    <label>{{'Roles'|trans}}</label>
     {{ form_errors(form.roles) }}
     {{ form_widget(form.roles, {'attr': {'class': 'mb-5'}}) }}
 
