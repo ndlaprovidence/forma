@@ -30,7 +30,7 @@
         <h6 class="font-italic text-danger mb-5">{{'No category for this training'|trans}}</h6>
     {% endif %}
 
-    <h5>{{'v'|trans}} ({{ training.goals|length }})</h5>
+    <h5>{{'goals'|trans}} ({{ training.goals|length }})</h5>
     {% if training.goals|length > 0 %}
         {% for goal in training.goals %}
             <h6 class='font-italic light-bottom-border pb-2'>{{ goal.title }}</h6>

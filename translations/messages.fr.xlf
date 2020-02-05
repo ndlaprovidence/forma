@@ -311,503 +311,507 @@
       </trans-unit>
       <trans-unit id="OnhpU4i" resname="Home">
         <source>Home</source>
-        <target>__Home</target>
+        <target>Accueil</target>
       </trans-unit>
       <trans-unit id="aVm0FZV" resname="Session">
         <source>Session</source>
-        <target>__Session</target>
+        <target>Session</target>
       </trans-unit>
       <trans-unit id="S0LGaQ6" resname="Administration">
         <source>Administration</source>
-        <target>__Administration</target>
+        <target>Administration</target>
       </trans-unit>
       <trans-unit id="UDe.Oq_" resname="Instructors">
         <source>Instructors</source>
-        <target>__Instructors</target>
+        <target>Formateurs</target>
       </trans-unit>
       <trans-unit id="UI4nOqP" resname="Trainees">
         <source>Trainees</source>
-        <target>__Trainees</target>
+        <target>Stagiaires</target>
       </trans-unit>
       <trans-unit id="a3wPsQa" resname="Trainings">
         <source>Trainings</source>
-        <target>__Trainings</target>
+        <target>Formations</target>
       </trans-unit>
       <trans-unit id="uLHYlMa" resname="Categories">
         <source>Categories</source>
-        <target>__Categories</target>
+        <target>Catégories</target>
       </trans-unit>
       <trans-unit id="lcYRcDG" resname="Locations">
         <source>Locations</source>
-        <target>__Locations</target>
+        <target>Emplacement</target>
       </trans-unit>
       <trans-unit id="EWzTmCq" resname="Goals">
         <source>Goals</source>
-        <target>__Goals</target>
+        <target>Objectifs</target>
       </trans-unit>
       <trans-unit id="SSNBO0D" resname="Companies">
         <source>Companies</source>
-        <target>__Companies</target>
+        <target>Entreprises</target>
       </trans-unit>
       <trans-unit id="Tvyg0Qx" resname="About">
         <source>About</source>
-        <target>__About</target>
+        <target>À propos</target>
       </trans-unit>
       <trans-unit id="M3n3oYz" resname="About Forma">
         <source>About Forma</source>
-        <target>__About Forma</target>
+        <target>À propos de Forma</target>
       </trans-unit>
       <trans-unit id="Q7IPmX." resname="Popover in a modal">
         <source>Popover in a modal</source>
-        <target>__Popover in a modal</target>
+        <target>Popover dans le modèle</target>
       </trans-unit>
       <trans-unit id="huHedII" resname="This">
         <source>This</source>
-        <target>__This</target>
+        <target>Ce</target>
       </trans-unit>
       <trans-unit id="w_LXjz." resname="button">
         <source>button</source>
-        <target>__button</target>
+        <target>bouton</target>
       </trans-unit>
       <trans-unit id="HVMEPa5" resname="triggers a popover on click">
         <source>triggers a popover on click</source>
-        <target>__triggers a popover on click</target>
+        <target>Déclenche un popover sur un clic</target>
       </trans-unit>
       <trans-unit id="i297YK9" resname="Tooltips in a modal">
         <source>Tooltips in a modal</source>
-        <target>__Tooltips in a modal</target>
+        <target>Infobulle dans le modèle</target>
       </trans-unit>
       <trans-unit id="njfOwly" resname="This link">
         <source>This link</source>
-        <target>__This link</target>
+        <target>Ce lien</target>
       </trans-unit>
       <trans-unit id="YgERG4O" resname="and">
         <source>and</source>
-        <target>__and</target>
+        <target>et</target>
       </trans-unit>
       <trans-unit id="bkG6q02" resname="that link">
         <source>that link</source>
-        <target>__that link</target>
+        <target>ce lien</target>
       </trans-unit>
       <trans-unit id="Ry1pAcn" resname="have tooltips on hover">
         <source>have tooltips on hover</source>
-        <target>__have tooltips on hover</target>
+        <target>avoir une infobulle lorsque vous survolez</target>
       </trans-unit>
       <trans-unit id="7r3SSnf" resname="Confirm">
         <source>Confirm</source>
-        <target>__Confirm</target>
+        <target>Confimer</target>
       </trans-unit>
       <trans-unit id="W1.D7rX" resname="Edit Company">
         <source>Edit Company</source>
-        <target>__Edit Company</target>
+        <target>Modifier une entreprise</target>
       </trans-unit>
       <trans-unit id="hkjIO_5" resname="Company index">
         <source>Company index</source>
-        <target>__Company index</target>
+        <target>Entreprise index</target>
       </trans-unit>
       <trans-unit id="GP3VSbL" resname="New">
         <source>New</source>
-        <target>__New</target>
+        <target>Nouveau</target>
       </trans-unit>
       <trans-unit id="Li8nzFb" resname="Company list">
         <source>Company list</source>
-        <target>__Company list</target>
+        <target>Liste des entreprises</target>
       </trans-unit>
       <trans-unit id="tb6tc6Q" resname="Corporate name">
         <source>Corporate name</source>
-        <target>__Corporate name</target>
+        <target>Raison sociale</target>
       </trans-unit>
       <trans-unit id="xmZZHfB" resname="Street">
         <source>Street</source>
-        <target>__Street</target>
+        <target>Rue</target>
       </trans-unit>
       <trans-unit id="rlPOqCK" resname="Postal code">
         <source>Postal code</source>
-        <target>__Postal code</target>
+        <target>Code postal</target>
       </trans-unit>
       <trans-unit id=".DP3Mkb" resname="City">
         <source>City</source>
-        <target>__City</target>
+        <target>Ville</target>
       </trans-unit>
       <trans-unit id="S1jGam4" resname="No entry found">
         <source>No entry found</source>
-        <target>__No entry found</target>
+        <target>Pas de données trouvées</target>
       </trans-unit>
       <trans-unit id="FFN3XfC" resname="New Company">
         <source>New Company</source>
-        <target>__New Company</target>
+        <target>Nouvelle entreprise</target>
       </trans-unit>
       <trans-unit id="jNDCMru" resname="Create new Company">
         <source>Create new Company</source>
-        <target>__Create new Company</target>
+        <target>Créer une nouvelle entreprise</target>
       </trans-unit>
       <trans-unit id="3kdDyHl" resname="Company">
         <source>Company</source>
-        <target>__Company</target>
+        <target>Entreprise</target>
       </trans-unit>
       <trans-unit id="FbYZdLJ" resname="Location">
         <source>Location</source>
-        <target>__Location</target>
+        <target>Emplacement</target>
       </trans-unit>
       <trans-unit id="3446Zja" resname="Incomplete address information">
         <source>Incomplete address information</source>
-        <target>__Incomplete address information</target>
+        <target>Les informations de l'adresse sont incomplète</target>
       </trans-unit>
       <trans-unit id="MG8bsgZ" resname="Phone number">
         <source>Phone number</source>
-        <target>__Phone number</target>
+        <target>Numéro de téléphone</target>
       </trans-unit>
       <trans-unit id="1Ogrxvf" resname="No phone number">
         <source>No phone number</source>
-        <target>__No phone number</target>
+        <target>Aucun numéro de téléphone</target>
       </trans-unit>
       <trans-unit id="K9DpAOL" resname="Siret number">
         <source>Siret number</source>
-        <target>__Siret number</target>
+        <target>Numéro de siret</target>
       </trans-unit>
       <trans-unit id="Bm7B4QT" resname="No siret number">
         <source>No siret number</source>
-        <target>__No siret number</target>
+        <target>Aucun de numéro de siret</target>
       </trans-unit>
       <trans-unit id="Y9zriAC" resname="Phone">
         <source>Phone</source>
-        <target>__Phone</target>
+        <target>Téléphone</target>
       </trans-unit>
       <trans-unit id="bPtId8Q" resname="F.C. Pro training management software">
         <source>F.C. Pro training management software</source>
-        <target>__F.C. Pro training management software</target>
+        <target>Logiciel de gestion de formations professionnelles FC PRO </target>
       </trans-unit>
       <trans-unit id="ZYhd0VG" resname="Import a new .csv file to get started">
         <source>Import a new .csv file to get started</source>
-        <target>__Import a new .csv file to get started</target>
+        <target>Importez un fichier .csv pour commencer</target>
       </trans-unit>
       <trans-unit id="b6PL9FG" resname="Sessions">
         <source>Sessions</source>
-        <target>__Sessions</target>
+        <target>Session</target>
       </trans-unit>
       <trans-unit id="PZakWBI" resname="recorded">
         <source>recorded</source>
-        <target>__recorded</target>
+        <target>enregistré</target>
       </trans-unit>
       <trans-unit id="wgWJJbK" resname="Trainee">
         <source>Trainee</source>
-        <target>__Trainee</target>
+        <target>Stagiaire</target>
       </trans-unit>
       <trans-unit id="M.vNhHD" resname="trained">
         <source>trained</source>
-        <target>__trained</target>
+        <target>formé</target>
       </trans-unit>
       <trans-unit id="wM3gc_f" resname="participant">
         <source>participant</source>
-        <target>__participant</target>
+        <target>participante</target>
       </trans-unit>
       <trans-unit id="NO_UoOo" resname="participants">
         <source>participants</source>
-        <target>__participants</target>
+        <target>participantes</target>
       </trans-unit>
       <trans-unit id="v_ksC3Q" resname="Please confirm!">
         <source>Please confirm!</source>
-        <target>__Please confirm!</target>
+        <target>Confirmez s'il vous plait !</target>
       </trans-unit>
       <trans-unit id="0LYEIUR" resname="This is the modal body, do you like it?">
         <source>This is the modal body, do you like it?</source>
-        <target>__This is the modal body, do you like it?</target>
+        <target>Voici le modèle body, vous l'aimez ?</target>
       </trans-unit>
       <trans-unit id="xFz0bNz" resname="Edit Goal">
         <source>Edit Goal</source>
-        <target>__Edit Goal</target>
+        <target>Modifier un objectif</target>
       </trans-unit>
       <trans-unit id="W.mHsko" resname="Goal index">
         <source>Goal index</source>
-        <target>__Goal index</target>
+        <target>Objectif index</target>
       </trans-unit>
       <trans-unit id="58k1Myi" resname="Goal list">
         <source>Goal list</source>
-        <target>__Goal list</target>
+        <target>liste des objectifs</target>
       </trans-unit>
       <trans-unit id="nStdIbr" resname="New Goal">
         <source>New Goal</source>
-        <target>__New Goal</target>
+        <target>Nouvel objectif</target>
       </trans-unit>
       <trans-unit id="dlgutJG" resname="Create new Goal">
         <source>Create new Goal</source>
-        <target>__Create new Goal</target>
+        <target>Créer un nouvel objectif</target>
       </trans-unit>
       <trans-unit id="zb9pdei" resname="Goal">
         <source>Goal</source>
-        <target>__Goal</target>
+        <target>Objectif</target>
       </trans-unit>
       <trans-unit id="EJXZo.y" resname="Associated trainings">
         <source>Associated trainings</source>
-        <target>__Associated trainings</target>
+        <target>Formations associées</target>
       </trans-unit>
       <trans-unit id="EDVQRMW" resname="No training for this goal">
         <source>No training for this goal</source>
-        <target>__No training for this goal</target>
+        <target>Aucune de formation pour cet objectif</target>
       </trans-unit>
       <trans-unit id="N0mmpfW" resname="Edit Instructor">
         <source>Edit Instructor</source>
-        <target>__Edit Instructor</target>
+        <target>Modifier un formateur</target>
       </trans-unit>
       <trans-unit id="ia9f22x" resname="Instructor index">
         <source>Instructor index</source>
-        <target>__Instructor index</target>
+        <target>Formateur index</target>
       </trans-unit>
       <trans-unit id="GuPOYof" resname="Instructor list">
         <source>Instructor list</source>
-        <target>__Instructor list</target>
+        <target>Liste des formateurs</target>
       </trans-unit>
       <trans-unit id="e0iIBJR" resname="Last name">
         <source>Last name</source>
-        <target>__Last name</target>
+        <target>Nom de famille</target>
       </trans-unit>
       <trans-unit id="cC75Ie0" resname="First name">
         <source>First name</source>
-        <target>__First name</target>
+        <target>Prénom</target>
       </trans-unit>
       <trans-unit id="e9cXFit" resname="New Instructor">
         <source>New Instructor</source>
-        <target>__New Instructor</target>
+        <target>Nouveau formateur </target>
       </trans-unit>
       <trans-unit id="4D6XgDm" resname="Create new Instructor">
         <source>Create new Instructor</source>
-        <target>__Create new Instructor</target>
+        <target>Créer un nouveau formateur</target>
       </trans-unit>
       <trans-unit id=".Km1w4a" resname="Instructor">
         <source>Instructor</source>
-        <target>__Instructor</target>
+        <target>Formateur</target>
       </trans-unit>
       <trans-unit id="UhFAfJ1" resname="Associated sessions">
         <source>Associated sessions</source>
-        <target>__Associated sessions</target>
+        <target>Sessions associées</target>
       </trans-unit>
       <trans-unit id="qQIJn0K" resname="No sessions for this instructor">
         <source>No sessions for this instructor</source>
-        <target>__No sessions for this instructor</target>
+        <target>Aucune sessions pour ce formateur</target>
       </trans-unit>
       <trans-unit id="wIFwG37" resname="Edit Location">
         <source>Edit Location</source>
-        <target>__Edit Location</target>
+        <target>Modifier un emplacement</target>
       </trans-unit>
       <trans-unit id="4V7dV2u" resname="Location index">
         <source>Location index</source>
-        <target>__Location index</target>
+        <target>Emplcamement index</target>
       </trans-unit>
       <trans-unit id="Wp4uq6H" resname="Location list">
         <source>Location list</source>
-        <target>__Location list</target>
+        <target>Liste des emplacements</target>
       </trans-unit>
       <trans-unit id="qaYhJOT" resname="New Location">
         <source>New Location</source>
-        <target>__New Location</target>
+        <target>Nouvel emplacement</target>
       </trans-unit>
       <trans-unit id="fOWyDX_" resname="Create new Location">
         <source>Create new Location</source>
-        <target>__Create new Location</target>
+        <target>Créer un nouvel emplacement</target>
       </trans-unit>
       <trans-unit id="Zj6hv.." resname="to">
         <source>to</source>
-        <target>__to</target>
+        <target>du</target>
       </trans-unit>
       <trans-unit id="dYV6RYm" resname="from">
         <source>from</source>
-        <target>__from</target>
+        <target>au</target>
       </trans-unit>
       <trans-unit id="RCo5dLL" resname="No sessions for this location">
         <source>No sessions for this location</source>
-        <target>__No sessions for this location</target>
+        <target>Aucune sessions pour cet emplacement</target>
       </trans-unit>
       <trans-unit id="XMxgVYx" resname="Edit Session">
         <source>Edit Session</source>
-        <target>__Edit Session</target>
+        <target>Modifier une session</target>
       </trans-unit>
       <trans-unit id="l6hh7Cl" resname="Session index">
         <source>Session index</source>
-        <target>__Session index</target>
+        <target>Session index</target>
       </trans-unit>
       <trans-unit id="fgmKD4z" resname="Sessions list">
         <source>Sessions list</source>
-        <target>__Sessions list</target>
+        <target>Liste des sessions</target>
       </trans-unit>
       <trans-unit id="NqeY4.O" resname="Training">
         <source>Training</source>
-        <target>__Training</target>
+        <target>Formations</target>
       </trans-unit>
       <trans-unit id="s1UuFDQ" resname="Training location">
         <source>Training location</source>
-        <target>__Training location</target>
+        <target>Formation emplacement</target>
       </trans-unit>
       <trans-unit id="gWlpMQG" resname="Start date">
         <source>Start date</source>
-        <target>__Start date</target>
+        <target>Date de début</target>
       </trans-unit>
       <trans-unit id="FDA6oMS" resname="End date">
         <source>End date</source>
-        <target>__End date</target>
+        <target>Date de fin</target>
       </trans-unit>
       <trans-unit id=".Au4Xzh" resname="New Session">
         <source>New Session</source>
-        <target>__New Session</target>
+        <target>Nouvelle session</target>
       </trans-unit>
       <trans-unit id="s65z0h4" resname="Create new Session">
         <source>Create new Session</source>
-        <target>__Create new Session</target>
+        <target>Créer une nouvelle session</target>
       </trans-unit>
       <trans-unit id="aTmTp.F" resname="Tally sheet">
         <source>Tally sheet</source>
-        <target>__Tally sheet</target>
+        <target>Feuille d'émargement</target>
       </trans-unit>
       <trans-unit id="qiY1vcO" resname="Training number reference not given">
         <source>Training number reference not given</source>
-        <target>__Training number reference not given</target>
+        <target>Numéro de référence de formation non fourni</target>
       </trans-unit>
       <trans-unit id="I8AaOIq" resname="No location set for this session">
         <source>No location set for this session</source>
-        <target>__No location set for this session</target>
+        <target>Aucun emplacement défini pour cette session</target>
       </trans-unit>
       <trans-unit id="KSwG8AR" resname="Category">
         <source>Category</source>
-        <target>__Category</target>
+        <target>Catégorie</target>
       </trans-unit>
       <trans-unit id="Lc4gZKQ" resname="No category set for this session">
         <source>No category set for this session</source>
-        <target>__No category set for this session</target>
+        <target>Aucune catégorie défini pour cette session</target>
       </trans-unit>
       <trans-unit id="Txh9ysq" resname="No instructor set for this session">
         <source>No instructor set for this session</source>
-        <target>__No instructor set for this session</target>
+        <target>Aucun formateur défini pour cette session</target>
       </trans-unit>
       <trans-unit id="RWA4Y.Y" resname="No goal set for this session">
         <source>No goal set for this session</source>
-        <target>__No goal set for this session</target>
+        <target>Aucun objectif défini pour cette session</target>
       </trans-unit>
       <trans-unit id="FL5PGsC" resname="Convention">
         <source>Convention</source>
-        <target>__Convention</target>
+        <target>Convention</target>
       </trans-unit>
       <trans-unit id="ssjFOuV" resname="Edit Trainee">
         <source>Edit Trainee</source>
-        <target>__Edit Trainee</target>
+        <target>Modifier un stagiaire</target>
       </trans-unit>
       <trans-unit id="FOv7jLI" resname="Trainee index">
         <source>Trainee index</source>
-        <target>__Trainee index</target>
+        <target>Stagiaire index</target>
       </trans-unit>
       <trans-unit id="M0ffoa5" resname="Trainee list">
         <source>Trainee list</source>
-        <target>__Trainee list</target>
+        <target>Liste des stagiaires</target>
       </trans-unit>
       <trans-unit id="oxbufNv" resname="New Trainee">
         <source>New Trainee</source>
-        <target>__New Trainee</target>
+        <target>Nouveau stagiaire</target>
       </trans-unit>
       <trans-unit id="cb8o_Om" resname="Create new Trainee">
         <source>Create new Trainee</source>
-        <target>__Create new Trainee</target>
+        <target>Créer un nouveau stagiaire</target>
       </trans-unit>
       <trans-unit id="i5fa81a" resname="Trainee email">
         <source>Trainee email</source>
-        <target>__Trainee email</target>
+        <target>Adresse email du stagiaire</target>
       </trans-unit>
       <trans-unit id="fZeLXAd" resname="No email for this trainee">
         <source>No email for this trainee</source>
-        <target>__No email for this trainee</target>
+        <target>Aucune adresse email pour ce stagiaire</target>
       </trans-unit>
       <trans-unit id="sHraVBJ" resname="Trainee company">
         <source>Trainee company</source>
-        <target>__Trainee company</target>
+        <target>Stagiaire entreprise</target>
       </trans-unit>
       <trans-unit id="vD4QnH0" resname="Edit Training">
         <source>Edit Training</source>
-        <target>__Edit Training</target>
+        <target>Modifier une formation</target>
       </trans-unit>
       <trans-unit id="47sGu45" resname="Training index">
         <source>Training index</source>
-        <target>__Training index</target>
+        <target>Formation index</target>
       </trans-unit>
       <trans-unit id="HxuUfd." resname="Training list">
         <source>Training list</source>
-        <target>__Training list</target>
+        <target>Liste des formations</target>
       </trans-unit>
       <trans-unit id="x4._GVc" resname="Platform">
         <source>Platform</source>
-        <target>__Platform</target>
+        <target>Plateforme</target>
       </trans-unit>
       <trans-unit id="z57ogPt" resname="Reference number">
         <source>Reference number</source>
-        <target>__Reference number</target>
+        <target>Numéro de référence</target>
       </trans-unit>
       <trans-unit id="Q9LZ56v" resname="New Training">
         <source>New Training</source>
-        <target>__New Training</target>
+        <target>Nouvelle formation</target>
       </trans-unit>
       <trans-unit id="2EnWmNq" resname="Create new Training">
         <source>Create new Training</source>
-        <target>__Create new Training</target>
+        <target>Créer une nouvelle formation</target>
       </trans-unit>
       <trans-unit id="z69rEqh" resname="Training platform">
         <source>Training platform</source>
-        <target>__Training platform</target>
+        <target>Plateforme de formation</target>
       </trans-unit>
       <trans-unit id="WjAYAgQ" resname="Training reference number">
         <source>Training reference number</source>
-        <target>__Training reference number</target>
+        <target>Numéro de référence de la formation</target>
       </trans-unit>
       <trans-unit id="0plI72g" resname="No reference number for this training">
         <source>No reference number for this training</source>
-        <target>__No reference number for this training</target>
+        <target>Aucun numéro de référence pour cette formation</target>
       </trans-unit>
       <trans-unit id="XcvKnOq" resname="No category for this training">
         <source>No category for this training</source>
-        <target>__No category for this training</target>
-      </trans-unit>
-      <trans-unit id="TJRIXgw" resname="v">
-        <source>v</source>
-        <target>__v</target>
+        <target>Aucune catégorie pour cette formation</target>
       </trans-unit>
       <trans-unit id="LdWwJUF" resname="Edit Training Category">
         <source>Edit Training Category</source>
-        <target>__Edit Training Category</target>
+        <target>Modifier une catégorie de formation</target>
       </trans-unit>
       <trans-unit id="Fac_vIS" resname="Training Category index">
         <source>Training Category index</source>
-        <target>__Training Category index</target>
+        <target>Catégorie de formation index</target>
       </trans-unit>
       <trans-unit id="gAaqV4J" resname="Training Category list">
         <source>Training Category list</source>
-        <target>__Training Category list</target>
+        <target>Liste de catégorie de formation</target>
       </trans-unit>
       <trans-unit id="WTEugOS" resname="New TrainingCategory">
         <source>New TrainingCategory</source>
-        <target>__New TrainingCategory</target>
+        <target>Nouvelle catégorie de formation</target>
       </trans-unit>
       <trans-unit id="hhrxp2c" resname="Create new Training Category">
         <source>Create new Training Category</source>
-        <target>__Create new Training Category</target>
+        <target>Créer une nouvelle catégorie de formation</target>
       </trans-unit>
       <trans-unit id="dbLQcYw" resname="Training Category">
         <source>Training Category</source>
-        <target>__Training Category</target>
+        <target>Catégorie de formation</target>
       </trans-unit>
       <trans-unit id="DE5R_1u" resname="No training for this category">
         <source>No training for this category</source>
-        <target>__No training for this category</target>
+        <target>Aucune formation pour cette catégorie</target>
       </trans-unit>
       <trans-unit id="BbiNGPw" resname="Edit user">
         <source>Edit user</source>
-        <target>__Edit user</target>
+        <target>Modifier un utilisateur</target>
       </trans-unit>
       <trans-unit id="iSINftS" resname="User list">
         <source>User list</source>
-        <target>__User list</target>
+        <target>Liste des utilisateurs</target>
       </trans-unit>
       <trans-unit id="g36VwXo" resname="Create new User">
         <source>Create new User</source>
-        <target>__Create new User</target>
+        <target>Créer un nouvel utilisateur</target>
       </trans-unit>
       <trans-unit id="zSaIqqf" resname="User roles">
         <source>User roles</source>
-        <target>__User roles</target>
+        <target>Rôles de l'utilisateur</target>
+      </trans-unit>
+      <trans-unit id="tbRxxhu" resname="goals">
+        <source>goals</source>
+        <target>Objectifs</target>
+      </trans-unit>
+      <trans-unit id="i0uffNm" resname="Export to Excel">
+        <source>Export to Excel</source>
+        <target>Exporter en excel</target>
       </trans-unit>
     </body>
   </file>
