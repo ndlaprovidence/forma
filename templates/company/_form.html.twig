@@ -1,5 +1,4 @@
 {{ form_start(form) }}
-<<<<<<< HEAD
     <h5>Corporate name</h5>
     {{ form_errors(form.corporate_name) }}
     {{ form_widget(form.corporate_name, {'attr': {'class': 'mb-3'}}) }}
@@ -21,29 +20,6 @@
     {{ form_widget(form.siret_number, {'attr': {'class': 'mb-3'}}) }}
 
     <h5>Phone</h5>
-=======
-    <label> {{'Corporate name'|trans}} </label>
-    {{ form_errors(form.corporate_name) }}
-    {{ form_widget(form.corporate_name, {'attr': {'class': 'mb-3'}}) }}
-
-    <label>{{'Street'|trans}}</label>
-    {{ form_errors(form.street) }}
-    {{ form_widget(form.street, {'attr': {'class': 'mb-3'}}) }}
-
-    <label>{{'Postal code'|trans}}</label>
-    {{ form_errors(form.postal_code) }}
-    {{ form_widget(form.postal_code, {'attr': {'class': 'mb-3'}}) }}
-
-    <label>{{'City'|trans}}</label>
-    {{ form_errors(form.city) }}
-    {{ form_widget(form.city, {'attr': {'class': 'mb-3'}}) }}
-
-    <label>{{'Siret number'|trans}}</label>
-    {{ form_errors(form.siret_number) }}
-    {{ form_widget(form.siret_number, {'attr': {'class': 'mb-3'}}) }}
-
-    <label>{{'Phone'|trans}}</label>
->>>>>>> develop
     {{ form_errors(form.phone_number) }}
     {{ form_widget(form.phone_number, {'attr': {'class': 'mb-5'}}) }}
 

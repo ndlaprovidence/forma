@@ -44,7 +44,7 @@
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>Reference number</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>Training reference</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.training.referenceNumber != 'Non-renseigné' %}
                     <h5>{{ session.training.referenceNumber }}</h5>
@@ -68,7 +68,7 @@
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-list-ul fa-2x"></i><label class='h4 px-3'>Category</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-list-ul fa-2x"></i><label class='h4 px-3'>Training category</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.training.trainingCategory %}
                     <h5>{{ session.training.trainingCategory.title }}</h5>
@@ -93,7 +93,7 @@
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>Objectifs</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>Training goals</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.training.goals|length > 0 %}
                     {% for goal in session.training.goals %}
@@ -112,15 +112,18 @@
 
     <div class="row text-center tab-header">
         <div class="col-2 tab-cell-header px-2 py-2">
+            {{'Civility'|trans}}
+        </div>
+        <div class="col-2 tab-cell-header px-2 py-2">
             {{'Last name'|trans}}
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
             {{'First name'|trans}}
         </div>
-        <div class="col-3 tab-cell-header px-2 py-2">
+        <div class="col-2 tab-cell-header px-2 py-2">
             {{'Email'|trans}}
         </div>
-        <div class="col-4 tab-cell-header px-2 py-2">
+        <div class="col-3 tab-cell-header px-2 py-2">
             {{'Company'|trans}}
         </div>
         <div class="col-1 tab-cell-header px-2 py-2">
@@ -130,15 +133,18 @@
     {% for trainee in session.trainees %}
         <div class="row text-center tab-row link-style-disabled">
             <div class="col-2 tab-cell px-2 py-2">
+                {{ trainee.civility }}
+            </div>
+            <div class="col-2 tab-cell px-2 py-2">
                 {{ trainee.lastName }}
             </div>
             <div class="col-2 tab-cell px-2 py-2">
                 {{ trainee.firstName }}
             </div>
-            <div class="col-3 tab-cell px-2 py-2">
+            <div class="col-2 tab-cell px-2 py-2">
                 {{ trainee.email }}
             </div>
-            <div class="col-4 tab-cell px-2 py-2">
+            <div class="col-3 tab-cell px-2 py-2">
                 {{ trainee.company.corporateName }}
             </div>
             <div class="col-1 tab-cell px-2 py-2">

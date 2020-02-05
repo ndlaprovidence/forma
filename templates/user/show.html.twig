@@ -13,6 +13,13 @@
 
     <h1 class="text-center mb-5">{{ user.email }}</h1>
 
-    <h5>{{'User roles'|trans}}</h5>
-    <h6 class='font-italic mb-5'>{{ user.roles ? user.roles|json_encode : '' }}</h6>
+    <div class='d-flex row mb-5 justify-content-around'>
+
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-user-tag fa-2x"></i><label class='h4 px-3'>{{'Roles'|trans}}</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                <h5>{{ user.roles ? user.roles|json_encode : '' }}</h5>
+            </div>
+        </div>
+    </div>
 {% endblock %}

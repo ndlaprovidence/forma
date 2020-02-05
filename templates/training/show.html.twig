@@ -13,31 +13,52 @@
 
     <h1 class="text-center mb-5">{{ training.title }}</h1>
 
-    <h5>{{'Training platform'|trans}}</h5>
-    <h6 class='font-italic mb-5'>{{ training.platform }}</h6>
+    <div class='d-flex row mb-5 justify-content-around'>
+    
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-database fa-2x"></i><label class='h4 px-3'>Platform</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                <h5>{{ training.platform }}</h5>
+            </div>
+        </div>
 
-    <h5>{{'Training reference number'|trans}}</h5>
-    {% if training.referenceNumber != 'Non-renseigné' %}
-        <h6 class='font-italic mb-5'>{{ training.referenceNumber }}</h6>
-    {% else %}
-        <h6 class="font-italic text-danger mb-5">{{'No reference number for this training'|trans}}</h6>
-    {% endif %}
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>Training reference</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                {% if training.referenceNumber != 'Non-renseigné' %}
+                    <h5>{{ training.referenceNumber }}</h5>
+                {% else %}
+                    <h5 class="font-italic text-danger">Unknown training reference</h5>
+                {% endif %}
+            </div>
+        </div>
+    
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-list-ul fa-2x"></i><label class='h4 px-3'>Category</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                {% if training.trainingCategory %}
+                    <h5>{{ training.trainingCategory }}</h5>
+                {% else %}
+                    <h5 class="font-italic text-danger">No category set for this training</h5>
+                {% endif %}
+            </div>
+        </div>
 
-    <h5>{{'Category'|trans}}</h5>
-    {% if training.trainingCategory %}
-        <h6 class='font-italic mb-5'>{{ training.trainingCategory }}</h6>
-    {% else %}
-        <h6 class="font-italic text-danger mb-5">{{'No category for this training'|trans}}</h6>
-    {% endif %}
-
-    <h5>{{'goals'|trans}} ({{ training.goals|length }})</h5>
-    {% if training.goals|length > 0 %}
-        {% for goal in training.goals %}
-            <h6 class='font-italic light-bottom-border pb-2'>{{ goal.title }}</h6>
-        {% endfor %}
-        <div class='mb-5'></div>
-    {% else %}
-        <h6 class="font-italic text-danger mb-5">{{'No goal set for this session'|trans}}</h6>
-    {% endif %}
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>Goals</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                <h5>Number : {{ training.goals|length }}</h5>
+                <hr>
+                {% if training.goals|length > 0 %}
+                    {% for goal in training.goals %}
+                        <h5>{{ goal.title }}</h5>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <h5 class="font-italic text-danger">No goal set for this training</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

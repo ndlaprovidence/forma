@@ -144,7 +144,7 @@ class SessionController extends AbstractController
 
 
                             // Créer un trainee si il n'existe pas déjà
-                            $civility = strtoupper($currentTrainee[0]);
+                            $civility = ucfirst($currentTrainee[0]);
                             $lastName = strtoupper($currentTrainee[2]);
                             $firstName = strtolower($currentTrainee[1]); 
                             $firstName = ucfirst($firstName);
