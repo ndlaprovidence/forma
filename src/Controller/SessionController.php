@@ -410,10 +410,10 @@ class SessionController extends AbstractController
      */
     public function show(Session $session, Request $request,UploadRepository $ur, SessionRepository $sr, EntityManagerInterface $em, TraineeRepository $tr): Response
     {       
-        $sessionStartDate = $session->getStartDate()->format('Y-m-d');
+        $sessionDate = $session->getDate()->format('Y-m-d');
                             setlocale(LC_TIME, "fr_FR");
-                            $sessionStartDate = strftime("%A %d %B %G", strtotime($sessionStartDate));
-        var_dump($sessionStartDate);
+                            $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+        var_dump($sessionDate);
 
         return $this->render('session/show.html.twig', [
             'session' => $session,
