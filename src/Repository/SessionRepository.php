@@ -68,4 +68,14 @@ class SessionRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findSessionByTrainee($value): ?Session
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

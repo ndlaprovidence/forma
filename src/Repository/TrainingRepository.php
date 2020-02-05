@@ -46,14 +46,11 @@ class TrainingRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findSameTraining($trainingTitle,$trainingReferenceNumber)
+    public function findSameTraining($trainingTitle)
     {
         $qb = $this->createQueryBuilder('t')
-            ->where('t.title = :val1')
-            ->setParameter('val1', $trainingTitle)
-            ->andWhere('t.reference_number = :val2')
-            ->setParameter('val2', $trainingReferenceNumber);
-
+            ->where('t.title = :val')
+            ->setParameter('val', $trainingTitle);
 
         $query = $qb->getQuery();
 

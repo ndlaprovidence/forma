@@ -69,7 +69,9 @@ class TrainingCategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('training_category_index');
+            return $this->redirectToRoute('training_category_show', [
+                'id' => $trainingCategory->getId(),
+            ]);
         }
 
         return $this->render('training_category/edit.html.twig', [

@@ -4,7 +4,11 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "d5f404adaa77b91eb120886ac1186bc1",
+=======
+    "content-hash": "d6f48a31ee01f42f1f2fbfff49491a9a",
+>>>>>>> feature/create-excel-file
     "packages": [
         {
             "name": "doctrine/annotations",

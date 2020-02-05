@@ -13,11 +13,14 @@
     <h1 class='text-center mb-3'>{{'Instructor list'|trans}}</h1>
 
     <div class="row text-center tab-header">
-        <div class="col-5 tab-cell-header px-2 py-2">
+        <div class="col-4 tab-cell-header px-2 py-2">
             {{'Last name'|trans}}
         </div>
-        <div class="col-5 tab-cell-header px-2 py-2">
+        <div class="col-4 tab-cell-header px-2 py-2">
             {{'First name'|trans}}
+        </div>
+        <div class="col-2 tab-cell-header px-2 py-2">
+            Profession
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
             {{'Trainings'|trans}}
@@ -26,11 +29,14 @@
     {% for instructor in instructors %}
         <a href="{{ path('instructor_show', {'id': instructor.id}) }}" class="link-unstyled">
             <div class="row text-center tab-row link-style-disabled">
-                <div class="col-5 tab-cell px-2 py-2">
+                <div class="col-4 tab-cell px-2 py-2">
                     {{ instructor.lastName }}
                 </div>
-                <div class="col-5 tab-cell px-2 py-2">
+                <div class="col-4 tab-cell px-2 py-2">
                     {{ instructor.firstName }}
+                </div>
+                <div class="col-2 tab-cell px-2 py-2">
+                    {{ instructor.profession }}
                 </div>
                 <div class="col-2 tab-cell px-2 py-2">
                     {{ instructor.sessions|length }}

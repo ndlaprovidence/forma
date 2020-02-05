@@ -36,7 +36,7 @@ class Trainee
     private $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="trainees", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="trainees")
      * @ORM\JoinColumn(nullable=false)
      */
     private $company;
@@ -45,6 +45,11 @@ class Trainee
      * @ORM\ManyToMany(targetEntity="App\Entity\Session", mappedBy="trainees")
      */
     private $sessions;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $civility;
 
     public function __construct()
     {
@@ -133,6 +138,18 @@ class Trainee
             $this->sessions->removeElement($session);
             $session->removeTrainee($this);
         }
+
+        return $this;
+    }
+
+    public function getCivility(): ?string
+    {
+        return $this->civility;
+    }
+
+    public function setCivility(?string $civility): self
+    {
+        $this->civility = $civility;
 
         return $this;
     }

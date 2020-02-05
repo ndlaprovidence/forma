@@ -69,7 +69,9 @@ class GoalController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('goal_index');
+            return $this->redirectToRoute('goal_show', [
+                'id' => $goal->getId(),
+            ]);
         }
 
         return $this->render('goal/edit.html.twig', [
