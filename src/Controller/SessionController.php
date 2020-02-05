@@ -11,7 +11,6 @@ use App\Entity\Training;
 use App\Form\SessionType;
 use PhpOffice\PhpWord\PhpWord;
 use App\Entity\TrainingCategory;
-use PhpOffice\PhpWord;
 use PhpOffice\PhpWord\IOFactory;
 use App\Repository\UploadRepository;
 use App\Repository\CompanyRepository;
