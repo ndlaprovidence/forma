@@ -4,6 +4,16 @@
 
 {% block body %}
 
+    {% if app.request.get('alert') == 'success' %}
+        <div class="text-center mx-auto mb-5 alert alert-success alert-dismissable fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="alert-heading">Word successfully created</h5>
+            <a href='/documents/test.docx'>Download <i class="fas fa-download"></i></a>
+        </div>
+    {% endif %}
+
     <a href="{{ path('session_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
     
     <div class='row justify-content-center mb-5'>
@@ -12,63 +22,93 @@
         </div>
         {% if session.training.platform != 'Formiris' %}
             <div class='col text-center'>
-
-                <a href="{{ path('session_emargement', {'id': session.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Feuille d'émargement</button></a>
-
+                <a href="#"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Tally sheet'|trans}}</button></a>
             </div>
         {% endif %}
-
     </div>
 
-    <h1 class="text-center mb-3">{{ session.training }}</h1>
+    <h1 class="text-center mb-5">{{ session.training }}</h1>
 
-    <div class='row mb-5 justify-content-center'>
-        {% if session.training.referenceNumber != 'Non-renseigné' %}
-            <h5 class="font-italic mb-5">{{ session.training.referenceNumber }}</h5>
-        {% else %}
-            <h5 class="font-italic text-danger mb-5">{{'Training number reference not given'|trans}}</h5>
-        {% endif %}
-    </div>
-
-    <h5>{{'Location'|trans}}</h5>
-    {% if session.location %}
-        <h6 class="font-italic mb-5">{{ session.location }}</h6>
-    {% else %}
-        <h6 class="font-italic text-danger mb-5">{{'No location set for this session'|trans}}</h6>
-    {% endif %}
-
-    <h5>{{'Category'|trans}}</h5>
-    {% if session.training.trainingCategory %}
-        <h6 class="font-italic mb-5">{{ session.training.trainingCategory.title }}</h6>
-    {% else %}
-        <h6 class="font-italic text-danger mb-5">{{'No category set for this session'|trans}}</h6>
-    {% endif %}
-
-
-    <h5>{{'Instructors'|trans}}</h5>
-    {% if session.instructors|length > 0 %}
-        <h6>
-        {% for instructor in session.instructors %}
-            {{ instructor.lastName }} {{ instructor.firstName }},
-        {% endfor %}
-        </h6><div class='mb-5'></div>
-    {% else %}
-        <h6 class="font-italic text-danger mb-5">{{'No instructor set for this session'|trans}}</h6>
-    {% endif %}
-
+    <div class='d-flex row mb-5 justify-content-around'>
     
-    <h5>{{'Goals'|trans}}</h5>
-    {% if session.training.goals|length > 0 %}
-        {% for goal in session.training.goals %}
-            <h6 class='font-italic light-bottom-border pb-2'>{{ goal.title }}</h6>
-        {% endfor %}
-        <div class='mb-5'></div>
-    {% else %}
-        <h6 class="font-italic text-danger mb-5">{{'No goal set for this session'|trans}}</h6>
-    {% endif %}
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon far fa-calendar-alt fa-2x"></i><label class='h4 px-3'>Horaires</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                <h5 class='mb-3'>Le {{ session.date|date("d/m/Y") }}</h5>
+                <hr>
+                <h5 class="text-center w-100">Matinée : {{ session.startTimeAm|date("H\\h\i") }}-{{ session.endTimeAm|date("H\\h\i") }}</h5>
+                <h5 class="text-center w-100">Après-midi : {{ session.startTimePm|date("H\\h\i") }}-{{ session.endTimePm|date("H\\h\i") }}</h5>
 
+                <hr>
+                <h5>{{ session.endTimeAm|date_minus(session.startTimeAm,session.endTimePm,session.startTimePm) }} de formation</h5>
+            </div>
+        </div>
 
-    <a href='/uploads/{{ session.upload.fileName }}'><h5>{{ session.upload.fileName }} <i class="fas fa-download"></i></h5></a>
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>Reference number</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                {% if session.training.referenceNumber != 'Non-renseigné' %}
+                    <h5>{{ session.training.referenceNumber }}</h5>
+                {% else %}
+                    <h5 class="font-italic text-danger">Réference de formation non-renseigné</h5>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-map-marker-alt fa-2x"></i><label class='h4 px-3'>Location</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                {% if session.location %}
+                    <h5>{{ session.location.street}}</h5>
+                    <h5>{{ session.location.postalCode}} - {{ session.location.city}}</h5>
+                {% else %}
+                    <h5 class="font-italic text-danger">No location set for this session</h5>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-list-ul fa-2x"></i><label class='h4 px-3'>Category</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                {% if session.training.trainingCategory %}
+                    <h5>{{ session.training.trainingCategory.title }}</h5>
+                {% else %}
+                    <h5 class="font-italic text-danger">No category set for this session</h5>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-user-tie fa-2x"></i><label class='h4 px-3'>{{'Instructor'|trans}}</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                {% if session.instructors|length > 0 %}
+                    {% for instructor in session.instructors %}
+                        <h5>{{ instructor.lastName }} {{ instructor.firstName }}</h5>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <h5 class="font-italic text-danger">{{'No instructor set for this session'|trans}}</h5>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>Objectifs</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                {% if session.training.goals|length > 0 %}
+                    {% for goal in session.training.goals %}
+                        <h5>{{ goal.title }}</h5>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <h5 class="font-italic text-danger">No goal set for this training</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <h5 class='mr-2 mb-4'><a class='border-rounded p-2' href='/uploads/{{ session.upload.fileName }}'>Download all files <i class="fas fa-file-alt fa-lg"></i></a></h5>
+    <h5 class='mr-2 mb-3'><a class='border-rounded p-2' href='/uploads/{{ session.upload.fileName }}'>{{ session.upload.fileName }} <i class="fas fa-download fa-lg"></i></a></h5>
 
     <div class="row text-center tab-header">
         <div class="col-2 tab-cell-header px-2 py-2">
@@ -102,7 +142,7 @@
                 {{ trainee.company.corporateName }}
             </div>
             <div class="col-1 tab-cell px-2 py-2">
-                <a href="#"><i class="fas fa-file-alt h5"></i></a>
+                <a href="{{ path('session_word', {'id': session.id, 'trainee': trainee.id}) }}"><i class="fas fa-file-alt fa-lg"></i></a>
             </div>
         </div>
     {% else %}

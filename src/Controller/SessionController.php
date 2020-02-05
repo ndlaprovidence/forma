@@ -413,54 +413,31 @@ class SessionController extends AbstractController
     /**
      * @Route("/{id}/emargement", name="session_emargement", methods={"GET"})
      */
-    public function test(Session $session, UploadRepository $ur, SessionRepository $sr, EntityManagerInterface $em, TraineeRepository $tr)
+    public function emargement(Session $session, UploadRepository $ur, SessionRepository $sr, EntityManagerInterface $em, TraineeRepository $tr)
     {
-        
         $this->em = $em;
-
-        $idSession = $session->getId();
-
-        $idSession = intval($idSession);
-
-        $traineesCollection = $session->getTrainees();
-
-        $nbTrainees = 0;
-
-        $traineesCollection = $session->getTrainees();
+        $idSession = $session->getId(intval($idSession));
         
-        foreach ($traineesCollection as $trainee) {
-
-            $nbTrainees++;
-        }
-
-        $uploadId = $session->getUpload()->getId();
-        $upload = $ur->findOneById($uploadId);
+        $upload = $ur->findOneById($session->getUpload()->getId());
         $this->em->persist($upload);
 
         $sessionsCollection = $upload->getSessions();
-        
         $nbSessions = 0;
 
         foreach ($sessionsCollection as $session) {
             $nbSessions++;
         }
 
-        $sessionStartDate = $session->getStartDate()->format('Y-m-d');
+        $sessionDate = $session->getStartDate()->format('d-m-Y');
                             // setlocale(LC_TIME, "fr_FR");
                             // $sessionStartDate = strftime("%A %d %B %G", strtotime($sessionStartDate));
-
-        $sessionEndDate = $session->getEndDate()->format('Y-m-d');
-                        //   setlocale(LC_TIME, "fr_FR");
-                        //   $sessionEndDate = strftime("%A %d %B %G", strtotime($sessionEndDate));
-
         $titleTraining = $session->getTraining()->getTitle();
-
         $sessionLocation = $session->getLocation()->getCity();
 
         $styleTable = ['borderSize' => 6, 'borderColor' => '000000', 'cellMargin' => 80];
         $styleFirstRow = ['borderBottomColor' => '0000FF', 'bgColor' => 'cccccc'];
         $timeDay = ['align' => 'center', 'bgColor' => 'cccccc'];
-        $header = ['size' => 18, 'bold' => true];
+        $styleHeader = ['size' => 18, 'bold' => true];
         $nameTraining = ['size' => 15, 'bold' => true];
         $textLeft = ['align' => 'left'];
         $styleTable = ['borderSize' => 6, 'borderColor' => '000000'];
@@ -478,10 +455,7 @@ class SessionController extends AbstractController
 
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-        $nbSession = $nbSessions;
-        $nbTrainee = $nbTrainees;
-
-        if ($nbSession == 1)
+        if ($nbSessions == 1)
         {
             $section = $phpWord->addSection();
         }
@@ -502,14 +476,12 @@ class SessionController extends AbstractController
             'width' => 80,
             'positioning' => 'absolute'
             ]);
-        $section->addText("Feuille d'émargement", $header, $textRight);
+        $section->addText("Feuille d'émargement", $styleHeader, $textRight);
         
         
         $section->addTextBreak();
-        
         $section->addText(htmlspecialchars($titleTraining), $nameTraining, $textCenter);
-        $section->addText(htmlspecialchars($sessionStartDate ." de 9h00 à 12h30 et de 13h30 à 17h00 à " . $sessionLocation ), $fontBold);
-        $section->addText(htmlspecialchars($sessionEndDate . " de 9h00 à 12h30 et de 13h30 à 17h00 à " . $sessionLocation), $fontBold);
+        $section->addText(htmlspecialchars($sessionDate ." de 9h00 à 12h30 et de 13h30 à 17h00 à " . $sessionLocation ), $fontBold);
 
         $textrun1 = $section->addTextRun();
         $textrun1->addText(htmlspecialchars("Merci de bien vouloir émarger lors de chaque demi-journée de formation."), $lilText);
@@ -524,7 +496,7 @@ class SessionController extends AbstractController
         $textrun1 = $etablissement->addTextRun($textCenter);
         $textrun1->addText(htmlspecialchars('Établissement'), $fontTitle, $textCenter);
 
-        for ($i = 1; $i <= $nbSession; $i++) {
+        for ($i = 1; $i <= $nbSessions; $i++) {
             $firstRowDate = $table->addCell(4000, $cellColSpan);
             $textrun2 = $firstRowDate->addTextRun($textCenter);
             switch ($i) {
@@ -544,7 +516,7 @@ class SessionController extends AbstractController
         }
         $table->addRow();
             
-        for($i = 1; $i <= $nbSession; $i++)
+        for($i = 1; $i <= $nbSessions; $i++)
         {
             if($i == 1)
             {
@@ -555,7 +527,7 @@ class SessionController extends AbstractController
             $table->addCell(2000)->addText(htmlspecialchars('De 13h30 à 17h00'), $fontTitle2, $timeDay);
         }
         
-
+        $traineesCollection = $session->getTrainees();
         foreach ($traineesCollection as $trainee) {
             $lastNameTrainee = $trainee->getLastName();
             $firstNameTrainee = $trainee->getFirstName();
@@ -564,7 +536,7 @@ class SessionController extends AbstractController
             $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars($lastNameTrainee . " " . $firstNameTrainee));
             $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars($companyTrainee));
 
-            for ($j = 1; $j <= $nbSession; $j++) {
+            for ($j = 1; $j <= $nbSessions; $j++) {
                 $table->addCell(2000)->addText(htmlspecialchars(" "));
                 $table->addCell(2000)->addText(htmlspecialchars(" "));
             }
