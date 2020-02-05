@@ -46,6 +46,11 @@ class Trainee
      */
     private $sessions;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $civility;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
@@ -133,6 +138,18 @@ class Trainee
             $this->sessions->removeElement($session);
             $session->removeTrainee($this);
         }
+
+        return $this;
+    }
+
+    public function getCivility(): ?string
+    {
+        return $this->civility;
+    }
+
+    public function setCivility(?string $civility): self
+    {
+        $this->civility = $civility;
 
         return $this;
     }

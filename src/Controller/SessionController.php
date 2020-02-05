@@ -125,7 +125,7 @@ class SessionController extends AbstractController
                             $trainingTitle = $currentTrainee[15]; 
                             $trainingReferenceNumber = 'Non-renseigné'; 
 
-                            $temp = $tgr->findSameTraining($trainingTitle, $trainingReferenceNumber);
+                            $temp = $tgr->findSameTraining($trainingTitle);
 
                             if ($temp)
                             {
@@ -144,6 +144,7 @@ class SessionController extends AbstractController
 
 
                             // Créer un trainee si il n'existe pas déjà
+                            $civility = strtoupper($currentTrainee[0]);
                             $lastName = strtoupper($currentTrainee[2]);
                             $firstName = strtolower($currentTrainee[1]); 
                             $firstName = ucfirst($firstName);
@@ -159,6 +160,7 @@ class SessionController extends AbstractController
                             } else {
                                 $trainee = new Trainee();
                                 $trainee
+                                    ->setCivility($civility)
                                     ->setLastName($lastName)
                                     ->setFirstName($firstName)
                                     ->setEmail($email);
@@ -222,12 +224,16 @@ class SessionController extends AbstractController
                         }
 
                         $sessionsNbrTotal = 1;
-                        $startDate = new \DateTime('@'.strtotime($sheetData[1][16]));
+                        $date = new \DateTime('@'.strtotime($sheetData[1][16]));
                         $session
                             ->setUpload($upload)
                             ->setTraining($training)
                             ->setLocation($location)
-                            ->setStartDate($startDate);
+                            ->setDate($date)
+                            ->setStartTimeAm(new \DateTime('@'.strtotime('09:00')))
+                            ->setEndTimeAm(new \DateTime('@'.strtotime('12:00')))
+                            ->setStartTimePm(new \DateTime('@'.strtotime('13:30')))
+                            ->setEndTimePm(new \DateTime('@'.strtotime('17:30')));
 
                         break;
 
@@ -338,8 +344,7 @@ class SessionController extends AbstractController
                             
                             $count = count($currentSession);
     
-                            $startDate = new \DateTime('@'.strtotime($currentSession[1]));
-                            $endDate = new \DateTime('@'.strtotime($currentSession[3]));
+                            $date = new \DateTime('@'.strtotime($currentSession[1]));
     
                             $this->em->flush();
                         }
@@ -347,8 +352,11 @@ class SessionController extends AbstractController
                         $session
                             ->setUpload($upload)
                             ->setTraining($training)
-                            ->setStartDate($startDate)
-                            ->setEndDate($endDate);
+                            ->setDate($date)
+                            ->setStartTimeAm(new \DateTime('@'.strtotime('09:00')))
+                            ->setEndTimeAm(new \DateTime('@'.strtotime('12:00')))
+                            ->setStartTimePm(new \DateTime('@'.strtotime('13:30')))
+                            ->setEndTimePm(new \DateTime('@'.strtotime('17:30')));
                         break;
                     
                     default:
@@ -410,28 +418,60 @@ class SessionController extends AbstractController
     /**
      * @Route("/{id}/word/{trainee}", name="session_word", methods={"GET"})
      */
-    public function createWord(Session $session): Response
+    public function createWord(Request $request, EntityManagerInterface $em, Session $session, TraineeRepository $ter, SessionRepository $sr, TrainingRepository $tgr): Response
     {
-        // Create a new Word document
+        $this->em = $em;
+        $parameters = $request->attributes->get('_route_params');
+
+        $session = $sr->findOneById(intval($parameters['id']));
+        $this->em->persist($session);
+
+        $trainee = $ter->findOneById(intval($parameters['trainee']));
+        $this->em->persist($session);
+
+        $training = $tgr->findOneById($session->getTraining()->getId());
+        $this->em->persist($training);
+
+        $traineeCivility        = $trainee->getCivility();
+        $traineeLastName        = $trainee->getLastName();
+        $traineeFirstName       = $trainee->getFirstName();
+        $traineeCompanyName     = $trainee->getCompany()->getCorporateName();
+        $traineeCompanyCity     = $trainee->getCompany()->getCity();
+        $sessionTrainingTitle   = $session->getTraining()->getTitle();
+        $sessionTrainingRef     = $session->getTraining()->getReferenceNumber();
+        $sessionDate            = $session->getDate()->format('Y-m-d');
+                                setlocale(LC_TIME, "fr_FR");
+                                $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+        $sessionStartTimeAm     = $session->getStartTimeAm()->format('H:i');
+        $sessionEndTimeAm       = $session->getEndTimeAm()->format('H:i');
+        $sessionStartTimePm     = $session->getStartTimePm()->format('H:i');
+        $sessionEndTimePm       = $session->getEndTimePm()->format('H:i');
+        $sessionLocationName    = $session->getLocation()->getName();
+        $sessionLocationStreet  = $session->getLocation()->getStreet();
+        $sessionLocationPostalCode = $session->getLocation()->getPostalCode();
+        $sessionLocationCity    = $session->getLocation()->getCity();
+        // $sessionLength = dateMinus($sessionEndTimeAm, $sessionStartTimeAm, $sessionEndTimePm, $sessionStartTimePm);
+        $sessionTrainingGoals   = $session->getTraining()->getGoals();
+        $trainingGoalsLength    = $training->getGoals();
+                                $trainingGoalsLength = count($trainingGoalsLength);
+        $todayDate              = date('d/m/Y');
+        
+
         $phpWord = new PhpWord();
 
-        // Font name
         $phpWord->setDefaultFontName('Arial');
-        // Font size
         $phpWord->setDefaultFontSize(11.5);
-        // LineHeight
         $phpWord->setDefaultParagraphStyle(['lineHeight' => 1.4]);
 
         $section = $phpWord->addSection();
-        // Header
         $header = $section->addHeader();
-        // Footer
         $footer = $section->addFooter();
+
 
         // Content header
         $header->addText("OGEC Notre Dame de la Providence <w:br/> 
                           Service de Formation professionnelle continue <w:br/>
-                          9 , rue  chanoine Bérenger BP 340 <w:br/>
+                          9, rue  chanoine Bérenger BP 340 <w:br/>
                           50300 AVRANCHES <w:br/>", ['size' => 10], ['align' => 'right']);
         // Content footer 
         $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", ['size' => 10], ['align' => 'left']);                             
@@ -439,37 +479,32 @@ class SessionController extends AbstractController
 
         // PAGE 1 --> Convocation
         $section->addText(htmlspecialchars("CONVOCATION À UNE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
-        
         $page1 = $section->addTextRun();
-
         $page1->addTextBreak();
-        $page1->addText(htmlspecialchars("A l'attention de"));
-        $page1->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page1->addText(htmlspecialchars("Madame Bouvet Orlanne, Notre Dame VILLEDIEU LES POELES ROUFF 0501401B."), ['bold' => true]);
-        $page1->addTextBreak();
+        $page1->addText(htmlspecialchars("A l'attention de "));
+        $page1->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." 0501401B."), ['bold' => true]);
+        $page1->addTextBreak(); 
         $page1->addTextBreak();
         $page1->addText(htmlspecialchars("Vous voudrez bien vous présenter à la session de la formation :"));
         $page1->addTextBreak();
-        // Données issues de la BDD
-        $page1->addText(htmlspecialchars("Les stratégies et supports pédagogiques adaptés aux attentes et fonctionnements mentaux des nouvelles générations d'enfants"), ['bold' => true]);
-        $page1->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page1->addText(htmlspecialchars("identifiée par le numéro PN060428 d'une durée de 6 heures (six heures) qui aura lieu"));
-        $page1->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page1->addText(htmlspecialchars("mercredi 22 janvier 2020"), ['bold' => true]); 
-        $page1->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page1->addText(htmlspecialchars("de 9h00 à 12h00 et de 14h00 à 17h00 dans les locaux de Ecole Notre Dame, 2 et 26 rue Pierre PARIS 50800 VILLEDIEU LES POELES."));
+        $page1->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
+        $page1->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de 6 heures (six heures) qui aura lieu "));
+        $page1->addText(htmlspecialchars( $sessionDate." "), ['bold' => true]); 
+        $page1->addText(htmlspecialchars("de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm." dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
         $page1->addTextBreak();
         $page1->addTextBreak();
-        $page1->addText(htmlspecialchars("Objectifs de la formation :"), ['bold' => true]);
-        $page1->addText(htmlspecialchars(" ")); 
+        $page1->addText(htmlspecialchars("Objectifs de la formation "), ['bold' => true]);
         $page1->addText(htmlspecialchars("(pour plus de détails, se rapporter au programme transmis précédemment) :"));
         $page1->addTextBreak();
-        // Données issues de la BDD
-        $page1->addText(htmlspecialchars("Se positionner en tant qu'acteur d'éducation au sein d'une société actuelle, connaître les liens établis en neuropsychologie entre motivation, stimulation et développement cognitif chez le jeune enfant, , se documenter et expérimenter les approches pédagogiques promues au sein du réseau d'information pour la « réussite éducative » notamment à destination des élèves dits « décrocheurs »."));
+        $i = 0;
+        foreach ( $sessionTrainingGoals as $goal ) {
+            $i++;
+            if ( $trainingGoalsLength-1 >= $i ) {
+                $page1->addText(htmlspecialchars($goal.", "));
+            } else {
+                $page1->addText(htmlspecialchars($goal."."));
+            }
+        }
         $page1->addTextBreak();
         $page1->addTextBreak();
         $page1->addText(htmlspecialchars("Votre arrivée dans les locaux est souhaitée un quart d'heure avant le début de la session."));
@@ -479,9 +514,9 @@ class SessionController extends AbstractController
         $page1->addTextBreak();
         $page1->addTextBreak();
         // Afficher la date du jour
-        $page1->addText(htmlspecialchars("À Avranches, le 29/01/2020."));
+        $page1->addText(htmlspecialchars("À Avranches, le ".$todayDate."."));
         $page1->addTextBreak();
-        $page1->addImage("../public/resources/signature.png", [
+        $page1->addImage("../public/images/signature.png", [
             'height' => 100,
             'width' => 170
         ]);
@@ -489,51 +524,42 @@ class SessionController extends AbstractController
 
         // PAGE 2 --> Attestation
         $section = $phpWord->addSection();
-
         $section->addText(htmlspecialchars("ATTESTATION DE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
-        
         $page2 = $section->addTextRun();
-
         $page2->addTextBreak();
-        $page2->addText(htmlspecialchars("Je soussigné, Philippe LECOUVREUR, responsable de FC PRO service de formation professionnelle continue du lycée Notre Dame de la Providence, atteste que :"));
-        $page2->addText(htmlspecialchars(" ")); 
-        // Données issues de la BDD
-        $page2->addText(htmlspecialchars("Madame Bouvet Orlanne, Notre Dame VILLEDIEU LES POELES ROUFF 0501401B"), ['bold' => true]);
-        $page2->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page2->addText(htmlspecialchars("a suivi  la prestation de formation décrite ci-dessous dans les locaux de Ecole Notre Dame , 2 et 26 rue Pierre PARIS 50800 VILLEDIEU LES POELES."));
+        $page2->addText(htmlspecialchars("Je soussigné, Philippe LECOUVREUR, responsable de FC PRO service de formation professionnelle continue du lycée Notre Dame de la Providence, atteste que : "));
+        $page2->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity ." 0501401B "), ['bold' => true]);
+        $page2->addText(htmlspecialchars("a suivi la prestation de formation décrite ci-dessous dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
         $page2->addTextBreak();
         $page2->addTextBreak();
-        $page2->addText(htmlspecialchars("Prestation de formation :"));
-        $page2->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page2->addText(htmlspecialchars("Les stratégies et supports pédagogiques adaptés aux attentes et fonctionnements mentaux des nouvelles générations d'enfants"), ['bold' => true]);
-        $page2->addText(htmlspecialchars(" "));
-        $page2->addText(htmlspecialchars("N° de prestation :"));
-        $page2->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page2->addText(htmlspecialchars("PN060428 en date de mercredi 22 janvier 2020"), ['bold' => true]);
-        $page2->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
+        $page2->addText(htmlspecialchars("Prestation de formation : "));
+        $page2->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
+        $page2->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef));
+        $page2->addText(htmlspecialchars(" en date de mercredi 22 janvier 2020 (((DATE DERNIERE SESSION))) "), ['bold' => true]);
         $page2->addText(htmlspecialchars("pendant une durée de 6 heures (six heures)."));
         $page2->addTextBreak();
         $page2->addTextBreak();
         $page2->addText(htmlspecialchars("Objectifs de la formation :"), ['bold' => true]);
         $page2->addTextBreak();
         // Données issues de la BDD
-        $page2->addText(htmlspecialchars("Se positionner en tant qu'acteur d'éducation au sein d'une société actuelle, connaître les liens établis en neuropsychologie entre motivation, stimulation et développement cognitif chez le jeune enfant, , se documenter et expérimenter les approches pédagogiques promues au sein du réseau d'information pour la « réussite éducative » notamment à destination des élèves dits « décrocheurs »."));
+        $i = 0;
+        foreach ( $sessionTrainingGoals as $goal ) {
+            $i++;
+            if ( $trainingGoalsLength-1 >= $i ) {
+                $page2->addText(htmlspecialchars($goal.", "));
+            } else {
+                $page2->addText(htmlspecialchars($goal."."));
+            }
+        }
         $page2->addTextBreak();
         $page2->addTextBreak();
-        $page2->addText(htmlspecialchars("Votre arrivée dans les locaux est souhaitée un quart d'heure avant le début de la session."));
-        $page2->addTextBreak();
-        $page2->addTextBreak();
-        $page2->addText(htmlspecialchars("Fait pour servir et valoir ce que de droit"));
+        $page2->addText(htmlspecialchars("Fait pour servir et valoir ce que de droit."));
         $page2->addTextBreak();
         $page2->addTextBreak();
         // Afficher la date du jour
-        $page2->addText(htmlspecialchars("À Avranches, le 29/01/2020."));
+        $page2->addText(htmlspecialchars("À Avranches, le ".$todayDate."."));
         $page2->addTextBreak();
-        $page2->addImage("../public/resources/signature.png", [
+        $page2->addImage("../public/images/signature.png", [
             'height' => 100,
             'width' => 170
         ]);
@@ -541,38 +567,32 @@ class SessionController extends AbstractController
 
         // PAGE 3 --> Inscription 
         $section = $phpWord->addSection();
-
         $section->addText(htmlspecialchars("INSCRIPTION À UNE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
-        
         $page3 = $section->addTextRun();
-
         $page3->addTextBreak();
-        $page3->addText(htmlspecialchars("À l'attention de"));
-        $page3->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page3->addText(htmlspecialchars("Madame Bouvet Orlanne, Notre Dame VILLEDIEU LES POELES ROUFF 0501401B."), ['bold' => true]);
+        $page3->addText(htmlspecialchars("À l'attention de "));
+        $page3->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity ." 0501401B."), ['bold' => true]);
         $page3->addTextBreak();
         $page3->addText(htmlspecialchars("J'accuse réception de votre inscription à la formation :"));
         $page3->addTextBreak();
-        // Données issues de la BDD
-        $page3->addText(htmlspecialchars("Les stratégies et supports pédagogiques adaptés aux attentes et fonctionnements mentaux des nouvelles générations d'enfants"), ['bold' => true]);
-        $page3->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page3->addText(htmlspecialchars("identifiée par le numéro PN060428  d'une durée de 6 heures (six heures) qui aura lieu"));
-        $page3->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page3->addText(htmlspecialchars("mercredi 22 janvier 2020"), ['bold' => true]);
-        $page3->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page3->addText(htmlspecialchars("de 9h00 à 12h00 et de 14h00 à 17h00 dans les locaux de Ecole Notre Dame , 2 et 26 rue Pierre PARIS 50800 VILLEDIEU LES POELES."));
+        $page3->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
+        $page3->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de 6 heures (six heures) qui aura lieu "));
+        $page3->addText(htmlspecialchars( $sessionDate." "), ['bold' => true]);
+        $page3->addText(htmlspecialchars("de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm." dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
         $page3->addTextBreak();
         $page3->addTextBreak();
-        $page3->addText(htmlspecialchars("Objectifs de la formation :"), ['bold' => true]);
-        $page3->addText(htmlspecialchars(" ")); 
-        $page3->addText(htmlspecialchars("(pour plus de détails, se rapporter au programme transmis précédemment)"));
+        $page3->addText(htmlspecialchars("Objectifs de la formation "), ['bold' => true]);
+        $page3->addText(htmlspecialchars("(pour plus de détails, se rapporter au programme transmis précédemment) :"));
         $page3->addTextBreak();
-        // Données issues de la BDD
-        $page3->addText(htmlspecialchars("Se positionner en tant qu'acteur d'éducation au sein d'une société actuelle, connaître les liens établis en neuropsychologie entre motivation, stimulation et développement cognitif chez le jeune enfant, , se documenter et expérimenter les approches pédagogiques promues au sein du réseau d'information pour la « réussite éducative » notamment à destination des élèves dits « décrocheurs »."));
+        $i = 0;
+        foreach ( $sessionTrainingGoals as $goal ) {
+            $i++;
+            if ( $trainingGoalsLength-1 >= $i ) {
+                $page3->addText(htmlspecialchars($goal.", "));
+            } else {
+                $page3->addText(htmlspecialchars($goal."."));
+            }
+        }
         $page3->addTextBreak();
         $page3->addTextBreak();
         $page3->addText(htmlspecialchars("Cette formation pourra être annulée si le nombre d'inscrits n'atteint pas un effectif minimum."));
@@ -581,10 +601,9 @@ class SessionController extends AbstractController
         $page3->addText(htmlspecialchars("Vous recevrez une convocation 10 jours avant le début de la session."));
         $page3->addTextBreak();
         $page3->addTextBreak();
-        // Afficher la date du jour
-        $page3->addText(htmlspecialchars("À Avranches, le 29/01/2020."));
+        $page3->addText(htmlspecialchars("À Avranches, le ".$todayDate."."));
         $page3->addTextBreak();
-        $page3->addImage("../public/resources/signature.png", [
+        $page3->addImage("../public/images/signature.png", [
             'height' => 100,
             'width' => 170
         ]);
@@ -592,59 +611,52 @@ class SessionController extends AbstractController
 
         //PAGE 4 --> Accusé de réception
         $section = $phpWord->addSection();
-
         $section->addText(htmlspecialchars('ACCUSÉ DE RÉCEPTION'), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
-
         $page4 = $section->addTextRun();
-
         $page4->addTextBreak(); 
-        $page4->addText(htmlspecialchars("Je soussigné,"));
-        $page4->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page4->addText(htmlspecialchars("Madame Bouvet Orlanne, Notre Dame VILLEDIEU LES POELES ROUFF 0501401B"), ['bold' => true]);
-        $page4->addText(htmlspecialchars(" "));
-        $page4->addText(htmlspecialchars("confirme avoir reçu une attestation pour la  formation que j'ai suivie"));
-        $page4->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page4->addText(htmlspecialchars("mercredi 22 janvier 2020"), ['bold' => true]);
-        $page4->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page4->addText(htmlspecialchars("pendant une durée de 6 heures (six heures) dans les locaux de Ecole Notre Dame, 2 et 26 rue Pierre PARIS 50800 VILLEDIEU LES POELES"));
+        $page4->addText(htmlspecialchars("Je soussigné, "));
+        $page4->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity ." 0501401B "), ['bold' => true]);
+        $page4->addText(htmlspecialchars("confirme avoir reçu une attestation pour la formation que j'ai suivie "));
+        $page4->addText(htmlspecialchars("mercredi 22 janvier 2020 (((DATE DERNIERE SESSION))) "), ['bold' => true]);
+        $page4->addText(htmlspecialchars("pendant une durée de 6 heures (six heures) dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
         $page4->addTextBreak();
         $page4->addTextBreak();
-        $page4->addText(htmlspecialchars("Prestation de la formation :"));
-        $page4->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page4->addText(htmlspecialchars("Les stratégies et supports pédagogiques adaptés aux attentes et fonctionnements mentaux des nouvelles générations d'enfants"), ['bold' => true]);
-        $page4->addText(htmlspecialchars(" "));
-        // Données issues de la BDD
-        $page4->addText(htmlspecialchars("PN060428."));
+        $page4->addText(htmlspecialchars("Prestation de la formation : "));
+        $page4->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
+        $page4->addText(htmlspecialchars( "identifiée par le numéro ".$sessionTrainingRef));
         $page4->addTextBreak();
         $page4->addTextBreak();
         $page4->addText(htmlspecialchars("Objectifs de la formation :"), ['bold' => true]);
         $page4->addTextBreak();
-        // Données issues de la BDD
-        $page4->addText(htmlspecialchars("Se positionner en tant qu'acteur d'éducation au sein d'une société actuelle, connaître les liens établis en neuropsychologie entre motivation, stimulation et développement cognitif chez le jeune enfant, , se documenter et expérimenter les approches pédagogiques promues au sein du réseau d'information pour la « réussite éducative » notamment à destination des élèves dits « décrocheurs »."));
+        $i = 0;
+        foreach ( $sessionTrainingGoals as $goal ) {
+            $i++;
+            if ( $trainingGoalsLength-1 >= $i ) {
+                $page4->addText(htmlspecialchars($goal.", "));
+            } else {
+                $page4->addText(htmlspecialchars($goal."."));
+            }
+        }
         $page4->addTextBreak();
         $page4->addTextBreak();
-        $page4->addText(htmlspecialchars("Fait pour servir et valoir ce que de droit"));
+        $page4->addText(htmlspecialchars("Fait pour servir et valoir ce que de droit."));
         $page4->addTextBreak();
         $page4->addTextBreak();
-        // Afficher la date du jour
-        $page4->addText(htmlspecialchars("À Avranches, le 29/01/2020."));        
+        $page4->addText(htmlspecialchars("À Avranches, le ".$todayDate."."));        
 
         // Saving the document as OOXML file...
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
         
+        // Name generated of file
+        $fileName = $traineeLastName."-".$traineeFirstName."-".$sessionTrainingRef."-".rand(10000,99999).".docx";
+
         // Path of saved file
-        $filePath = '../public/test.docx';
+        $filePath = "../public/documents/".$fileName;
 
         // Write file into path
         $objWriter->save($filePath);
 
-        return $this->render('session/show.html.twig', [
-            'alert' => 'success'
-        ]);
+        return $this->redirect("/documents/".$fileName, 301);
     }
 
     /**
@@ -658,7 +670,9 @@ class SessionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('session_index');
+            return $this->redirectToRoute('session_show', [
+                'id' => $session->getId(),
+            ]);
         }
 
         return $this->render('session/edit.html.twig', [

@@ -4,9 +4,9 @@
     "repository": "https://github.com/ndlaprovidence/forma",
     "keywords": ["php",
         "symfony",
-        "quiz",
-        "student",
-        "teacher"
+        "management",
+        "csv",
+        "excel"
     ],
     "addons": [{
         "plan": "heroku-postgresql",

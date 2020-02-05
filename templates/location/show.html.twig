@@ -16,7 +16,7 @@
     <h5>Associated sessions ({{ location.sessions|length }})</h5>
     {% if location.sessions|length > 0 %}
         {% for session in location.sessions %}
-            <h6 class='font-italic light-bottom-border pb-2'>{{ session.training.title }} du {{ session.startDate|date("d/m/Y") }} au {{ session.endDate|date("d/m/Y") }}</h6>
+            <h6 class='font-italic light-bottom-border pb-2'>{{ session.training.title }} du {{ session.date|date("d/m/Y") }}</h6>
         {% endfor %}
     {% else %}
         <h6 class="font-italic text-danger mb-5">No sessions for this location</h6>

@@ -69,7 +69,9 @@ class CompanyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('company_index');
+            return $this->redirectToRoute('company_show', [
+                'id' => $company->getId(),
+            ]);
         }
 
         return $this->render('company/edit.html.twig', [

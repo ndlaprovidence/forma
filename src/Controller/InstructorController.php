@@ -69,7 +69,9 @@ class InstructorController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('instructor_index');
+            return $this->redirectToRoute('instructor_show', [
+                'id' => $instructor->getId(),
+            ]);
         }
 
         return $this->render('instructor/edit.html.twig', [

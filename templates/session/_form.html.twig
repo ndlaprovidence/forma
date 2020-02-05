@@ -1,30 +1,50 @@
 {{ form_start(form) }}
-    <label>Training</label>
-    {{ form_errors(form.training) }}
-    {{ form_widget(form.training, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Location</label>
+    {% if app.request.attributes.get('_route') == 'session_new' %}
+        <div class='row justify-content-center'>
+            <h2 class="text-center mb-5">{{ session.training }}</h2>
+        </div>
+        {{ form_widget(form.training, {'attr': {'class': 'hidden-row mb-3'}}) }}
+    {% else %}
+        <h5>Training</h5>
+        {{ form_errors(form.training) }}
+        {{ form_widget(form.training, {'attr': {'class': 'mb-3'}}) }}
+    {% endif %}
+
+    <h5>Location</h5>
     {{ form_errors(form.location) }}
     {{ form_widget(form.location, {'attr': {'class': 'mb-3'}}) }}
 
-    <label>Instructors</label>
+    <h5>Instructors</h5>
     {{ form_errors(form.instructors) }}
     {{ form_widget(form.instructors, {'attr': {'class': 'mb-3'}}) }}
 
     <div class='row justify-content-center'>
-        <div class="col-3">
-        <label>Start date</label>
-            {{ form_errors(form.start_date) }}
-            {{ form_widget(form.start_date, {'attr': {'class': 'mb-3'}}) }}
-        </div>
-        <div class="col-3">
-        <label>End date</label>
-            {{ form_errors(form.end_date) }}
-            {{ form_widget(form.end_date, {'attr': {'class': 'mb-3'}}) }}
+        <div class="col-4">
+        <h5>Date</h5>
+            {{ form_errors(form.date) }}
+            {{ form_widget(form.date, {'attr': {'class': 'mb-3'}}) }}
         </div>
     </div>
 
-    <label>Comment</label>
+    <div class='row justify-content-center'>
+        <div class="col-2">
+        <h5>AM time</h5>
+            {{ form_errors(form.start_time_am) }}
+            {{ form_widget(form.start_time_am, {'attr': {'class': 'mb-3'}}) }}
+            {{ form_errors(form.end_time_am) }}
+            {{ form_widget(form.end_time_am, {'attr': {'class': 'mb-3'}}) }}
+        </div>
+        <div class="col-2">
+        <h5>PM time</h5>
+            {{ form_errors(form.start_time_pm) }}
+            {{ form_widget(form.start_time_pm, {'attr': {'class': 'mb-3'}}) }}
+            {{ form_errors(form.end_time_pm) }}
+            {{ form_widget(form.end_time_pm, {'attr': {'class': 'mb-3'}}) }}
+        </div>
+    </div>
+
+    <h5>Comment</h5>
     {{ form_errors(form.comment) }}
     {{ form_widget(form.comment, {'attr': {'class': 'mb-3'}}) }}
 

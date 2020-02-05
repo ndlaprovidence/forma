@@ -14,15 +14,18 @@
 
     <div class="row text-center tab-header">
         <div class="col-2 tab-cell-header px-2 py-2">
+            Civility
+        </div>
+        <div class="col-2 tab-cell-header px-2 py-2">
             Last name
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
             First name
         </div>
-        <div class="col-4 tab-cell-header px-2 py-2">
+        <div class="col-3 tab-cell-header px-2 py-2">
             Email
         </div>
-        <div class="col-4 tab-cell-header px-2 py-2">
+        <div class="col-3 tab-cell-header px-2 py-2">
             Company
         </div>
     </div>
@@ -30,15 +33,18 @@
         <a href="{{ path('trainee_show', {'id': trainee.id}) }}" class="link-unstyled">
             <div class="row text-center tab-row link-style-disabled">
                 <div class="col-2 tab-cell px-2 py-2">
+                    {{ trainee.civility }}
+                </div>
+                <div class="col-2 tab-cell px-2 py-2">
                     {{ trainee.lastName }}
                 </div>
                 <div class="col-2 tab-cell px-2 py-2">
                     {{ trainee.firstName }}
                 </div>
-                <div class="col-4 tab-cell px-2 py-2">
+                <div class="col-3 tab-cell px-2 py-2">
                     {{ trainee.email }}
                 </div>
-                <div class="col-4 tab-cell px-2 py-2">
+                <div class="col-3 tab-cell px-2 py-2">
                     {{ trainee.company }}
                 </div>
             </div>

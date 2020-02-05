@@ -69,7 +69,9 @@ class TraineeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('trainee_index');
+            return $this->redirectToRoute('trainee_show', [
+                'id' => $trainee->getId(),
+            ]);
         }
 
         return $this->render('trainee/edit.html.twig', [

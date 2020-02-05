@@ -13,14 +13,23 @@
 
     <h1 class="text-center mb-5">{{ instructor.lastName }} {{ instructor.firstName }}</h1>
 
-
-    <h5>Associated sessions ({{ instructor.sessions|length }})</h5>
-    {% if instructor.sessions|length > 0 %}
-        {% for session in instructor.sessions %}
-            <h6 class='font-italic light-bottom-border pb-2'>{{ session.training.title }}</h6>
-        {% endfor %}
-    {% else %}
-        <h6 class="font-italic text-danger mb-5">No sessions for this instructor</h6>
-    {% endif %}
+    <div class='d-flex row mb-5 justify-content-around'>
+    
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-chalkboard-teacher fa-2x"></i><label class='h4 px-3'>Associated sessions</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                <h5>Number : {{ instructor.sessions|length }}</h5>
+                <hr>
+                {% if instructor.sessions|length > 0 %}
+                    {% for session in instructor.sessions %}
+                        <h5>{{ session.training.title }}</h5>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <h5 class="font-italic text-danger">No sessions for this instructor</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
