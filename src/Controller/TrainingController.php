@@ -26,29 +26,6 @@ class TrainingController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="training_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $training = new Training();
-        $form = $this->createForm(TrainingType::class, $training);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($training);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('training_index');
-        }
-
-        return $this->render('training/new.html.twig', [
-            'training' => $training,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
      * @Route("/{id}", name="training_show", methods={"GET"})
      */
     public function show(Training $training): Response

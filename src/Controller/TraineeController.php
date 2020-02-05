@@ -26,29 +26,6 @@ class TraineeController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="trainee_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $trainee = new Trainee();
-        $form = $this->createForm(TraineeType::class, $trainee);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($trainee);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('trainee_index');
-        }
-
-        return $this->render('trainee/new.html.twig', [
-            'trainee' => $trainee,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
      * @Route("/{id}", name="trainee_show", methods={"GET"})
      */
     public function show(Trainee $trainee): Response

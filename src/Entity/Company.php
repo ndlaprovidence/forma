@@ -36,7 +36,7 @@ class Company
     private $phone_number;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Trainee", mappedBy="company")
+     * @ORM\OneToMany(targetEntity="App\Entity\Trainee", mappedBy="company", orphanRemoval=true)
      */
     private $trainees;
 
