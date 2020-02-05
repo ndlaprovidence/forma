@@ -10,6 +10,8 @@ use App\Entity\Location;
 use App\Entity\Training;
 use App\Form\SessionType;
 use App\Entity\TrainingCategory;
+use PhpOffice\PhpWord;
+use PhpOffice\PhpWord\IOFactory;
 use App\Repository\UploadRepository;
 use App\Repository\CompanyRepository;
 use App\Repository\SessionRepository;
@@ -17,7 +19,6 @@ use App\Repository\TraineeRepository;
 use App\Repository\LocationRepository;
 use App\Repository\TrainingRepository;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
-use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\TrainingCategoryRepository;
@@ -397,10 +398,199 @@ class SessionController extends AbstractController
     /**
      * @Route("/{id}", name="session_show", methods={"GET"})
      */
-    public function show(Session $session): Response
-    {
+    public function show(Session $session, Request $request,UploadRepository $ur, SessionRepository $sr, EntityManagerInterface $em, TraineeRepository $tr): Response
+    {       
+        $sessionStartDate = $session->getStartDate()->format('Y-m-d');
+                            setlocale(LC_TIME, "fr_FR");
+                            $sessionStartDate = strftime("%A %d %B %G", strtotime($sessionStartDate));
+        var_dump($sessionStartDate);
+
         return $this->render('session/show.html.twig', [
             'session' => $session,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/emargement", name="session_emargement", methods={"GET"})
+     */
+    public function test(Session $session, UploadRepository $ur, SessionRepository $sr, EntityManagerInterface $em, TraineeRepository $tr)
+    {
+        
+        $this->em = $em;
+
+        $idSession = $session->getId();
+
+        $idSession = intval($idSession);
+
+        $traineesCollection = $session->getTrainees();
+
+        $nbTrainees = 0;
+
+        $traineesCollection = $session->getTrainees();
+        
+        foreach ($traineesCollection as $trainee) {
+
+            $nbTrainees++;
+        }
+
+        $uploadId = $session->getUpload()->getId();
+        $upload = $ur->findOneById($uploadId);
+        $this->em->persist($upload);
+
+        $sessionsCollection = $upload->getSessions();
+        
+        $nbSessions = 0;
+
+        foreach ($sessionsCollection as $session) {
+            $nbSessions++;
+        }
+
+        $sessionStartDate = $session->getStartDate()->format('Y-m-d');
+                            // setlocale(LC_TIME, "fr_FR");
+                            // $sessionStartDate = strftime("%A %d %B %G", strtotime($sessionStartDate));
+
+        $sessionEndDate = $session->getEndDate()->format('Y-m-d');
+                        //   setlocale(LC_TIME, "fr_FR");
+                        //   $sessionEndDate = strftime("%A %d %B %G", strtotime($sessionEndDate));
+
+        $titleTraining = $session->getTraining()->getTitle();
+
+        $sessionLocation = $session->getLocation()->getCity();
+
+        $styleTable = ['borderSize' => 6, 'borderColor' => '000000', 'cellMargin' => 80];
+        $styleFirstRow = ['borderBottomColor' => '0000FF', 'bgColor' => 'cccccc'];
+        $timeDay = ['align' => 'center', 'bgColor' => 'cccccc'];
+        $header = ['size' => 18, 'bold' => true];
+        $nameTraining = ['size' => 15, 'bold' => true];
+        $textLeft = ['align' => 'left'];
+        $styleTable = ['borderSize' => 6, 'borderColor' => '000000'];
+        $cellRowSpan = ['vMerge' => 'restart', 'bgColor' => 'cccccc'];
+        $cellRowContinue = ['vMerge' => 'continue'];
+        $cellColSpan = ['gridSpan' => 2];
+        $textCenter = ['align' => 'center'];
+        $textRight = ['align' => 'right'];
+        $verticalCenter = ['valign' => 'center'];
+        $fontBold = ['bold' => true];
+        $fontTitle = ['bold' => true, 'size' => 12];
+        $fontTitle2 = ['bold' => true, 'size' => 8];
+        $lilText = ['size' => 9];
+        $landscape = ['orientation' => 'landscape'];
+
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+
+        $nbSession = $nbSessions;
+        $nbTrainee = $nbTrainees;
+
+        if ($nbSession == 1)
+        {
+            $section = $phpWord->addSection();
+        }
+        else
+        {
+            $section = $phpWord->addSection($landscape);
+        }
+            
+        // Create footer
+        $footer = $section->addFooter();
+        
+        // Footer content 
+        $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", $lilText);
+        
+        // Header content
+        $section->addImage("../public/resources/FC-PRO-logo.png", [
+            'height' => 40,
+            'width' => 80,
+            'positioning' => 'absolute'
+            ]);
+        $section->addText("Feuille d'émargement", $header, $textRight);
+        
+        
+        $section->addTextBreak();
+        
+        $section->addText(htmlspecialchars($titleTraining), $nameTraining, $textCenter);
+        $section->addText(htmlspecialchars($sessionStartDate ." de 9h00 à 12h30 et de 13h30 à 17h00 à " . $sessionLocation ), $fontBold);
+        $section->addText(htmlspecialchars($sessionEndDate . " de 9h00 à 12h30 et de 13h30 à 17h00 à " . $sessionLocation), $fontBold);
+
+        $textrun1 = $section->addTextRun();
+        $textrun1->addText(htmlspecialchars("Merci de bien vouloir émarger lors de chaque demi-journée de formation."), $lilText);
+
+        $phpWord->addTableStyle('Fancy Table', $styleTable, $styleFirstRow);
+        $table = $section->addTable('Fancy Table');
+        $table->addRow(90);
+        $nomPrenom = $table->addCell(4000, $cellRowSpan);
+        $textrun1 = $nomPrenom->addTextRun($textCenter);
+        $textrun1->addText(htmlspecialchars('Nom et prénom du stagiaire'), $fontTitle, $textCenter);
+        $etablissement = $table->addCell(4000, $cellRowSpan);
+        $textrun1 = $etablissement->addTextRun($textCenter);
+        $textrun1->addText(htmlspecialchars('Établissement'), $fontTitle, $textCenter);
+
+        for ($i = 1; $i <= $nbSession; $i++) {
+            $firstRowDate = $table->addCell(4000, $cellColSpan);
+            $textrun2 = $firstRowDate->addTextRun($textCenter);
+            switch ($i) {
+                // Première session
+                case 1:
+                    $textrun2->addText(htmlspecialchars($sessionStartDate), $fontTitle2, $textCenter);
+                    break;
+                // Deuxième session
+                case 2:
+                    $textrun2->addText(htmlspecialchars('Jeudi 3 janvier 2020'), $fontTitle2, $textCenter);
+                    break;
+                // Troisème session
+                case 3:
+                    $textrun2->addText(htmlspecialchars('Lundi 6 janvier 2020'), $fontTitle2, $textCenter);
+                    break;
+            }
+        }
+        $table->addRow();
+            
+        for($i = 1; $i <= $nbSession; $i++)
+        {
+            if($i == 1)
+            {
+                $table->addCell(null, $cellRowContinue);
+                $table->addCell(null, $cellRowContinue);
+            }
+            $table->addCell(2000)->addText(htmlspecialchars('De 9h00 à 12h30'), $fontTitle2, $timeDay);
+            $table->addCell(2000)->addText(htmlspecialchars('De 13h30 à 17h00'), $fontTitle2, $timeDay);
+        }
+        
+
+        foreach ($traineesCollection as $trainee) {
+            $lastNameTrainee = $trainee->getLastName();
+            $firstNameTrainee = $trainee->getFirstName();
+            $companyTrainee = $trainee->getCompany();
+            $table->addRow(750);
+            $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars($lastNameTrainee . " " . $firstNameTrainee));
+            $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars($companyTrainee));
+
+            for ($j = 1; $j <= $nbSession; $j++) {
+                $table->addCell(2000)->addText(htmlspecialchars(" "));
+                $table->addCell(2000)->addText(htmlspecialchars(" "));
+            }
+        }    
+
+        $instructorCollection = $session->getInstructors();
+        foreach ($instructorCollection as $instructor) {
+            $firstNameInstructor = $instructor->getFirstName();
+            $lastNameInstructor = $instructor->getLastName();
+        
+            $table->addRow(750);
+            $table->addCell(2000, $verticalCenter)->addText(htmlspecialchars("Formateur : " . $firstNameInstructor . " " . $lastNameInstructor), $textCenter);
+        }
+        // $section->addTextBreak();
+        $section->addText("Cachet et signature du prestataire de formation:");
+
+        $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
+        
+        // Path of saved file
+        $filePath = '../public/documents/emargement.docx';
+
+        // Write file into path
+        $objWriter->save($filePath);
+
+        return $this->redirectToRoute('session_show', [
+            'id' => $session->getId(),
         ]);
     }
 
