@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New TrainingCategory{% endblock %}
+{% block title %}{{'New TrainingCategory'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('training_category_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
 
-    <h1 class='text-center mb-5'>Create new Training Category</h1>
+    <h1 class='text-center mb-5'>{{'Create new Training Category'|trans}}</h1>
 
     {{ include('training_category/_form.html.twig') }}
 {% endblock %}

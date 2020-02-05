@@ -1,34 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Goal index{% endblock %}
+{% block title %}{{'Goal index'|trans}}{% endblock %}
 
 {% block body %}
 
     <div class='row justify-content-center mb-3'>
         <div class='col text-center'>
-            <a href="{{ path('goal_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">New</button></a>
+            <a href="{{ path('goal_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Title'|trans}}New</button></a>
         </div>
     </div>
 
-    <h1 class='text-center mb-3'>Goal list</h1>
+    <h1 class='text-center mb-3'>{{'Goal list'|trans}}</h1>
 
     <div class="row text-center tab-header">
-        <div class="col-12 tab-cell-header px-2 py-2">
-            Title
+        <div class="col-10 tab-cell-header px-2 py-2">
+            {{'Title'|trans}}
+        </div>
+        <div class="col-2 tab-cell-header px-2 py-2">
+            Trainings
         </div>
     </div>
     {% for goal in goals %}
         <a href="{{ path('goal_show', {'id': goal.id}) }}" class="link-unstyled">
             <div class="row text-center tab-row link-style-disabled">
-                <div class="col-12 tab-cell px-2 py-2">
+                <div class="col-10 tab-cell px-2 py-2">
                     {{ goal.title }}
+                </div>
+                <div class="col-2 tab-cell px-2 py-2">
+                    {{ goal.trainings|length }}
                 </div>
             </div>
         </a>
     {% else %}
         <div class='row justify-content-center mt-2'>
             <div class='col text-center'>
-                <div class="alert alert-danger">No entry found</div>
+                <div class="alert alert-danger">{{'No entry found'|trans}}</div>
             </div>
         </div>
     {% endfor %}

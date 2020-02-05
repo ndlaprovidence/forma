@@ -25,7 +25,7 @@ class TrainingCategory
     private $title;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Training", mappedBy="training_category", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Training", mappedBy="training_category")
      */
     private $trainings;
 

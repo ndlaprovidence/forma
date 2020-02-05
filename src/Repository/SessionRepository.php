@@ -35,6 +35,27 @@ class SessionRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function getNbTrainees($id)
+    {
+        return $this->createQueryBuilder('s')
+            ->select('COUNT(t.last_name)')
+            ->leftJoin('s.trainees', 't')
+            ->andWhere('s.id = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findOneById($id): ?Session
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.id = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 
     /*
     public function findOneBySomeField($value): ?Session
@@ -47,4 +68,14 @@ class SessionRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findSessionByTrainee($value): ?Session
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

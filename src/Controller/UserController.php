@@ -73,7 +73,9 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('user_index');
+            return $this->redirectToRoute('user_show', [
+                'id' => $user->getId(),
+            ]);
         }
 
         return $this->render('user/edit.html.twig', [

@@ -1,29 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Session index{% endblock %}
+{% block title %}{{'Session index'|trans}}{% endblock %}
 
 {% block body %}
 
-    <h1 class='text-center mb-3'>Sessions list</h1>
+    <h1 class='text-center mb-3'>{{'Sessions list'|trans}}</h1>
 
     <div class='row justify-content-center'>
         <div class='col text-center mb-3'>
-            <a href="{{ path('session_export') }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">Export to Excel</button></a>
+            <a href="{{ path('session_export') }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Export to Excel'|trans}}</button></a>
         </div>
     </div>
 
     <div class="row text-center tab-header">
         <div class="col-5 tab-cell-header px-2 py-2">
-            Training
+            {{'Training'|trans}}
         </div>
-        <div class="col-3 tab-cell-header px-2 py-2">
-            Training location
-        </div>
-        <div class="col-2 tab-cell-header px-2 py-2">
-            Start date
+        <div class="col-5 tab-cell-header px-2 py-2">
+            {{'Training location'|trans}}
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
-            End date
+            Date
         </div>
     </div>
     {% for session in sessions %}
@@ -32,21 +29,18 @@
                 <div class="col-5 tab-cell px-2 py-2">
                     {{ session.training }}
                 </div>
-                <div class="col-3 tab-cell px-2 py-2">
+                <div class="col-5 tab-cell px-2 py-2">
                     {{ session.location }}
                 </div>
                 <div class="col-2 tab-cell px-2 py-2">
-                    {{ session.startDate ? session.startDate|date('d-m-Y') : '' }}
-                </div>
-                <div class="col-2 tab-cell px-2 py-2">
-                    {{ session.endDate ? session.endDate|date('d-m-Y') : '' }}
+                    {{ session.date ? session.date|date('d-m-Y') : '' }}
                 </div>
             </div>
         </a>
     {% else %}
         <div class='row justify-content-center mt-2'>
             <div class='col text-center'>
-                <div class="alert alert-danger">No entry found</div>
+                <div class="alert alert-danger">{{'No entry found'|trans}}</div>
             </div>
         </div>
     {% endfor %}

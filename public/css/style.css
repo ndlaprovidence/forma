@@ -56,7 +56,7 @@ body {
     line-height: normal;
 }
 
-.platform-name {
+.border-rounded {
     border: 1px solid #ced4da;
     border-radius: 10px;
 }
@@ -128,4 +128,25 @@ body {
     position: fixed;
     top: 67px;
     right: 50px;
+}
+
+.hidden-row {
+    display: none;
+}
+
+.info-box-icon {
+    float: left;
+}
+
+.info-box-header {
+    font-size: 0.9rem;
+    border-radius: 15px 15px 0 0;
+    border: 1px solid #ced4da;
+}
+
+.info-box-content {
+    border-radius: 0px 0px 15px 15px;
+    border-bottom: 1px solid #ced4da;
+    border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
 }

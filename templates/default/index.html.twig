@@ -6,8 +6,8 @@
 
     <div class="text-center">
 
-        <h2 class="card-title">Le logiciel de gestion des formations F.C. Pro</h2>
-        <h5 class="card-title text-center font-italic">Importer un nouveau fichier .csv pour démarrer</h5>
+        <h2 class="card-title">{{'F.C. Pro training management software'|trans}}</h2>
+        <h5 class="card-title text-center font-italic">{{'Import a new .csv file to get started'|trans}}</h5>
 
         {{ form_start(form) }}
 
@@ -24,18 +24,36 @@
         <div class="row mt-5">
             <div class="col">
                 <h1 class='stats-nb'>{{ sessions|length }}</h1>
-                <h4>Sessions</h4>
-                <h4>enregistrés</h4>
+                {% if sessions|length == 1 %}
+                    <h4>{{'Session'|trans}}</h4>
+                    <h4>{{'recorded'|trans}}</h4>
+                {% else %}
+                    <h4>{{'Sessions'|trans}}</h4>
+                    <h4>{{'recordeds'|trans}}</h4>
+                {% endif %}
+                
             </div>
             <div class="col">
                 <h1 class='stats-nb'>{{ trainees|length }}</h1>
-                <h4>Stagiaires</h4>
-                <h4>formés</h4>
+                {% if trainees|length == 1 %}
+                    <h4>{{'Trainee'|trans}}</h4>
+                    <h4>{{'trained'|trans}}</h4>
+                {% else %}
+                    <h4>{{'Trainees'|trans}}</h4>
+                    <h4>{{'traineds'|trans}}</h4>
+                {% endif %}
+                
             </div>
             <div class="col">
                 <h1 class='stats-nb'>{{ companies|length }}</h1>
-                <h4>Entreprises</h4>
-                <h4>participantes</h4>
+                {% if companies|length == 1 %}
+                    <h4>{{'Company'|trans}}</h4>
+                    <h4>{{'participant'|trans}}</h4>    
+                {% else %}
+                    <h4>{{'Companies'|trans}}</h4>
+                    <h4>{{'participants'|trans}}</h4>
+                {% endif %}
+                
             </div>
         </div>
     </div>
@@ -44,16 +62,16 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title">Please confirm!</h2>
+                    <h2 class="modal-title">{{'Please confirm!'|trans}}</h2>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>This is the modal body, do you like it?</p>
+                    <p>{{'This is the modal body, do you like it?'|trans}}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Confirm</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{'Confirm'|trans}}</button>
                 </div>
             </div>
         </div>

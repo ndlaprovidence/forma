@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Goal{% endblock %}
+{% block title %}{{'Edit Goal'|trans}}{% endblock %}
 
 {% block body %}
     <a href="{{ path('goal_show', {'id': goal.id}) }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
 
-    <h1 class='text-center mb-5'>Edit Goal</h1>
+    <h1 class='text-center mb-5'>{{'Edit Goal'|trans}}</h1>
 
     {{ include('goal/_form.html.twig', {'button_label': 'Update'}) }}
 
