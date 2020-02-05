@@ -9,6 +9,7 @@ use App\Entity\Trainee;
 use App\Entity\Location;
 use App\Entity\Training;
 use App\Form\SessionType;
+use Doctrine\ORM\EntityManager;
 use App\Entity\TrainingCategory;
 use App\Repository\UploadRepository;
 use App\Repository\CompanyRepository;
@@ -19,6 +20,8 @@ use App\Repository\TrainingRepository;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Doctrine\ORM\EntityManagerInterface;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\TrainingCategoryRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,6 +46,47 @@ class SessionController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/export", name="session_export", methods={"GET"})
+     */
+    public function export(SessionRepository $sr, EntityManagerInterface $em)
+    {
+        $this->em = $em;
+        $sessions = $sr->findAll();
+        $sessions = implode($sessions);
+        $sessionId = $sessions->getId();
+        var_dump($sessionId);
+        // $trainingSession = $sessions->getTraining()->getTitle();
+        // $traineesCollection = $sessions->getTrainees();
+        $i = 1;
+
+        $filePath = '../public/documents/data.xlsx';
+        
+        $spreadsheet = new Spreadsheet();
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        foreach ($sessions as $session) {
+            for ($i=1; $i<10 ; $i++) { 
+                $sheet->getCell('A'. $i)->setValue('John');
+                $sheet->getCell('B'. $i)->setValue('Smith');
+                $sheet->getCell('C'. $i)->setValue($trainingSession);
+            }
+            
+        }
+
+        
+        
+        // foreach ($traineesCollection as $trainee) {
+
+        //     // $nbTrainees++;
+        // }
+        
+        $writer->save($filePath);
+
+        return $this->redirectToRoute('session_index');
+    }
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
