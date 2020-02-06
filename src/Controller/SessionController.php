@@ -65,7 +65,7 @@ class SessionController extends AbstractController
      */
     public function export(SessionRepository $sr, TrainingRepository $tr)
     {
-        $filePath = '../public/documents/data.xlsx'; 
+        $filePath = '../public/temp/data.xlsx'; 
         $spreadsheet = new Spreadsheet();
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");  
 
@@ -95,6 +95,7 @@ class SessionController extends AbstractController
 
         // BgColor cells
         $tabColor = ['EC7063', 'A3E4D7', 'F9E79F'];
+
         $cells = ['A1','B1','C1','D1', 'E1','F1','G1','H1', 'I1','J1','K1','L1', 'M1', 'N1'];
         $valuesHeader = ["Formateur", "Titre", "Prestation", "N° de la prestation", "Civilité", "Prénom stagiaire","Nom stagiaire", "Email du stagiaire", "N° de l'établissement", "Établissement", "Durée de la session", "Date de session", "Lieu de la session","Objectifs de la formation", "Plateforme" ];
 
@@ -110,11 +111,24 @@ class SessionController extends AbstractController
             
             $sessionCollection = $training->getSessions();
 
+            $instructorRow = "";
+            $instructorProfession = "";
+            $k = 0;
+
             foreach ($sessionCollection as $session) 
             {
                 $traineeCollection = $session->getTrainees();
                 $goalCollection = $session->getTraining()->getGoals();
                 $instructorCollection = $session->getInstructors();
+
+                foreach ($instructorCollection as $instructor)
+                {
+                $k++;
+                if ($k < $nbInstructors) $instructorRow = $instructorRow . $instructor . ", ";
+                else $instructorRow = $instructorRow . $instructor ;
+
+                $instructorProfession = $instructor->getProfession();
+                }
             }
 
             foreach ($traineeCollection as $trainee) {
@@ -131,18 +145,9 @@ class SessionController extends AbstractController
                     $nbInstructors++;
                 }
 
-                $instructorRow = "";
-                $k = 0;
-                foreach ($instructorCollection as $instructor)
-                {
-                    $k++;
-                    if ($k < $nbInstructors) $instructorRow = $instructorRow . $instructor . ", ";
-                    else $instructorRow = $instructorRow . $instructor ;
-                }
-
                 $sheet->getCell('A'. $currentRow)->setValue($instructorRow);
                 $sheet->getStyle('A'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('B'. $currentRow)->setValue($instructor->getProfession());
+                $sheet->getCell('B'. $currentRow)->setValue($instructorProfession);
                 $sheet->getStyle('B'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
                 $sheet->getCell('C'. $currentRow)->setValue($training->getTitle());
                 $sheet->getStyle('C'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
@@ -614,6 +619,35 @@ class SessionController extends AbstractController
     public function tallySheet(Session $session, UploadRepository $ur, SessionRepository $sr, EntityManagerInterface $em, TraineeRepository $tr)
     {
         $this->formaHelper->clearFolder('../public/temp');
+
+        $this->em = $em;
+
+        $idSession = $session->getId();
+
+        $idSession = intval($idSession);
+
+        $traineesCollection = $session->getTrainees();
+
+        $nbTrainees = 0;
+
+        $traineesCollection = $session->getTrainees();
+        
+        foreach ($traineesCollection as $trainee) {
+
+            $nbTrainees++;
+        }
+
+        $uploadId = $session->getUpload()->getId();
+        $upload = $ur->findOneById($uploadId);
+        $this->em->persist($upload);
+
+        $sessionsCollection = $upload->getSessions();
+
+        $nbSessions = 0;
+
+        foreach ($sessionsCollection as $session) {
+            $nbSessions++;
+        }
 
         $sessionDate = $session->getDate()->format('d-m-Y');
                             // setlocale(LC_TIME, "fr_FR");
