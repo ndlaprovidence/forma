@@ -106,13 +106,13 @@
         </div>
     </div>
 
-
-    <a href="{{ path('session_all_documents', {'id': session.id}) }}">
-        <button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5 mb-3">{{'Publipostage'|trans}} <i class="fas fa-file-alt fa-lg"></i></button>
-    </a>
     <a href="/uploads/{{ session.upload.fileName }}" class='disabled'>
         <button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5 mb-3">{{ session.upload.fileName|trans }} <i class="fas fa-download fa-lg"></i></button>
     </a>
+    <a href="{{ path('session_all_documents', {'id': session.id}) }}">
+        <button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5 mb-3">{{'Publipostage'|trans}} <i class="fas fa-file-alt fa-lg"></i></button>
+    </a>
+
 
     <div class="row text-center tab-header">
         <div class="col-2 tab-cell-header px-2 py-2">
