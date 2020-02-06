@@ -47,6 +47,7 @@ class SessionRepository extends ServiceEntityRepository
         ;
     }
 
+
     public function findOneById($id): ?Session
     {
         return $this->createQueryBuilder('s')

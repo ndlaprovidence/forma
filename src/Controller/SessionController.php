@@ -11,6 +11,7 @@ use App\Entity\Location;
 use App\Entity\Training;
 use App\Form\SessionType;
 use App\Util\FormaHelper;
+use Doctrine\ORM\EntityManager;
 use PhpOffice\PhpWord\PhpWord;
 use App\Entity\TrainingCategory;
 use PhpOffice\PhpWord\IOFactory;
@@ -24,6 +25,8 @@ use App\Repository\TrainingRepository;
 use PhpOffice\PhpSpreadsheet\Cell\Cell;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\TrainingCategoryRepository;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,6 +59,139 @@ class SessionController extends AbstractController
             'sessions' => $sessionRepository->findAll(),
         ]);
     }
+
+    /**
+     * @Route("/export", name="session_export", methods={"GET"})
+     */
+    public function export(SessionRepository $sr, TrainingRepository $tr)
+    {
+        $filePath = '../public/documents/data.xlsx'; 
+        $spreadsheet = new Spreadsheet();
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");  
+
+        $trainings = $tr->findAll();
+        // $sessions = $sr->findAll();
+
+        $currentRow = 2;
+        $i = 0;
+
+        $sheet = $spreadsheet->getActiveSheet();
+        
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('N')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('O')->setAutoSize(true);
+
+        // BgColor cells
+        $tabColor = ['EC7063', 'A3E4D7', 'F9E79F'];
+        $cells = ['A1','B1','C1','D1', 'E1','F1','G1','H1', 'I1','J1','K1','L1', 'M1', 'N1'];
+        $valuesHeader = ["Formateur", "Titre", "Prestation", "N° de la prestation", "Civilité", "Prénom stagiaire","Nom stagiaire", "Email du stagiaire", "N° de l'établissement", "Établissement", "Durée de la session", "Date de session", "Lieu de la session","Objectifs de la formation", "Plateforme" ];
+
+        for ($t = 0; $t < sizeof($cells); $t++)
+        {
+            $sheet->getCell($cells[$t])->setValue($valuesHeader[$t]);
+            $sheet->getCell($cells[$t])->getStyle()->getFont()->setBold(true);
+            $sheet->getStyle($cells[$t])->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            
+        }
+
+        foreach ($trainings as $training) {
+            
+            $sessionCollection = $training->getSessions();
+
+            foreach ($sessionCollection as $session) 
+            {
+                $traineeCollection = $session->getTrainees();
+                $goalCollection = $session->getTraining()->getGoals();
+                $instructorCollection = $session->getInstructors();
+            }
+
+            foreach ($traineeCollection as $trainee) {
+
+                $nbGoals = 0;
+                foreach ($goalCollection as $goal)
+                {
+                    $nbGoals++;
+                }
+
+                $nbInstructors = 0 ;
+                foreach ($instructorCollection as $instructor)
+                {
+                    $nbInstructors++;
+                }
+
+                $instructorRow = "";
+                $k = 0;
+                foreach ($instructorCollection as $instructor)
+                {
+                    $k++;
+                    if ($k < $nbInstructors) $instructorRow = $instructorRow . $instructor . ", ";
+                    else $instructorRow = $instructorRow . $instructor ;
+                }
+
+                $sheet->getCell('A'. $currentRow)->setValue($instructorRow);
+                $sheet->getStyle('A'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('B'. $currentRow)->setValue($instructor->getProfession());
+                $sheet->getStyle('B'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('C'. $currentRow)->setValue($training->getTitle());
+                $sheet->getStyle('C'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('D'. $currentRow)->setValue($training->getReferenceNumber());
+                $sheet->getStyle('D'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('E'. $currentRow)->setValue($trainee->getCivility());
+                $sheet->getStyle('E'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('F'. $currentRow)->setValue($trainee->getFirstName());
+                $sheet->getStyle('F'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('G'. $currentRow)->setValue($trainee->getLastName());
+                $sheet->getStyle('G'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('H'. $currentRow)->setValue($trainee->getEmail());
+                $sheet->getStyle('H'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('I'. $currentRow)->setValue("Num établissement");
+                $sheet->getStyle('I'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('J'. $currentRow)->setValue($trainee->getCompany());
+                $sheet->getStyle('J'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('K'. $currentRow)->setValue("nbsession");
+                $sheet->getStyle('K'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('L'. $currentRow)->setValue($session->getDate());
+                $sheet->getStyle('L'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('M'. $currentRow)->setValue($session->getLocation());
+                $sheet->getStyle('M'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+
+                $goalRow = "";
+                $j = 0;
+                foreach ($goalCollection as $goal)
+                {
+                    $j++;
+                    if ( $j < $nbGoals ) $goalRow = $goalRow. $goal . ", ";
+                    else  $goalRow = $goalRow. $goal;
+                }
+
+                $sheet->getCell('N'. $currentRow)->setValue($goalRow);
+                $sheet->getStyle('N'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+
+                
+
+                $currentRow++;
+            }
+
+            if ($i == 2) $i = 0;
+                else $i++;                
+        }
+        $writer->save($filePath);
+
+        return $this->redirectToRoute('session_index');
+    }       
+       
 
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})

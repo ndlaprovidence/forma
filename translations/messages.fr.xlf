@@ -339,7 +339,7 @@
       </trans-unit>
       <trans-unit id="lcYRcDG" resname="Locations">
         <source>Locations</source>
-        <target>lieux</target>
+        <target>Lieux</target>
       </trans-unit>
       <trans-unit id="EWzTmCq" resname="Goals">
         <source>Goals</source>
@@ -595,7 +595,7 @@
       </trans-unit>
       <trans-unit id="Wp4uq6H" resname="Location list">
         <source>Location list</source>
-        <target>Liste des lieus</target>
+        <target>Liste des lieux</target>
       </trans-unit>
       <trans-unit id="qaYhJOT" resname="New Location">
         <source>New Location</source>
