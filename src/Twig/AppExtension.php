@@ -28,8 +28,6 @@ class AppExtension extends AbstractExtension
         $hours = $hours + intval($diffPm[0]);
         $minutes = $minutes + $diffPm[1];
 
-        $result = "RESULT : ".$hours." ".$minutes;
-
         if ( $minutes >= 60 ) {
             $hours++;
             $minutes = $minutes - 60;

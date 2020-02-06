@@ -10,7 +10,6 @@
                 <span aria-hidden="true">&times;</span>
             </button>
             <h5 class="alert-heading">Word successfully created</h5>
-            <a href='/documents/test.docx'>Download <i class="fas fa-download"></i></a>
         </div>
     {% endif %}
 
@@ -22,7 +21,7 @@
         </div>
         {% if session.training.platform != 'Formiris' %}
             <div class='col text-center'>
-                <a href="#"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Tally sheet'|trans}}</button></a>
+                <a href="{{ path('session_tally_sheet', {'id': session.id}) }}"><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'Tally sheet'|trans}}</button></a>
             </div>
         {% endif %}
     </div>
@@ -44,17 +43,6 @@
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>Training reference</label></div>
-            <div class='info-box-content px-4 py-3 text-center'>
-                {% if session.training.referenceNumber != 'Non-renseigné' %}
-                    <h5>{{ session.training.referenceNumber }}</h5>
-                {% else %}
-                    <h5 class="font-italic text-danger">Réference de formation non-renseigné</h5>
-                {% endif %}
-            </div>
-        </div>
-    
-        <div class='mb-4'>
             <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-map-marker-alt fa-2x"></i><label class='h4 px-3'>Location</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.location %}
@@ -63,17 +51,6 @@
                     <h5>{{ session.location.postalCode}} - {{ session.location.city}}</h5>
                 {% else %}
                     <h5 class="font-italic text-danger">No location set for this session</h5>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-list-ul fa-2x"></i><label class='h4 px-3'>Training category</label></div>
-            <div class='info-box-content px-4 py-3 text-center'>
-                {% if session.training.trainingCategory %}
-                    <h5>{{ session.training.trainingCategory.title }}</h5>
-                {% else %}
-                    <h5 class="font-italic text-danger">No category set for this session</h5>
                 {% endif %}
             </div>
         </div>
@@ -93,6 +70,28 @@
         </div>
 
         <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>Training reference</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                {% if session.training.referenceNumber != 'Non-renseigné' %}
+                    <h5>{{ session.training.referenceNumber }}</h5>
+                {% else %}
+                    <h5 class="font-italic text-danger">Réference de formation non-renseigné</h5>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class='mb-4'>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-list-ul fa-2x"></i><label class='h4 px-3'>Training category</label></div>
+            <div class='info-box-content px-4 py-3 text-center'>
+                {% if session.training.trainingCategory %}
+                    <h5>{{ session.training.trainingCategory.title }}</h5>
+                {% else %}
+                    <h5 class="font-italic text-danger">No category set for this session</h5>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class='mb-4'>
             <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>Training goals</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.training.goals|length > 0 %}
@@ -107,8 +106,13 @@
         </div>
     </div>
 
-    <h5 class='mr-2 mb-4'><a class='border-rounded p-2' href='/uploads/{{ session.upload.fileName }}'>Download all files <i class="fas fa-file-alt fa-lg"></i></a></h5>
-    <h5 class='mr-2 mb-3'><a class='border-rounded p-2' href='/uploads/{{ session.upload.fileName }}'>{{ session.upload.fileName }} <i class="fas fa-download fa-lg"></i></a></h5>
+    <a href="/uploads/{{ session.upload.fileName }}" class='disabled'>
+        <button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5 mb-3">{{ session.upload.fileName|trans }} <i class="fas fa-download fa-lg"></i></button>
+    </a>
+    <a href="{{ path('session_all_documents', {'id': session.id}) }}">
+        <button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5 mb-3">{{'Publipostage'|trans}} <i class="fas fa-file-alt fa-lg"></i></button>
+    </a>
+
 
     <div class="row text-center tab-header">
         <div class="col-2 tab-cell-header px-2 py-2">
@@ -120,14 +124,11 @@
         <div class="col-2 tab-cell-header px-2 py-2">
             {{'First name'|trans}}
         </div>
-        <div class="col-2 tab-cell-header px-2 py-2">
+        <div class="col-3 tab-cell-header px-2 py-2">
             {{'Email'|trans}}
         </div>
         <div class="col-3 tab-cell-header px-2 py-2">
             {{'Company'|trans}}
-        </div>
-        <div class="col-1 tab-cell-header px-2 py-2">
-            {{'Convention'|trans}}
         </div>
     </div>
     {% for trainee in session.trainees %}
@@ -141,14 +142,11 @@
             <div class="col-2 tab-cell px-2 py-2">
                 {{ trainee.firstName }}
             </div>
-            <div class="col-2 tab-cell px-2 py-2">
+            <div class="col-3 tab-cell px-2 py-2">
                 {{ trainee.email }}
             </div>
             <div class="col-3 tab-cell px-2 py-2">
                 {{ trainee.company.corporateName }}
-            </div>
-            <div class="col-1 tab-cell px-2 py-2">
-                <a href="{{ path('session_word', {'id': session.id, 'trainee': trainee.id}) }}"><i class="fas fa-file-alt fa-lg"></i></a>
             </div>
         </div>
     {% else %}
