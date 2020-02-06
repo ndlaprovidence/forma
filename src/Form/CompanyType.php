@@ -16,7 +16,7 @@ class CompanyType extends AbstractType
             ->add('street')
             ->add('postal_code')
             ->add('city')
-            ->add('siret_number')
+            ->add('reference_number')
             ->add('phone_number')
         ;
     }

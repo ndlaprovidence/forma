@@ -28,7 +28,7 @@ class Company
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $siret_number;
+    private $reference_number;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -82,14 +82,14 @@ class Company
         return $this;
     }
 
-    public function getSiretNumber(): ?string
+    public function getReferenceNumber(): ?string
     {
-        return $this->siret_number;
+        return $this->reference_number;
     }
 
-    public function setSiretNumber(?string $siret_number): self
+    public function setReferenceNumber(?string $reference_number): self
     {
-        $this->siret_number = $siret_number;
+        $this->reference_number = $reference_number;
 
         return $this;
     }
