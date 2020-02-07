@@ -39,7 +39,7 @@ class DefaultController extends AbstractController
 
             $originalFile = $upload->getFileName();
             $fileName = time().'-'.rand(10000,99999).'.'.$originalFile->getClientOriginalExtension();
-            $originalFile->move($this->getParameter('upload_directory'), $fileName);
+            $originalFile->move($this->getParameter('temp_directory'), $fileName);
             $upload->setFileName($fileName);
     
             return $this->redirectToRoute('session_new', [

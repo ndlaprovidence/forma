@@ -201,9 +201,10 @@ class SessionController extends AbstractController
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
-    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr, LocationRepository $lr, UploadRepository $ur): Response
+    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr, LocationRepository $lr, UploadRepository $ur, SessionRepository $sr): Response
     {
         if ( $request->query->has('file_name')) {
+            
             $fileName = $request->query->get('file_name');
             $this->em = $em;
 
@@ -212,8 +213,9 @@ class SessionController extends AbstractController
             // START READING CSV
             Cell::setValueBinder(new AdvancedValueBinder());
 
+            $filesystem = new Filesystem();
             $inputFileType = 'Csv';
-            $inputFileName = '../public/uploads/'.$fileName;
+            $inputFileName = '../public/temp/'.$fileName;
 
             /**  Create a new Reader of the type defined in $inputFileType  **/
             $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
@@ -359,14 +361,18 @@ class SessionController extends AbstractController
                         }
 
                         // Créer un upload si il n'existe pas déjà
-                        $temp = $ur->findSameUpload($fileName);
+                        $date = new \DateTime('@'.strtotime($sheetData[1][16]));
+                        $temp = $sr->findSessionByParameters($location,$training,$date);
 
                         if ($temp)
                         {
-                            $existingUpload = $temp;
+                            $existingSession = $temp;
+                            $existingUpload = $existingSession->getUpload()->getId();
+
                             $upload = $ur->findOneById($existingUpload);
                             $this->em->persist($upload);
                         } else {
+                            $filesystem->copy('../public/temp/'.$fileName, '../public/uploads/'.$fileName);
                             $upload = new Upload();
                             $upload
                                 ->setFileName($fileName)
@@ -376,7 +382,6 @@ class SessionController extends AbstractController
                         }
 
                         $sessionsNbrTotal = 1;
-                        $date = new \DateTime('@'.strtotime($sheetData[1][16]));
                         $session
                             ->setUpload($upload)
                             ->setTraining($training)
@@ -565,11 +570,13 @@ class SessionController extends AbstractController
         }
         $this->em->persist($session);
 
+        $this->formaHelper->clearFolder('../public/temp');
 
         $form = $this->createForm(SessionType::class, $session);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $this->em->persist($session);
             $this->em->flush();
 
@@ -791,7 +798,7 @@ class SessionController extends AbstractController
     /**
      * @Route("/{id}/all-documents", name="session_all_documents", methods={"GET"})
      */
-    public function createMultipleWord(Request $request, EntityManagerInterface $em, Session $session, TraineeRepository $ter, SessionRepository $sr, TrainingRepository $tgr): Response
+    public function createMultipleWord(Request $request, EntityManagerInterface $em, Session $session, TraineeRepository $ter, SessionRepository $sr, TrainingRepository $tgr, UploadRepository $ur): Response
     {
         $this->formaHelper->clearFolder('../public/temp');
 
@@ -800,6 +807,9 @@ class SessionController extends AbstractController
 
         $session = $sr->findOneById(intval($parameters['id']));
         $this->em->persist($session);
+
+        $upload = $ur->findOneById($session->getUpload()->getId());
+        $sessionCollection = $sr->findsessionsCollectionByUpload($upload);
 
         $traineeCollection = $session->getTrainees();
 
@@ -875,6 +885,13 @@ class SessionController extends AbstractController
             $page1->addTextBreak();
             $page1->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
             $page1->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de 6 heures (six heures) qui aura lieu "));
+            foreach ( $sessionCollection as $session ) {
+                $sessionDate            = $session->getDate()->format('Y-m-d');
+                setlocale(LC_TIME, "fr_FR");
+                $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+
+                $page1->addText(htmlspecialchars($sessionDate.','));
+            }
             $page1->addText(htmlspecialchars( $sessionDate." "), ['bold' => true]); 
             $page1->addText(htmlspecialchars("de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm." dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
             $page1->addTextBreak();

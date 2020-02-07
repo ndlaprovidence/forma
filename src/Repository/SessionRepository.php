@@ -57,26 +57,30 @@ class SessionRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+    
 
-    /*
-    public function findOneBySomeField($value): ?Session
+    public function findSessionByParameters($location,$training,$date): ?Session
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+            ->where('s.location = :val1')
+            ->setParameter('val1', $location)
+            ->andWhere('s.training = :val2')
+            ->setParameter('val2', $training)
+            ->andWhere('s.date = :val3')
+            ->setParameter('val3', $date)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getOneOrNullResult();
         ;
     }
-    */
 
-    public function findSessionByTrainee($value): ?Session
+
+    public function findsessionsCollectionByUpload($upload)
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+            ->where('s.upload = :val')
+            ->setParameter('val', $upload)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getResult()
         ;
     }
 }
