@@ -542,6 +542,7 @@ class SessionController extends AbstractController
                             $upload = $ur->findOneById($existingUpload);
                             $this->em->persist($upload);
                         } else {
+                            $filesystem->copy('../public/temp/'.$fileName, '../public/uploads/'.$fileName);
                             $upload = new Upload();
                             $upload
                                 ->setFileName($fileName)
