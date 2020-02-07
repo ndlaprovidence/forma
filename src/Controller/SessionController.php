@@ -97,7 +97,7 @@ class SessionController extends AbstractController
         $tabColor = ['EC7063', 'A3E4D7', 'F9E79F'];
 
         $cells = ['A1','B1','C1','D1', 'E1','F1','G1','H1', 'I1','J1','K1','L1', 'M1', 'N1'];
-        $valuesHeader = ["Formateur", "Titre", "Prestation", "N° de la prestation", "Civilité", "Prénom stagiaire","Nom stagiaire", "Email du stagiaire", "N° de l'établissement", "Établissement", "Durée de la session", "Date de session", "Lieu de la session","Objectifs de la formation", "Plateforme" ];
+        $valuesHeader = ["Formateur", "Titre", "Prestation", "N° de la prestation", "Civilité", "Prénom stagiaire","Nom stagiaire", "Email du stagiaire", "N° de l'établissement", "Établissement", "Durée de la formation", "Date de session", "Lieu de la session","Objectifs de la formation", "Plateforme" ];
 
         for ($t = 0; $t < sizeof($cells); $t++)
         {
@@ -113,25 +113,13 @@ class SessionController extends AbstractController
 
             $instructorRow = "";
             $instructorProfession = "";
-            $k = 0;
+            
 
             foreach ($sessionCollection as $session) 
             {
                 $traineeCollection = $session->getTrainees();
                 $goalCollection = $session->getTraining()->getGoals();
                 $instructorCollection = $session->getInstructors();
-
-                foreach ($instructorCollection as $instructor)
-                {
-                $k++;
-                if ($k < $nbInstructors) $instructorRow = $instructorRow . $instructor . ", ";
-                else $instructorRow = $instructorRow . $instructor ;
-
-                $instructorProfession = $instructor->getProfession();
-                }
-            }
-
-            foreach ($traineeCollection as $trainee) {
 
                 $nbGoals = 0;
                 foreach ($goalCollection as $goal)
@@ -140,10 +128,22 @@ class SessionController extends AbstractController
                 }
 
                 $nbInstructors = 0 ;
+                $k = 0;
                 foreach ($instructorCollection as $instructor)
                 {
+                    if ($k < $nbInstructors) $instructorRow = $instructorRow . $instructor ;
+                    else $instructorRow = $instructorRow . $instructor . ", ";
+
                     $nbInstructors++;
+                    $k++;
+
+                    $instructorProfession = $instructor->getProfession();
                 }
+            }
+
+            foreach ($traineeCollection as $trainee) {
+
+                $companyNb = $trainee->getCompany()->getReferenceNumber();
 
                 $sheet->getCell('A'. $currentRow)->setValue($instructorRow);
                 $sheet->getStyle('A'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
@@ -161,11 +161,11 @@ class SessionController extends AbstractController
                 $sheet->getStyle('G'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
                 $sheet->getCell('H'. $currentRow)->setValue($trainee->getEmail());
                 $sheet->getStyle('H'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('I'. $currentRow)->setValue("Num établissement");
+                $sheet->getCell('I'. $currentRow)->setValue($companyNb);
                 $sheet->getStyle('I'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
                 $sheet->getCell('J'. $currentRow)->setValue($trainee->getCompany());
                 $sheet->getStyle('J'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('K'. $currentRow)->setValue("nbsession");
+                $sheet->getCell('K'. $currentRow)->setValue("");
                 $sheet->getStyle('K'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
                 $sheet->getCell('L'. $currentRow)->setValue($session->getDate());
                 $sheet->getStyle('L'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
@@ -194,7 +194,7 @@ class SessionController extends AbstractController
         }
         $writer->save($filePath);
 
-        return $this->redirectToRoute('session_index');
+        return $this->redirect("/temp/data.xlsx");
     }       
        
 
@@ -446,7 +446,6 @@ class SessionController extends AbstractController
                             $names = explode(" ", $currentTrainee[6]);
                             $count = count($names);
                             $referenceNumber = $names[$count-1];
-                            var_dump($referenceNumber);
                             for ($j = 0; $j<=$count; $j++) {
                                 $city = NULL;
                                 // Si la chaine de caractère est en majuscule (c'est la ville)

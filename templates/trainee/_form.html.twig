@@ -1,4 +1,8 @@
 {{ form_start(form) }}
+    <h5>{{'Civility'|trans}}</h5>
+    {{ form_errors(form.civility) }}
+    {{ form_widget(form.civility, {'attr': {'class': 'mb-3'}}) }}
+
     <h5>{{'Last name'|trans}}</h5>
     {{ form_errors(form.last_name) }}
     {{ form_widget(form.last_name, {'attr': {'class': 'mb-3'}}) }}
