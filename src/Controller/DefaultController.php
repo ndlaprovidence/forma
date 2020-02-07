@@ -46,10 +46,13 @@ class DefaultController extends AbstractController
                 'file_name' => $fileName,
             ]);
         }
+
+        $trainingsNb = $sr->CountSessionsWithSameUpload();
+
         return $this->render('default/index.html.twig', [
             'controller_name' => 'DefaultController',
             'form' => $form->createView(),
-            'sessions' => $sr->findAll(),
+            'trainings_nb' => $trainingsNb,
             'trainees' => $tr->findAll(),
             'companies' => $cr->findAll()
             ]);

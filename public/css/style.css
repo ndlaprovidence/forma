@@ -97,6 +97,15 @@ body {
     border-left: 1px solid #ced4da;
 }
 
+.tab-row-light {
+    background-color: #EEEEEE;
+
+}
+
+.tab-row-light-alt {
+    background-color: #DDDDDD;
+}
+
 .tab-row:hover {
     background-color: #ced4da;
     transition: 0.2s;

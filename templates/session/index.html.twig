@@ -23,9 +23,24 @@
             Date
         </div>
     </div>
-    {% for session in sessions %}
+
+    {% set previousSessionUpload = '' %}
+    {% set color = 'light-alt' %}
+    
+    {% for session in sessions | sortByField('upload','desc') %}
+
+        {% set currentSessionUpload = session.upload.fileName %}
+
+        {% if currentSessionUpload != previousSessionUpload %}
+            {% if color == 'light' %}
+                {% set color = 'light-alt' %}
+            {% else %}
+                {% set color = 'light' %}
+            {% endif %}
+        {% endif %}
+        
         <a href="{{ path('session_show', {'id': session.id}) }}" class="link-unstyled">
-            <div class="row text-center tab-row link-style-disabled">
+            <div class="row text-center tab-row link-style-disabled tab-row-{{ color }}">
                 <div class="col-5 tab-cell px-2 py-2">
                     {{ session.training }}
                 </div>
@@ -37,6 +52,9 @@
                 </div>
             </div>
         </a>
+
+        {% set previousSessionUpload = currentSessionUpload %}
+
     {% else %}
         <div class='row justify-content-center mt-2'>
             <div class='col text-center'>

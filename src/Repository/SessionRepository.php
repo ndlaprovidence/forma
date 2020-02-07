@@ -83,4 +83,13 @@ class SessionRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+
+    public function CountSessionsWithSameUpload()
+    {
+        return $this->createQueryBuilder('s')
+            ->groupBy('s.upload')
+            ->getQuery()
+            ->getResult();
+    }
 }

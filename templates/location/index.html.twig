@@ -13,7 +13,10 @@
     <h1 class='text-center mb-3'>{{'Location list'|trans}}</h1>
 
     <div class="row text-center tab-header">
-        <div class="col-7 tab-cell-header px-2 py-2">
+        <div class="col-3 tab-cell-header px-2 py-2">
+            {{'Name'|trans}}
+        </div>
+        <div class="col-4 tab-cell-header px-2 py-2">
             {{'Street'|trans}}
         </div>
         <div class="col-2 tab-cell-header px-2 py-2">
@@ -23,10 +26,13 @@
             City
         </div>
     </div>
-    {% for location in locations %}
+    {% for location in locations | sortByField('name','asc') %}
         <a href="{{ path('location_show', {'id': location.id}) }}" class="link-unstyled">
             <div class="row text-center tab-row link-style-disabled">
-                <div class="col-7 tab-cell px-2 py-2">
+                <div class="col-3 tab-cell px-2 py-2">
+                    {{ location.name }}
+                </div>
+                <div class="col-4 tab-cell px-2 py-2">
                     {{ location.street }}
                 </div>
                 <div class="col-2 tab-cell px-2 py-2">

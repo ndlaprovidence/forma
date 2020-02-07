@@ -23,12 +23,12 @@
 
         <div class="row mt-5">
             <div class="col">
-                <h1 class='stats-nb'>{{ sessions|length }}</h1>
-                {% if sessions|length == 1 %}
-                    <h4>{{'Session'|trans}}</h4>
+                <h1 class='stats-nb'>{{ trainings_nb|length }}</h1>
+                {% if trainings_nb|length == 1 %}
+                    <h4>{{'Training'|trans}}</h4>
                     <h4>{{'recorded'|trans}}</h4>
                 {% else %}
-                    <h4>{{'Sessions'|trans}}</h4>
+                    <h4>{{'Trainings'|trans}}</h4>
                     <h4>{{'recordeds'|trans}}</h4>
                 {% endif %}
                 
