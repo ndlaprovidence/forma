@@ -451,7 +451,6 @@ class SessionController extends AbstractController
                             $names = explode(" ", $currentTrainee[6]);
                             $count = count($names);
                             $referenceNumber = $names[$count-1];
-                            var_dump($referenceNumber);
                             for ($j = 0; $j<=$count; $j++) {
                                 $city = NULL;
                                 // Si la chaine de caractère est en majuscule (c'est la ville)
@@ -570,8 +569,6 @@ class SessionController extends AbstractController
         }
         $this->em->persist($session);
 
-        $this->formaHelper->clearFolder('../public/temp');
-
         $form = $this->createForm(SessionType::class, $session);
         $form->handleRequest($request);
 
@@ -584,20 +581,24 @@ class SessionController extends AbstractController
                 $currentSessionNbr = $request->query->get('current_session_number');
                 if ( $currentSessionNbr < $sessionsNbrTotal-1 ) {
                     $currentSessionNbr = $currentSessionNbr+1;
+                    $this->formaHelper->clearFolder('../public/temp');
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $fileName,
                         'current_session_number' => $currentSessionNbr
                     ]);
                 }
+                $this->formaHelper->clearFolder('../public/temp');
                 return $this->redirectToRoute('session_index');
             } else {
                 if ( $sessionsNbrTotal != 1 ) {
                     $currentSessionNbr = 1;
+                    $this->formaHelper->clearFolder('../public/temp');
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $fileName,
                         'current_session_number' => $currentSessionNbr
                     ]);
                 }
+                $this->formaHelper->clearFolder('../public/temp');
                 return $this->redirectToRoute('session_index');
             }
         }
