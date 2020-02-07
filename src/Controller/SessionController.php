@@ -581,7 +581,6 @@ class SessionController extends AbstractController
                 $currentSessionNbr = $request->query->get('current_session_number');
                 if ( $currentSessionNbr < $sessionsNbrTotal-1 ) {
                     $currentSessionNbr = $currentSessionNbr+1;
-                    $this->formaHelper->clearFolder('../public/temp');
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $fileName,
                         'current_session_number' => $currentSessionNbr
@@ -592,7 +591,6 @@ class SessionController extends AbstractController
             } else {
                 if ( $sessionsNbrTotal != 1 ) {
                     $currentSessionNbr = 1;
-                    $this->formaHelper->clearFolder('../public/temp');
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $fileName,
                         'current_session_number' => $currentSessionNbr
