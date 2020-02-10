@@ -60,7 +60,10 @@
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.instructors|length > 0 %}
                     {% for instructor in session.instructors %}
-                        <h5>{{ instructor.lastName }} {{ instructor.firstName }}</h5>
+                        <h5>{{ instructor.lastName }} {{ instructor.firstName }} 
+                        {% if instructor.profession %}
+                            ({{ instructor.profession }})</h5>
+                        {% endif %}
                         <hr>
                     {% endfor %}
                 {% else %}
