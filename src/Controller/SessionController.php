@@ -814,6 +814,60 @@ class SessionController extends AbstractController
 
         $traineeCollection = $session->getTrainees();
 
+        $errors = [];
+        $locationName = [];
+        $locationPc = [];
+        $locationCity = [];
+        $locationStreet = [];
+
+        $sessionTrainingTitle = $session->getTraining()->getTitle();
+        if ( $sessionTrainingTitle == null || $sessionTrainingTitle == '' || $sessionTrainingTitle == 'Non-renseigné') {
+            array_push($errors, 'training_title');
+        }
+
+        $sessionTrainingRef = $session->getTraining()->getReferenceNumber();
+        if ( $sessionTrainingRef == null || $sessionTrainingRef == '' || $sessionTrainingRef == 'Non-renseigné') {
+            array_push($errors, 'training_ref_number');
+        }
+
+        if ( count($session->getTraining()->getGoals()) == 0 ) {
+            array_push($errors, 'training_goals');
+        }
+
+        foreach ( $sessionCollection as $currentSession ) {
+            $currentSessionLocationName = $currentSession->getLocation()->getName();
+            if ( $currentSessionLocationName == null || $currentSessionLocationName == '' || $currentSessionLocationName == "Nom de l'établissement non-renseigné" ) {
+                array_push($locationName, $currentSession->getDate()->format('d-m-Y'));
+            }
+
+            $currentSessionLocationName = $currentSession->getLocation()->getPostalCode();
+            if ( $currentSessionLocationName == null || $currentSessionLocationName == '' || $currentSessionLocationName == 'Non-renseigné' ) {
+                array_push($locationPc, $currentSession->getDate()->format('d-m-Y'));
+            }
+
+            $currentSessionLocationCity = $currentSession->getLocation()->getCity();
+            if ( $currentSessionLocationCity == null || $currentSessionLocationCity == '' || $currentSessionLocationCity == 'Non-renseignée' ) {
+                array_push($locationCity, $currentSession->getDate()->format('d-m-Y'));
+            }
+
+            $currentSessionLocationStreet = $currentSession->getLocation()->getStreet();
+            if ( $currentSessionLocationStreet == null || $currentSessionLocationStreet == '' || $currentSessionLocationStreet == 'Non-renseignée' ) {
+                array_push($locationStreet, $currentSession->getDate()->format('d-m-Y'));
+            }
+        }
+
+        if ( count($errors) > 0 ) {
+            return $this->redirectToRoute('session_show', [
+                'errors' => $errors,
+                'location_name' => $locationName,
+                'location_pc' => $locationPc,
+                'location_city' => $locationCity,
+                'location_street' => $locationStreet,
+                'id' => $session->getId()
+            ]);
+        }
+
+
         $document = ['Convocation','Attestation','Inscription','Reception'];
         $currentDoc = 0;
 
@@ -859,7 +913,6 @@ class SessionController extends AbstractController
                         $sessionLocationStreet  = $session->getLocation()->getStreet();
                         $sessionLocationPostalCode = $session->getLocation()->getPostalCode();
                         $sessionLocationCity    = $session->getLocation()->getCity();
-                        // $sessionLength = dateMinus($sessionEndTimeAm, $sessionStartTimeAm, $sessionEndTimePm, $sessionStartTimePm);
                         $sessionTrainingGoals   = $session->getTraining()->getGoals();
                         $trainingGoalsLength    = $training->getGoals();
                                                 $trainingGoalsLength = count($trainingGoalsLength);
@@ -889,8 +942,7 @@ class SessionController extends AbstractController
                         // Content footer 
                         $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", ['size' => 10], ['align' => 'left']);                             
         
-        
-                        // PAGE 1 --> Convocation
+
                         $section->addText(htmlspecialchars("CONVOCATION À UNE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
                         $pageContent = $section->addTextRun();
                         $pageContent->addTextBreak();
@@ -901,16 +953,27 @@ class SessionController extends AbstractController
                         $pageContent->addText(htmlspecialchars("Vous voudrez bien vous présenter à la session de la formation :"));
                         $pageContent->addTextBreak();
                         $pageContent->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
-                        $pageContent->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de ".$sessionHoursLength." qui aura lieu "));
+                        $pageContent->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de ".$sessionHoursLength." qui aura lieu :"));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $previousCurrentSession = '';
                         foreach ( $sessionCollection as $session ) {
+                            $currentSession = $session->getLocation()->getName().", ".$session->getLocation()->getStreet()." ".$session->getLocation()->getPostalCode()." ".$session->getLocation()->getCity().".";
+                            if ( $currentSession != $previousCurrentSession ) {
+                                $pageContent->addText(htmlspecialchars("Dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity." :"));
+                                $pageContent->addTextBreak();
+                            }
                             $sessionDate            = $session->getDate()->format('Y-m-d');
                             setlocale(LC_TIME, "fr_FR");
                             $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
         
-                            $pageContent->addText(htmlspecialchars($sessionDate.','));
+                            $pageContent->addText(htmlspecialchars($sessionDate), ['bold' => true]);
+                            $pageContent->addText(htmlspecialchars(" de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm));
+                            $pageContent->addTextBreak();
+                            
+                            $previousCurrentSession = $currentSession;
                         }
-                        $pageContent->addText(htmlspecialchars( $sessionDate." "), ['bold' => true]); 
-                        $pageContent->addText(htmlspecialchars("de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm." dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
+
                         $pageContent->addTextBreak();
                         $pageContent->addTextBreak();
                         $pageContent->addText(htmlspecialchars("Objectifs de la formation "), ['bold' => true]);
@@ -972,7 +1035,6 @@ class SessionController extends AbstractController
                         $sessionLocationStreet  = $session->getLocation()->getStreet();
                         $sessionLocationPostalCode = $session->getLocation()->getPostalCode();
                         $sessionLocationCity    = $session->getLocation()->getCity();
-                        // $sessionLength = dateMinus($sessionEndTimeAm, $sessionStartTimeAm, $sessionEndTimePm, $sessionStartTimePm);
                         $sessionTrainingGoals   = $session->getTraining()->getGoals();
                         $trainingGoalsLength    = $training->getGoals();
                                                 $trainingGoalsLength = count($trainingGoalsLength);
@@ -1002,7 +1064,7 @@ class SessionController extends AbstractController
                         // Content footer 
                         $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", ['size' => 10], ['align' => 'left']); 
                         
-                        // PAGE 2 --> Attestation
+
                         $section->addText(htmlspecialchars("ATTESTATION DE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
                         $pageContent = $section->addTextRun();
                         $pageContent->addTextBreak();
@@ -1013,9 +1075,23 @@ class SessionController extends AbstractController
                         $pageContent->addTextBreak();
                         $pageContent->addText(htmlspecialchars("Prestation de formation : "));
                         $pageContent->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
-                        $pageContent->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef));
-                        $pageContent->addText(htmlspecialchars(" en date de mercredi 22 janvier 2020 (((TOUTES LES DATES DE SESSION))) "), ['bold' => true]);
-                        $pageContent->addText(htmlspecialchars("pendant une durée de 6 heures (six heures)."));
+                        $pageContent->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." en date de "));
+                        $i = 0;
+                        foreach ( $sessionCollection as $session ) {
+                            $i++;
+                            $sessionDate = $session->getDate()->format('Y-m-d');
+                            setlocale(LC_TIME, "fr_FR");
+                            $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+                            $pageContent->addText(htmlspecialchars($sessionDate), ['bold' => true]);
+                            if ( $i == count($sessionCollection)-1) {
+                                $pageContent->addText(htmlspecialchars(" et "));
+                            } else if ( $i < count($sessionCollection)) {
+                                $pageContent->addText(htmlspecialchars(", "));
+                            } else {
+                                $pageContent->addText(htmlspecialchars(" "));
+                            }
+                        }
+                        $pageContent->addText(htmlspecialchars("pendant une durée de ".$sessionHoursLength."."));
                         $pageContent->addTextBreak();
                         $pageContent->addTextBreak();
                         $pageContent->addText(htmlspecialchars("Objectifs de la formation :"), ['bold' => true]);
@@ -1036,7 +1112,7 @@ class SessionController extends AbstractController
                         $pageContent->addTextBreak();
                         $pageContent->addTextBreak();
                         // Afficher la date du jour
-                        $pageContent->addText(htmlspecialchars("À Avranches, le (((DATE DERNIERE SESSION)))."));
+                        $pageContent->addText(htmlspecialchars("À Avranches, le ".$sessionDate."."));
                         $pageContent->addTextBreak();
                         $pageContent->addImage("../public/images/signature.png", [
                             'height' => 100,
@@ -1074,7 +1150,6 @@ class SessionController extends AbstractController
                         $sessionLocationStreet  = $session->getLocation()->getStreet();
                         $sessionLocationPostalCode = $session->getLocation()->getPostalCode();
                         $sessionLocationCity    = $session->getLocation()->getCity();
-                        // $sessionLength = dateMinus($sessionEndTimeAm, $sessionStartTimeAm, $sessionEndTimePm, $sessionStartTimePm);
                         $sessionTrainingGoals   = $session->getTraining()->getGoals();
                         $trainingGoalsLength    = $training->getGoals();
                                                 $trainingGoalsLength = count($trainingGoalsLength);
@@ -1104,7 +1179,7 @@ class SessionController extends AbstractController
                         // Content footer 
                         $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", ['size' => 10], ['align' => 'left']); 
                         
-                        // PAGE 3 --> Inscription 
+
                         $section->addText(htmlspecialchars("INSCRIPTION À UNE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
                         $pageContent = $section->addTextRun();
                         $pageContent->addTextBreak();
@@ -1114,9 +1189,26 @@ class SessionController extends AbstractController
                         $pageContent->addText(htmlspecialchars("J'accuse réception de votre inscription à la formation :"));
                         $pageContent->addTextBreak();
                         $pageContent->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
-                        $pageContent->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de 6 heures (six heures) qui aura lieu "));
-                        $pageContent->addText(htmlspecialchars( $sessionDate." "), ['bold' => true]);
-                        $pageContent->addText(htmlspecialchars("de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm." dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
+                        $pageContent->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de ".$sessionHoursLength." qui aura lieu :"));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $previousCurrentSession = '';
+                        foreach ( $sessionCollection as $session ) {
+                            $currentSession = $session->getLocation()->getName().", ".$session->getLocation()->getStreet()." ".$session->getLocation()->getPostalCode()." ".$session->getLocation()->getCity().".";
+                            if ( $currentSession != $previousCurrentSession ) {
+                                $pageContent->addText(htmlspecialchars("Dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity." :"));
+                                $pageContent->addTextBreak();
+                            }
+                            $sessionDate            = $session->getDate()->format('Y-m-d');
+                            setlocale(LC_TIME, "fr_FR");
+                            $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+        
+                            $pageContent->addText(htmlspecialchars($sessionDate), ['bold' => true]);
+                            $pageContent->addText(htmlspecialchars(" de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm));
+                            $pageContent->addTextBreak();
+                            
+                            $previousCurrentSession = $currentSession;
+                        }
                         $pageContent->addTextBreak();
                         $pageContent->addTextBreak();
                         $pageContent->addText(htmlspecialchars("Objectifs de la formation "), ['bold' => true]);
@@ -1177,7 +1269,6 @@ class SessionController extends AbstractController
                         $sessionLocationStreet  = $session->getLocation()->getStreet();
                         $sessionLocationPostalCode = $session->getLocation()->getPostalCode();
                         $sessionLocationCity    = $session->getLocation()->getCity();
-                        // $sessionLength = dateMinus($sessionEndTimeAm, $sessionStartTimeAm, $sessionEndTimePm, $sessionStartTimePm);
                         $sessionTrainingGoals   = $session->getTraining()->getGoals();
                         $trainingGoalsLength    = $training->getGoals();
                                                 $trainingGoalsLength = count($trainingGoalsLength);
@@ -1207,15 +1298,20 @@ class SessionController extends AbstractController
                         // Content footer 
                         $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", ['size' => 10], ['align' => 'left']); 
                         
-                        //PAGE 4 --> Accusé de réception
+
                         $section->addText(htmlspecialchars('ACCUSÉ DE RÉCEPTION'), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
                         $pageContent = $section->addTextRun();
                         $pageContent->addTextBreak(); 
                         $pageContent->addText(htmlspecialchars("Je soussigné, "));
-                        $pageContent->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." ".$traineeCompanyRef."."), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." ".$traineeCompanyRef." "), ['bold' => true]);
                         $pageContent->addText(htmlspecialchars("confirme avoir reçu une attestation pour la formation que j'ai suivie "));
-                        $pageContent->addText(htmlspecialchars("mercredi 22 janvier 2020 (((DATE DERNIERE SESSION))) "), ['bold' => true]);
-                        $pageContent->addText(htmlspecialchars("pendant une durée de 6 heures (six heures) dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
+                        foreach ( $sessionCollection as $session ) {
+                            $sessionDate            = $session->getDate()->format('Y-m-d');
+                            setlocale(LC_TIME, "fr_FR");
+                            $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+                        }
+                        $pageContent->addText(htmlspecialchars($sessionDate." "), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("pendant une durée de ".$sessionHoursLength." dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
                         $pageContent->addTextBreak();
                         $pageContent->addTextBreak();
                         $pageContent->addText(htmlspecialchars("Prestation de la formation : "));

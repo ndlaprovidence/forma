@@ -21,7 +21,7 @@
                 {% if trainee.email %}
                     <h5>{{ trainee.email }}</h5>
                 {% else %}
-                    <h5 class="font-italic text-danger">{{'No email for this trainee'|trans}}</h5>
+                    <a href="{{ path('trainee_edit', {'id': trainee.id}) }}"><h5 class="font-italic text-danger">{{'No email for this trainee'|trans}}</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -29,7 +29,7 @@
         <div class='mb-4'>
             <div class='info-box-header p-3 text-center'><i class="info-box-icon far fa-building fa-2x"></i><label class='h4 px-3'>Company</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
-                <h5>{{ trainee.company }}</h5>
+                <a href="{{ path('company_show', {'id': trainee.company.id}) }}"><h5>{{ trainee.company }}</h5></a>
             </div>
         </div>
 
@@ -40,7 +40,7 @@
                 <hr>
                 {% if trainee.sessions|length > 0 %}
                     {% for session in trainee.sessions %}
-                        <h5>{{ session.training.title }}</h5>
+                        <a href="{{ path('session_show', {'id': session.id}) }}"><h5>{{ session.date|date('d-m-Y') }} : {{ session.training.title }}</h5></a>
                         <hr>
                     {% endfor %}
                 {% else %}

@@ -4,12 +4,60 @@
 
 {% block body %}
 
-    {% if app.request.get('alert') == 'success' %}
-        <div class="text-center mx-auto mb-5 alert alert-success alert-dismissable fade show" role="alert">
+    {% if (app.request.get('errors')) or (app.request.get('location_name')) or (app.request.get('location_pc') or (app.request.get('location_street')) or (app.request.get('location_city'))) %}
+        <div class="text-center mx-auto mb-5 alert alert-danger alert-dismissable fade show" role="alert">
             <button type="button" class="close" data-dismiss="alert">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h5 class="alert-heading">Word successfully created</h5>
+
+            {% for error in app.request.get('errors') %}
+                {% if error == 'training_title' %}
+                    <h5>Veuillez renseigné un nom de formation</h5>
+                    {{ form_start(training.form) }}
+
+                    <h5>{{'Reference number'|trans}}</h5>
+                    {{ form_errors(training.form.reference_number) }}
+                    {{ form_widget(training.form.reference_number, {'attr': {'class': 'mb-3'}}) }}
+
+                    <div class='row justify-content-center'>
+                        <div class='col text-center'>
+                            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save') }}</button>
+                        </div>
+                    </div>
+                    {{ form_end(training.form) }}
+
+                {% endif %}
+                {% if error == 'training_ref_number' %}
+                    <h5>Veuillez renseigné un numéro de reference de formation</h5>
+                {% endif %}
+                {% if error == 'training_goals' %}
+                    <h5>Veuillez renseigné au moins un objectif de formation</h5>
+                {% endif %}
+            {% endfor %}
+
+            {% if app.request.get('location_name') %}
+                {% for session_date in app.request.get('location_name') %}
+                    <h5>Veuillez renseigné le nom de l'établissement pour la session du {{ session_date }}</h5>
+                {% endfor %}
+            {% endif %}   
+
+            {% if app.request.get('location_pc') %}
+                {% for session_date in app.request.get('location_pc') %}
+                    <h5>Veuillez renseigné le code postal de la ville pour la session du {{ session_date }}</h5>
+                {% endfor %}
+            {% endif %}     
+
+            {% if app.request.get('location_street') %}
+                {% for session_date in app.request.get('location_street') %}
+                    <h5>Veuillez renseigné la rue de l'établissement pour la session du {{ session_date }}</h5>
+                {% endfor %}
+            {% endif %}  
+
+            {% if app.request.get('location_city') %}
+                {% for session_date in app.request.get('location_city') %}
+                    <h5>Veuillez renseigné le nom de la ville pour la session du {{ session_date }}</h5>
+                {% endfor %}
+            {% endif %}   
         </div>
     {% endif %}
 
@@ -50,7 +98,7 @@
                     <h5>{{ session.location.street}}</h5>
                     <h5>{{ session.location.postalCode}} - {{ session.location.city}}</h5>
                 {% else %}
-                    <h5 class="font-italic text-danger">No location set for this session</h5>
+                    <a href="{{ path('session_edit', {'id': session.id}) }}"><h5 class="font-italic text-danger">No location set for this session</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -60,11 +108,11 @@
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.instructors|length > 0 %}
                     {% for instructor in session.instructors %}
-                        <h5>{{ instructor.lastName }} {{ instructor.firstName }}</h5>
+                        <a href="{{ path('instructor_show', {'id': instructor.id}) }}"><h5>{{ instructor.lastName }} {{ instructor.firstName }}</h5></a>
                         <hr>
                     {% endfor %}
                 {% else %}
-                    <h5 class="font-italic text-danger">{{'No instructor set for this session'|trans}}</h5>
+                    <a href="{{ path('session_edit', {'id': session.id}) }}"><h5 class="font-italic text-danger">{{'No instructor set for this session'|trans}}</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -73,9 +121,9 @@
             <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>Training reference</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.training.referenceNumber != 'Non-renseigné' %}
-                    <h5>{{ session.training.referenceNumber }}</h5>
+                    <a href="{{ path('training_show', {'id': session.training.id}) }}"><h5>{{ session.training.referenceNumber }}</h5></a>
                 {% else %}
-                    <h5 class="font-italic text-danger">Réference de formation non-renseigné</h5>
+                    <a href="{{ path('training_edit', {'id': session.training.id}) }}"><h5 class="font-italic text-danger">Réference de formation non-renseigné</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -84,9 +132,9 @@
             <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-list-ul fa-2x"></i><label class='h4 px-3'>Training category</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.training.trainingCategory %}
-                    <h5>{{ session.training.trainingCategory.title }}</h5>
+                    <a href="{{ path('training_category_show', {'id': session.training.trainingCategory.id}) }}"><h5>{{ session.training.trainingCategory.title }}</h5></a>
                 {% else %}
-                    <h5 class="font-italic text-danger">No category set for this session</h5>
+                    <a href="{{ path('training_edit', {'id': session.training.id}) }}"><h5 class="font-italic text-danger">No category set for this training</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -96,17 +144,17 @@
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.training.goals|length > 0 %}
                     {% for goal in session.training.goals %}
-                        <h5>{{ goal.title }}</h5>
+                        <a href="{{ path('goal_show', {'id': goal.id}) }}"><h5>{{ goal.title }}</h5></a>
                         <hr>
                     {% endfor %}
                 {% else %}
-                    <h5 class="font-italic text-danger">No goal set for this training</h5>
+                    <a href="{{ path('training_edit', {'id': session.training.id}) }}"><h5 class="font-italic text-danger">No goal set for this training</h5></a>
                 {% endif %}
             </div>
         </div>
     </div>
 
-    <a href="/uploads/{{ session.upload.fileName }}" class='disabled'>
+    <a href="/uploads/{{ session.upload.fileName }}">
         <button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5 mb-3">{{ session.upload.fileName|trans }} <i class="fas fa-download fa-lg"></i></button>
     </a>
     <a href="{{ path('session_all_documents', {'id': session.id}) }}">

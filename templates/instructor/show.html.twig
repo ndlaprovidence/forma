@@ -21,7 +21,7 @@
                 {% if instructor.profession %}
                     <h5>{{ instructor.profession }}</h5>
                 {% else %}
-                    <h5 class="font-italic text-danger">No profession for this instructor</h5>
+                    <a href="{{ path('instructor_edit', {'id': instructor.id}) }}"><h5 class="font-italic text-danger">No profession for this instructor</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -33,7 +33,7 @@
                 <hr>
                 {% if instructor.sessions|length > 0 %}
                     {% for session in instructor.sessions %}
-                        <h5>{{ session.training.title }}</h5>
+                        <a href="{{ path('session_show', {'id': session.id}) }}"><h5>{{ session.date|date('d-m-Y') }} : {{ session.training.title }}</h5></a>
                         <hr>
                     {% endfor %}
                 {% else %}
