@@ -77,27 +77,18 @@ class SessionController extends AbstractController
 
         $sheet = $spreadsheet->getActiveSheet();
         
-        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('N')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('O')->setAutoSize(true);
+        $columns = ['A','B','C','D', 'E','F','G','H', 'I','J','K','L', 'M'];
+
+        for ($a = 0; $a < sizeof($columns); $a++) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columns[$a])->setAutoSize(true);        
+        }
+    
 
         // BgColor cells
         $tabColor = ['EC7063', 'A3E4D7', 'F9E79F'];
 
-        $cells = ['A1','B1','C1','D1', 'E1','F1','G1','H1', 'I1','J1','K1','L1', 'M1', 'N1'];
-        $valuesHeader = ["Formateur", "Titre", "Prestation", "N° de la prestation", "Civilité", "Prénom stagiaire","Nom stagiaire", "Email du stagiaire", "N° de l'établissement", "Établissement", "Durée de la session", "Date de session", "Lieu de la session","Objectifs de la formation", "Plateforme" ];
+        $cells = ['A1','B1','C1','D1', 'E1','F1','G1','H1', 'I1','J1','K1','L1', 'M1'];
+        $valuesHeader = ["Formateur", "Prestation", "N° de la prestation", "Civilité", "Prénom stagiaire","Nom stagiaire", "Email du stagiaire", "N° de l'établissement", "Établissement", "Durée de la formation", "Date de session", "Lieu de la session","Objectifs de la formation", "Plateforme" ];
 
         for ($t = 0; $t < sizeof($cells); $t++)
         {
@@ -113,25 +104,27 @@ class SessionController extends AbstractController
 
             $instructorRow = "";
             $instructorProfession = "";
-            $k = 0;
+            $sessionDate = "";
+            
+            // $sessionStartTimeAm     = $session->getStartTimeAm()->format('H:i');
+            // $sessionEndTimeAm       = $session->getEndTimeAm()->format('H:i');
+            // $sessionStartTimePm     = $session->getStartTimePm()->format('H:i');
+            // $sessionEndTimePm       = $session->getEndTimePm()->format('H:i');
 
+            // $sessionHoursLength = '0';   
+            
             foreach ($sessionCollection as $session) 
             {
                 $traineeCollection = $session->getTrainees();
                 $goalCollection = $session->getTraining()->getGoals();
                 $instructorCollection = $session->getInstructors();
+                
+                
+                $sessionDate = $sessionDate . $session->getDate()->format('d/m/y') . ", ";
 
-                foreach ($instructorCollection as $instructor)
-                {
-                $k++;
-                if ($k < $nbInstructors) $instructorRow = $instructorRow . $instructor . ", ";
-                else $instructorRow = $instructorRow . $instructor ;
-
-                $instructorProfession = $instructor->getProfession();
-                }
-            }
-
-            foreach ($traineeCollection as $trainee) {
+                
+                // $sessionHoursLengthTmp = $this->formaHelper->getHoursLength($session->getEndTimeAm(), $session->getStartTimeAm(), $session->getEndTimePm(), $session->getStartTimePm());
+                // $sessionHoursLength = $this->formaHelper->getHoursTotal($sessionHoursLength,$sessionHoursLengthTmp);
 
                 $nbGoals = 0;
                 foreach ($goalCollection as $goal)
@@ -139,38 +132,45 @@ class SessionController extends AbstractController
                     $nbGoals++;
                 }
 
-                $nbInstructors = 0 ;
                 foreach ($instructorCollection as $instructor)
                 {
-                    $nbInstructors++;
+                    $instructorProfession = $instructor->getProfession();
+
+                    $instructorRow = $instructorRow . $instructor . " - " . $instructorProfession ;
+        
                 }
+            }
+
+            // $sessionHoursLength = $this->formaHelper->formatHoursTotal($sessionHoursLength);
+
+            foreach ($traineeCollection as $trainee) {
+
+                $companyNb = $trainee->getCompany()->getReferenceNumber();
 
                 $sheet->getCell('A'. $currentRow)->setValue($instructorRow);
                 $sheet->getStyle('A'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('B'. $currentRow)->setValue($instructorProfession);
+                $sheet->getCell('B'. $currentRow)->setValue($training->getTitle());
                 $sheet->getStyle('B'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('C'. $currentRow)->setValue($training->getTitle());
+                $sheet->getCell('C'. $currentRow)->setValue($training->getReferenceNumber());
                 $sheet->getStyle('C'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('D'. $currentRow)->setValue($training->getReferenceNumber());
+                $sheet->getCell('D'. $currentRow)->setValue($trainee->getCivility());
                 $sheet->getStyle('D'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('E'. $currentRow)->setValue($trainee->getCivility());
+                $sheet->getCell('E'. $currentRow)->setValue($trainee->getFirstName());
                 $sheet->getStyle('E'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('F'. $currentRow)->setValue($trainee->getFirstName());
+                $sheet->getCell('F'. $currentRow)->setValue($trainee->getLastName());
                 $sheet->getStyle('F'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('G'. $currentRow)->setValue($trainee->getLastName());
+                $sheet->getCell('G'. $currentRow)->setValue($trainee->getEmail());
                 $sheet->getStyle('G'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('H'. $currentRow)->setValue($trainee->getEmail());
+                $sheet->getCell('H'. $currentRow)->setValue($companyNb);
                 $sheet->getStyle('H'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('I'. $currentRow)->setValue("Num établissement");
+                $sheet->getCell('I'. $currentRow)->setValue($trainee->getCompany());
                 $sheet->getStyle('I'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('J'. $currentRow)->setValue($trainee->getCompany());
+                $sheet->getCell('J'. $currentRow)->setValue("");
                 $sheet->getStyle('J'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('K'. $currentRow)->setValue("nbsession");
+                $sheet->getCell('K'. $currentRow)->setValue($sessionDate);
                 $sheet->getStyle('K'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('L'. $currentRow)->setValue($session->getDate());
+                $sheet->getCell('L'. $currentRow)->setValue($session->getLocation());
                 $sheet->getStyle('L'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('M'. $currentRow)->setValue($session->getLocation());
-                $sheet->getStyle('M'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
 
                 $goalRow = "";
                 $j = 0;
@@ -181,20 +181,19 @@ class SessionController extends AbstractController
                     else  $goalRow = $goalRow. $goal;
                 }
 
-                $sheet->getCell('N'. $currentRow)->setValue($goalRow);
-                $sheet->getStyle('N'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-
-                
+                $sheet->getCell('M'. $currentRow)->setValue($goalRow);
+                $sheet->getStyle('M'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
 
                 $currentRow++;
             }
 
             if ($i == 2) $i = 0;
-                else $i++;                
+            else $i++;                
         }
+
         $writer->save($filePath);
 
-        return $this->redirectToRoute('session_index');
+        return $this->redirect("/temp/data.xlsx");
     }       
        
 
@@ -656,9 +655,6 @@ class SessionController extends AbstractController
             $nbSessions++;
         }
 
-        $sessionDate = $session->getDate()->format('d-m-Y');
-                            // setlocale(LC_TIME, "fr_FR");
-                            // $sessionStartDate = strftime("%A %d %B %G", strtotime($sessionStartDate));
         $trainingTitle = $session->getTraining()->getTitle();
         $sessionLocation = $session->getLocation()->getCity();
 
@@ -667,7 +663,6 @@ class SessionController extends AbstractController
         $timeDay = ['align' => 'center', 'bgColor' => 'cccccc'];
         $styleHeader = ['size' => 18, 'bold' => true];
         $nameTraining = ['size' => 15, 'bold' => true];
-        $textLeft = ['align' => 'left'];
         $styleTable = ['borderSize' => 6, 'borderColor' => '000000'];
         $cellRowSpan = ['vMerge' => 'restart', 'bgColor' => 'cccccc'];
         $cellRowContinue = ['vMerge' => 'continue'];
@@ -683,12 +678,9 @@ class SessionController extends AbstractController
 
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-        if ($nbSessions == 1)
-        {
+        if ($nbSessions == 1) {
             $section = $phpWord->addSection();
-        }
-        else
-        {
+        } else {
             $section = $phpWord->addSection($landscape);
         }
             
@@ -698,7 +690,6 @@ class SessionController extends AbstractController
         // Footer content 
         $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", $lilText);
         
-        // Header content
         $section->addImage("../public/images/FC-PRO-logo.png", [
             'height' => 40,
             'width' => 80,
@@ -706,11 +697,34 @@ class SessionController extends AbstractController
             ]);
         $section->addText("Feuille d'émargement", $styleHeader, $textRight);
         
-        
         $section->addTextBreak();
         $section->addText(htmlspecialchars($trainingTitle), $nameTraining, $textCenter);
-        $section->addText(htmlspecialchars($sessionDate ." de 9h00 à 12h30 et de 13h30 à 17h00 à " . $sessionLocation ), $fontBold);
 
+        foreach ($sessionsCollection as $session) {
+
+            $sessionDate = $session->getDate()->format('d-m-Y');
+            setlocale(LC_TIME, "fr_FR");
+            $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+    
+            $startTimeAm = $session->getStartTimeAm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $startTimeAm = strftime("%Hh%M", strtotime($startTimeAm));
+    
+            $endTimeAm = $session->getEndTimeAm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $endTimeAm = strftime("%Hh%M", strtotime($endTimeAm));
+    
+            $startTimePm = $session->getStartTimePm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $startTimePm = strftime("%Hh%M", strtotime($startTimePm));
+    
+            $endTimePm = $session->getEndTimePm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $endTimePm = strftime("%Hh%M", strtotime($endTimePm));
+
+            $section->addText(htmlspecialchars($sessionDate ." de " . $startTimeAm . " à " . $endTimeAm . " et de " . $startTimePm . " à " . $endTimePm . " à " . $sessionLocation ), $fontBold);
+        }
+        
         $textrun1 = $section->addTextRun();
         $textrun1->addText(htmlspecialchars("Merci de bien vouloir émarger lors de chaque demi-journée de formation."), $lilText);
 
@@ -724,38 +738,54 @@ class SessionController extends AbstractController
         $textrun1 = $etablissement->addTextRun($textCenter);
         $textrun1->addText(htmlspecialchars('Établissement'), $fontTitle, $textCenter);
 
-        for ($i = 1; $i <= $nbSessions; $i++) {
+        foreach ($sessionsCollection as $session) {
+            $sessionDate = $session->getDate()->format('d-m-Y');
+            setlocale(LC_TIME, "fr_FR");
+            $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
             $firstRowDate = $table->addCell(4000, $cellColSpan);
             $textrun2 = $firstRowDate->addTextRun($textCenter);
-            switch ($i) {
-                // Première session
-                case 1:
-                    $textrun2->addText(htmlspecialchars($sessionDate), $fontTitle2, $textCenter);
-                    break;
-                // Deuxième session
-                case 2:
-                    $textrun2->addText(htmlspecialchars('Jeudi 3 janvier 2020'), $fontTitle2, $textCenter);
-                    break;
-                // Troisème session
-                case 3:
-                    $textrun2->addText(htmlspecialchars('Lundi 6 janvier 2020'), $fontTitle2, $textCenter);
-                    break;
-            }
+    
+            $textrun2->addText(htmlspecialchars($sessionDate), $fontTitle2, $textCenter);
         }
+
         $table->addRow();
             
-        for($i = 1; $i <= $nbSessions; $i++)
-        {
-            if($i == 1)
-            {
+        $i = 1;
+        foreach ($sessionsCollection as $session) {
+
+            $startTimeAm = $session->getStartTimeAm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $startTimeAm = strftime("%Hh%M", strtotime($startTimeAm));
+    
+            $endTimeAm = $session->getEndTimeAm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $endTimeAm = strftime("%Hh%M", strtotime($endTimeAm));
+    
+            $startTimePm = $session->getStartTimePm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $startTimePm = strftime("%Hh%M", strtotime($startTimePm));
+    
+            $endTimePm = $session->getEndTimePm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $endTimePm = strftime("%Hh%M", strtotime($endTimePm));
+
+            if($i == 1) {
                 $table->addCell(null, $cellRowContinue);
                 $table->addCell(null, $cellRowContinue);
             }
-            $table->addCell(2000)->addText(htmlspecialchars('De 9h00 à 12h30'), $fontTitle2, $timeDay);
-            $table->addCell(2000)->addText(htmlspecialchars('De 13h30 à 17h00'), $fontTitle2, $timeDay);
+                       
+            $table->addCell(2000)->addText(htmlspecialchars("de " . $startTimeAm . " à " . $endTimeAm), $fontTitle2, $timeDay);
+            $table->addCell(2000)->addText(htmlspecialchars("de " . $startTimePm . " à " . $endTimePm), $fontTitle2, $timeDay);
+            
+            $i++;
+
         }
+        // for($i = 1; $i <= $nbSessions; $i++)
+        // {
+        // }
         
         $traineesCollection = $session->getTrainees();
+
         foreach ($traineesCollection as $trainee) {
             $lastNameTrainee = $trainee->getLastName();
             $firstNameTrainee = $trainee->getFirstName();

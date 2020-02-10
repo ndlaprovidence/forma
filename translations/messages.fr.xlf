@@ -821,6 +821,14 @@
         <source>traineds</source>
         <target>formés</target>
       </trans-unit>
+      <trans-unit id="Hj256O" resname="New session">
+        <source>New session</source>
+        <target>Nouvelle session</target>
+      </trans-unit>
+      <trans-unit id="Lm341A" resname="Save">
+        <source>Save</source>
+        <target>Enregistrer</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -108,7 +108,11 @@
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.instructors|length > 0 %}
                     {% for instructor in session.instructors %}
-                        <a href="{{ path('instructor_show', {'id': instructor.id}) }}"><h5>{{ instructor.lastName }} {{ instructor.firstName }}</h5></a>
+                        <a href="{{ path('instructor_show', {'id': instructor.id}) }}"><h5>{{ instructor.lastName }} {{ instructor.firstName }}
+                        {% if instructor.profession %}
+                            ({{ instructor.profession }})</h5>
+                        {% endif %}
+                        </h5></a>
                         <hr>
                     {% endfor %}
                 {% else %}
