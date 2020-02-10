@@ -122,7 +122,7 @@ class SessionController extends AbstractController
                 
                 $sessionDate = $sessionDate . $session->getDate()->format('d/m/y') . ", ";
 
-                
+
                 // $sessionHoursLengthTmp = $this->formaHelper->getHoursLength($session->getEndTimeAm(), $session->getStartTimeAm(), $session->getEndTimePm(), $session->getStartTimePm());
                 // $sessionHoursLength = $this->formaHelper->getHoursTotal($sessionHoursLength,$sessionHoursLengthTmp);
 
