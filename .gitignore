@@ -5,6 +5,7 @@
 /.env.*.local
 /public/bundles/
 /public/uploads/
+/public/temp/
 /public/documents/
 /public/images/
 /var/
