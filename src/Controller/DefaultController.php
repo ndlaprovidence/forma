@@ -39,17 +39,20 @@ class DefaultController extends AbstractController
 
             $originalFile = $upload->getFileName();
             $fileName = time().'-'.rand(10000,99999).'.'.$originalFile->getClientOriginalExtension();
-            $originalFile->move($this->getParameter('upload_directory'), $fileName);
+            $originalFile->move($this->getParameter('temp_directory'), $fileName);
             $upload->setFileName($fileName);
     
             return $this->redirectToRoute('session_new', [
                 'file_name' => $fileName,
             ]);
         }
+
+        $trainingsNb = $sr->CountSessionsWithSameUpload();
+
         return $this->render('default/index.html.twig', [
             'controller_name' => 'DefaultController',
             'form' => $form->createView(),
-            'sessions' => $sr->findAll(),
+            'trainings_nb' => $trainingsNb,
             'trainees' => $tr->findAll(),
             'companies' => $cr->findAll()
             ]);

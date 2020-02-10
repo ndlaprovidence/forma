@@ -23,7 +23,7 @@
             {{'Goal'|trans}}
         </div>
     </div>
-    {% for training in trainings %}
+    {% for training in trainings | sortByField('title','desc') %}
         <a href="{{ path('training_show', {'id': training.id}) }}" class="link-unstyled">
             <div class="row text-center tab-row link-style-disabled">
                 <div class="col-4 tab-cell px-2 py-2">

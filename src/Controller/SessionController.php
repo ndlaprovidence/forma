@@ -77,21 +77,12 @@ class SessionController extends AbstractController
 
         $sheet = $spreadsheet->getActiveSheet();
         
-        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('J')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('K')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('L')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('M')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('N')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('O')->setAutoSize(true);
+        $columns = ['A','B','C','D', 'E','F','G','H', 'I','J','K','L', 'M'];
+
+        for ($a = 0; $a < sizeof($columns); $a++) {
+            $spreadsheet->getActiveSheet()->getColumnDimension($columns[$a])->setAutoSize(true);        
+        }
+    
 
         // BgColor cells
         $tabColor = ['EC7063', 'A3E4D7', 'F9E79F'];
@@ -115,14 +106,25 @@ class SessionController extends AbstractController
             $instructorProfession = "";
             $sessionDate = "";
             
+            // $sessionStartTimeAm     = $session->getStartTimeAm()->format('H:i');
+            // $sessionEndTimeAm       = $session->getEndTimeAm()->format('H:i');
+            // $sessionStartTimePm     = $session->getStartTimePm()->format('H:i');
+            // $sessionEndTimePm       = $session->getEndTimePm()->format('H:i');
 
+            // $sessionHoursLength = '0';   
+            
             foreach ($sessionCollection as $session) 
             {
                 $traineeCollection = $session->getTrainees();
                 $goalCollection = $session->getTraining()->getGoals();
                 $instructorCollection = $session->getInstructors();
                 
+                
                 $sessionDate = $sessionDate . $session->getDate()->format('d/m/y') . ", ";
+
+                
+                // $sessionHoursLengthTmp = $this->formaHelper->getHoursLength($session->getEndTimeAm(), $session->getStartTimeAm(), $session->getEndTimePm(), $session->getStartTimePm());
+                // $sessionHoursLength = $this->formaHelper->getHoursTotal($sessionHoursLength,$sessionHoursLengthTmp);
 
                 $nbGoals = 0;
                 foreach ($goalCollection as $goal)
@@ -133,9 +135,13 @@ class SessionController extends AbstractController
                 foreach ($instructorCollection as $instructor)
                 {
                     $instructorProfession = $instructor->getProfession();
-                    $instructorRow = $instructorRow . $instructor . " - " . $instructorProfession . ", ";
+
+                    $instructorRow = $instructorRow . $instructor . " - " . $instructorProfession ;
+        
                 }
             }
+
+            // $sessionHoursLength = $this->formaHelper->formatHoursTotal($sessionHoursLength);
 
             foreach ($traineeCollection as $trainee) {
 
@@ -178,14 +184,13 @@ class SessionController extends AbstractController
                 $sheet->getCell('M'. $currentRow)->setValue($goalRow);
                 $sheet->getStyle('M'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
 
-                
-
                 $currentRow++;
             }
 
             if ($i == 2) $i = 0;
-                else $i++;                
+            else $i++;                
         }
+
         $writer->save($filePath);
 
         return $this->redirect("/temp/data.xlsx");
@@ -195,9 +200,10 @@ class SessionController extends AbstractController
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
-    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr, LocationRepository $lr, UploadRepository $ur): Response
+    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr, LocationRepository $lr, UploadRepository $ur, SessionRepository $sr): Response
     {
         if ( $request->query->has('file_name')) {
+            
             $fileName = $request->query->get('file_name');
             $this->em = $em;
 
@@ -206,8 +212,9 @@ class SessionController extends AbstractController
             // START READING CSV
             Cell::setValueBinder(new AdvancedValueBinder());
 
+            $filesystem = new Filesystem();
             $inputFileType = 'Csv';
-            $inputFileName = '../public/uploads/'.$fileName;
+            $inputFileName = '../public/temp/'.$fileName;
 
             /**  Create a new Reader of the type defined in $inputFileType  **/
             $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
@@ -353,14 +360,18 @@ class SessionController extends AbstractController
                         }
 
                         // Créer un upload si il n'existe pas déjà
-                        $temp = $ur->findSameUpload($fileName);
+                        $date = new \DateTime('@'.strtotime($sheetData[1][16]));
+                        $temp = $sr->findSessionByParameters($location,$training,$date);
 
                         if ($temp)
                         {
-                            $existingUpload = $temp;
+                            $existingSession = $temp;
+                            $existingUpload = $existingSession->getUpload()->getId();
+
                             $upload = $ur->findOneById($existingUpload);
                             $this->em->persist($upload);
                         } else {
+                            $filesystem->copy('../public/temp/'.$fileName, '../public/uploads/'.$fileName);
                             $upload = new Upload();
                             $upload
                                 ->setFileName($fileName)
@@ -370,7 +381,6 @@ class SessionController extends AbstractController
                         }
 
                         $sessionsNbrTotal = 1;
-                        $date = new \DateTime('@'.strtotime($sheetData[1][16]));
                         $session
                             ->setUpload($upload)
                             ->setTraining($training)
@@ -531,6 +541,7 @@ class SessionController extends AbstractController
                             $upload = $ur->findOneById($existingUpload);
                             $this->em->persist($upload);
                         } else {
+                            $filesystem->copy('../public/temp/'.$fileName, '../public/uploads/'.$fileName);
                             $upload = new Upload();
                             $upload
                                 ->setFileName($fileName)
@@ -558,11 +569,11 @@ class SessionController extends AbstractController
         }
         $this->em->persist($session);
 
-
         $form = $this->createForm(SessionType::class, $session);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $this->em->persist($session);
             $this->em->flush();
 
@@ -575,6 +586,7 @@ class SessionController extends AbstractController
                         'current_session_number' => $currentSessionNbr
                     ]);
                 }
+                $this->formaHelper->clearFolder('../public/temp');
                 return $this->redirectToRoute('session_index');
             } else {
                 if ( $sessionsNbrTotal != 1 ) {
@@ -584,6 +596,7 @@ class SessionController extends AbstractController
                         'current_session_number' => $currentSessionNbr
                     ]);
                 }
+                $this->formaHelper->clearFolder('../public/temp');
                 return $this->redirectToRoute('session_index');
             }
         }
@@ -642,9 +655,6 @@ class SessionController extends AbstractController
             $nbSessions++;
         }
 
-        $sessionDate = $session->getDate()->format('d-m-Y');
-                            // setlocale(LC_TIME, "fr_FR");
-                            // $sessionStartDate = strftime("%A %d %B %G", strtotime($sessionStartDate));
         $trainingTitle = $session->getTraining()->getTitle();
         $sessionLocation = $session->getLocation()->getCity();
 
@@ -653,7 +663,6 @@ class SessionController extends AbstractController
         $timeDay = ['align' => 'center', 'bgColor' => 'cccccc'];
         $styleHeader = ['size' => 18, 'bold' => true];
         $nameTraining = ['size' => 15, 'bold' => true];
-        $textLeft = ['align' => 'left'];
         $styleTable = ['borderSize' => 6, 'borderColor' => '000000'];
         $cellRowSpan = ['vMerge' => 'restart', 'bgColor' => 'cccccc'];
         $cellRowContinue = ['vMerge' => 'continue'];
@@ -669,12 +678,9 @@ class SessionController extends AbstractController
 
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
-        if ($nbSessions == 1)
-        {
+        if ($nbSessions == 1) {
             $section = $phpWord->addSection();
-        }
-        else
-        {
+        } else {
             $section = $phpWord->addSection($landscape);
         }
             
@@ -684,7 +690,6 @@ class SessionController extends AbstractController
         // Footer content 
         $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", $lilText);
         
-        // Header content
         $section->addImage("../public/images/FC-PRO-logo.png", [
             'height' => 40,
             'width' => 80,
@@ -692,11 +697,34 @@ class SessionController extends AbstractController
             ]);
         $section->addText("Feuille d'émargement", $styleHeader, $textRight);
         
-        
         $section->addTextBreak();
         $section->addText(htmlspecialchars($trainingTitle), $nameTraining, $textCenter);
-        $section->addText(htmlspecialchars($sessionDate ." de 9h00 à 12h30 et de 13h30 à 17h00 à " . $sessionLocation ), $fontBold);
 
+        foreach ($sessionsCollection as $session) {
+
+            $sessionDate = $session->getDate()->format('d-m-Y');
+            setlocale(LC_TIME, "fr_FR");
+            $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+    
+            $startTimeAm = $session->getStartTimeAm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $startTimeAm = strftime("%Hh%M", strtotime($startTimeAm));
+    
+            $endTimeAm = $session->getEndTimeAm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $endTimeAm = strftime("%Hh%M", strtotime($endTimeAm));
+    
+            $startTimePm = $session->getStartTimePm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $startTimePm = strftime("%Hh%M", strtotime($startTimePm));
+    
+            $endTimePm = $session->getEndTimePm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $endTimePm = strftime("%Hh%M", strtotime($endTimePm));
+
+            $section->addText(htmlspecialchars($sessionDate ." de " . $startTimeAm . " à " . $endTimeAm . " et de " . $startTimePm . " à " . $endTimePm . " à " . $sessionLocation ), $fontBold);
+        }
+        
         $textrun1 = $section->addTextRun();
         $textrun1->addText(htmlspecialchars("Merci de bien vouloir émarger lors de chaque demi-journée de formation."), $lilText);
 
@@ -710,38 +738,54 @@ class SessionController extends AbstractController
         $textrun1 = $etablissement->addTextRun($textCenter);
         $textrun1->addText(htmlspecialchars('Établissement'), $fontTitle, $textCenter);
 
-        for ($i = 1; $i <= $nbSessions; $i++) {
+        foreach ($sessionsCollection as $session) {
+            $sessionDate = $session->getDate()->format('d-m-Y');
+            setlocale(LC_TIME, "fr_FR");
+            $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
             $firstRowDate = $table->addCell(4000, $cellColSpan);
             $textrun2 = $firstRowDate->addTextRun($textCenter);
-            switch ($i) {
-                // Première session
-                case 1:
-                    $textrun2->addText(htmlspecialchars($sessionDate), $fontTitle2, $textCenter);
-                    break;
-                // Deuxième session
-                case 2:
-                    $textrun2->addText(htmlspecialchars('Jeudi 3 janvier 2020'), $fontTitle2, $textCenter);
-                    break;
-                // Troisème session
-                case 3:
-                    $textrun2->addText(htmlspecialchars('Lundi 6 janvier 2020'), $fontTitle2, $textCenter);
-                    break;
-            }
+    
+            $textrun2->addText(htmlspecialchars($sessionDate), $fontTitle2, $textCenter);
         }
+
         $table->addRow();
             
-        for($i = 1; $i <= $nbSessions; $i++)
-        {
-            if($i == 1)
-            {
+        $i = 1;
+        foreach ($sessionsCollection as $session) {
+
+            $startTimeAm = $session->getStartTimeAm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $startTimeAm = strftime("%Hh%M", strtotime($startTimeAm));
+    
+            $endTimeAm = $session->getEndTimeAm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $endTimeAm = strftime("%Hh%M", strtotime($endTimeAm));
+    
+            $startTimePm = $session->getStartTimePm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $startTimePm = strftime("%Hh%M", strtotime($startTimePm));
+    
+            $endTimePm = $session->getEndTimePm()->format('H:i');
+            setlocale(LC_TIME, "fr_FR");
+            $endTimePm = strftime("%Hh%M", strtotime($endTimePm));
+
+            if($i == 1) {
                 $table->addCell(null, $cellRowContinue);
                 $table->addCell(null, $cellRowContinue);
             }
-            $table->addCell(2000)->addText(htmlspecialchars('De 9h00 à 12h30'), $fontTitle2, $timeDay);
-            $table->addCell(2000)->addText(htmlspecialchars('De 13h30 à 17h00'), $fontTitle2, $timeDay);
+                       
+            $table->addCell(2000)->addText(htmlspecialchars("de " . $startTimeAm . " à " . $endTimeAm), $fontTitle2, $timeDay);
+            $table->addCell(2000)->addText(htmlspecialchars("de " . $startTimePm . " à " . $endTimePm), $fontTitle2, $timeDay);
+            
+            $i++;
+
         }
+        // for($i = 1; $i <= $nbSessions; $i++)
+        // {
+        // }
         
         $traineesCollection = $session->getTrainees();
+
         foreach ($traineesCollection as $trainee) {
             $lastNameTrainee = $trainee->getLastName();
             $firstNameTrainee = $trainee->getFirstName();
@@ -781,10 +825,11 @@ class SessionController extends AbstractController
         return $this->redirect("/temp/".$fileName, 301);
     }
 
+
     /**
      * @Route("/{id}/all-documents", name="session_all_documents", methods={"GET"})
      */
-    public function createMultipleWord(Request $request, EntityManagerInterface $em, Session $session, TraineeRepository $ter, SessionRepository $sr, TrainingRepository $tgr): Response
+    public function createMultipleWord(Request $request, EntityManagerInterface $em, Session $session, TraineeRepository $ter, SessionRepository $sr, TrainingRepository $tgr, UploadRepository $ur): Response
     {
         $this->formaHelper->clearFolder('../public/temp');
 
@@ -794,240 +839,450 @@ class SessionController extends AbstractController
         $session = $sr->findOneById(intval($parameters['id']));
         $this->em->persist($session);
 
+        $upload = $ur->findOneById($session->getUpload()->getId());
+        $sessionCollection = $sr->findsessionsCollectionByUpload($upload);
+
         $traineeCollection = $session->getTrainees();
 
-        foreach ( $traineeCollection as $trainee ) {
+        $document = ['Convocation','Attestation','Inscription','Reception'];
+        $currentDoc = 0;
 
-            $trainee = $ter->findOneById($trainee->getId());
-            $this->em->persist($session);
+        for ($currentDoc ; $currentDoc<count($document) ; $currentDoc++) {
 
-            $training = $tgr->findOneById($session->getTraining()->getId());
-            $this->em->persist($training);
+            switch ($document[$currentDoc]) {
+                
+                case 'Convocation':
 
-            $traineeCivility        = $trainee->getCivility();
-            $traineeLastName        = $trainee->getLastName();
-            $traineeFirstName       = $trainee->getFirstName();
-            $traineeCompanyName     = $trainee->getCompany()->getCorporateName();
-            $traineeCompanyCity     = $trainee->getCompany()->getCity();
-            $traineeCompanyRef      = $trainee->getCompany()->getReferenceNumber();
-            $sessionTrainingTitle   = $session->getTraining()->getTitle();
-            $sessionTrainingRef     = $session->getTraining()->getReferenceNumber();
-            $sessionDate            = $session->getDate()->format('Y-m-d');
-                                    setlocale(LC_TIME, "fr_FR");
-                                    $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
-            $sessionStartTimeAm     = $session->getStartTimeAm()->format('H:i');
-            $sessionEndTimeAm       = $session->getEndTimeAm()->format('H:i');
-            $sessionStartTimePm     = $session->getStartTimePm()->format('H:i');
-            $sessionEndTimePm       = $session->getEndTimePm()->format('H:i');
-            $sessionLocationName    = $session->getLocation()->getName();
-            $sessionLocationStreet  = $session->getLocation()->getStreet();
-            $sessionLocationPostalCode = $session->getLocation()->getPostalCode();
-            $sessionLocationCity    = $session->getLocation()->getCity();
-            // $sessionLength = dateMinus($sessionEndTimeAm, $sessionStartTimeAm, $sessionEndTimePm, $sessionStartTimePm);
-            $sessionTrainingGoals   = $session->getTraining()->getGoals();
-            $trainingGoalsLength    = $training->getGoals();
-                                    $trainingGoalsLength = count($trainingGoalsLength);
-            $todayDate              = date('d/m/Y');
-            
+                    $phpWord = new PhpWord();
 
-            $phpWord = new PhpWord();
+                    foreach ( $traineeCollection as $trainee ) {
+                        $trainee = $ter->findOneById($trainee->getId());
+                        $this->em->persist($trainee);
+        
+                        $training = $tgr->findOneById($session->getTraining()->getId());
+                        $this->em->persist($training);
+        
+                        $traineeCivility        = $trainee->getCivility();
+                        $traineeLastName        = $trainee->getLastName();
+                        $traineeFirstName       = $trainee->getFirstName();
+                        $traineeCompanyName     = $trainee->getCompany()->getCorporateName();
+                        $traineeCompanyCity     = $trainee->getCompany()->getCity();
+                        $traineeCompanyRef      = $trainee->getCompany()->getReferenceNumber();
+                        $sessionTrainingTitle   = $session->getTraining()->getTitle();
+                        $sessionTrainingRef     = $session->getTraining()->getReferenceNumber();
+                        $sessionDate            = $session->getDate()->format('Y-m-d');
+                                                setlocale(LC_TIME, "fr_FR");
+                                                $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+                        $sessionStartTimeAm     = $session->getStartTimeAm()->format('H:i');
+                        $sessionEndTimeAm       = $session->getEndTimeAm()->format('H:i');
+                        $sessionStartTimePm     = $session->getStartTimePm()->format('H:i');
+                        $sessionEndTimePm       = $session->getEndTimePm()->format('H:i');
 
-            $phpWord->setDefaultFontName('Arial');
-            $phpWord->setDefaultFontSize(11.5);
-            $phpWord->setDefaultParagraphStyle(['lineHeight' => 1.3]);
+                        $sessionHoursLength = '0';
+                        foreach ( $sessionCollection as $session ) {
+                            $sessionHoursLengthTmp = $this->formaHelper->getHoursLength($session->getEndTimeAm(), $session->getStartTimeAm(), $session->getEndTimePm(), $session->getStartTimePm());
+                            $sessionHoursLength = $this->formaHelper->getHoursTotal($sessionHoursLength,$sessionHoursLengthTmp);
+                        }
+                        $sessionHoursLength = $this->formaHelper->formatHoursTotal($sessionHoursLength);
+                        
+                        $sessionLocationName    = $session->getLocation()->getName();
+                        $sessionLocationStreet  = $session->getLocation()->getStreet();
+                        $sessionLocationPostalCode = $session->getLocation()->getPostalCode();
+                        $sessionLocationCity    = $session->getLocation()->getCity();
+                        // $sessionLength = dateMinus($sessionEndTimeAm, $sessionStartTimeAm, $sessionEndTimePm, $sessionStartTimePm);
+                        $sessionTrainingGoals   = $session->getTraining()->getGoals();
+                        $trainingGoalsLength    = $training->getGoals();
+                                                $trainingGoalsLength = count($trainingGoalsLength);
+                        $todayDate              = date('d/m/Y');
+                        
+        
+                        $phpWord->setDefaultFontName('Arial');
+                        $phpWord->setDefaultFontSize(11.5);
+                        $phpWord->setDefaultParagraphStyle(['lineHeight' => 1.3]);
+        
+                        $section = $phpWord->addSection();
+                        $header = $section->addHeader();
+                        $footer = $section->addFooter();
+        
+        
+                        // Content header
+                        $header->addImage("../public/images/FC-PRO-logo.png", [
+                            'height' => 50,
+                            'width' => 100,
+                            'positioning' => 'absolute'
+                        ]);
+                        $header->addText("OGEC Notre Dame de la Providence <w:br/> 
+                                        Service de Formation professionnelle continue <w:br/>
+                                        9, rue chanoine Bérenger BP 340 <w:br/>
+                                        50300 AVRANCHES <w:br/>", ['size' => 10], ['align' => 'right']);
+        
+                        // Content footer 
+                        $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", ['size' => 10], ['align' => 'left']);                             
+        
+        
+                        // PAGE 1 --> Convocation
+                        $section->addText(htmlspecialchars("CONVOCATION À UNE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
+                        $pageContent = $section->addTextRun();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("A l'attention de "));
+                        $pageContent->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." ".$traineeCompanyRef."."), ['bold' => true]);
+                        $pageContent->addTextBreak(); 
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Vous voudrez bien vous présenter à la session de la formation :"));
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de ".$sessionHoursLength." qui aura lieu "));
+                        foreach ( $sessionCollection as $session ) {
+                            $sessionDate            = $session->getDate()->format('Y-m-d');
+                            setlocale(LC_TIME, "fr_FR");
+                            $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+        
+                            $pageContent->addText(htmlspecialchars($sessionDate.','));
+                        }
+                        $pageContent->addText(htmlspecialchars( $sessionDate." "), ['bold' => true]); 
+                        $pageContent->addText(htmlspecialchars("de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm." dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Objectifs de la formation "), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("(pour plus de détails, se rapporter au programme transmis précédemment) :"));
+                        $pageContent->addTextBreak();
+                        $i = 0;
+                        foreach ( $sessionTrainingGoals as $goal ) {
+                            $i++;
+                            if ( $trainingGoalsLength-1 >= $i ) {
+                                $pageContent->addText(htmlspecialchars($goal.", "));
+                            } else {
+                                $pageContent->addText(htmlspecialchars($goal."."));
+                            }
+                        }
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Votre arrivée dans les locaux est souhaitée un quart d'heure avant le début de la session."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Je vous souhaite une bonne formation."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        // Afficher la date du jourAttestation
+                        $pageContent->addText(htmlspecialchars("À Avranches, le ".$todayDate."."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addImage("../public/images/signature.png", [
+                            'height' => 100,
+                            'width' => 170
+                        ]);
+                    }
+                break;
+                
+                case 'Attestation':
+                    $phpWord = new PhpWord();
 
-            $section = $phpWord->addSection();
-            $header = $section->addHeader();
-            $footer = $section->addFooter();
+                    foreach ( $traineeCollection as $trainee ) {
+                        $trainee = $ter->findOneById($trainee->getId());
+                        $this->em->persist($trainee);
+        
+                        $training = $tgr->findOneById($session->getTraining()->getId());
+                        $this->em->persist($training);
+        
+                        $traineeCivility        = $trainee->getCivility();
+                        $traineeLastName        = $trainee->getLastName();
+                        $traineeFirstName       = $trainee->getFirstName();
+                        $traineeCompanyName     = $trainee->getCompany()->getCorporateName();
+                        $traineeCompanyCity     = $trainee->getCompany()->getCity();
+                        $traineeCompanyRef      = $trainee->getCompany()->getReferenceNumber();
+                        $sessionTrainingTitle   = $session->getTraining()->getTitle();
+                        $sessionTrainingRef     = $session->getTraining()->getReferenceNumber();
+                        $sessionDate            = $session->getDate()->format('Y-m-d');
+                                                setlocale(LC_TIME, "fr_FR");
+                                                $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+                        $sessionStartTimeAm     = $session->getStartTimeAm()->format('H:i');
+                        $sessionEndTimeAm       = $session->getEndTimeAm()->format('H:i');
+                        $sessionStartTimePm     = $session->getStartTimePm()->format('H:i');
+                        $sessionEndTimePm       = $session->getEndTimePm()->format('H:i');
+                        $sessionLocationName    = $session->getLocation()->getName();
+                        $sessionLocationStreet  = $session->getLocation()->getStreet();
+                        $sessionLocationPostalCode = $session->getLocation()->getPostalCode();
+                        $sessionLocationCity    = $session->getLocation()->getCity();
+                        // $sessionLength = dateMinus($sessionEndTimeAm, $sessionStartTimeAm, $sessionEndTimePm, $sessionStartTimePm);
+                        $sessionTrainingGoals   = $session->getTraining()->getGoals();
+                        $trainingGoalsLength    = $training->getGoals();
+                                                $trainingGoalsLength = count($trainingGoalsLength);
+                        $todayDate              = date('d/m/Y');
+                        
+        
+                        $phpWord->setDefaultFontName('Arial');
+                        $phpWord->setDefaultFontSize(11.5);
+                        $phpWord->setDefaultParagraphStyle(['lineHeight' => 1.3]);
+        
+                        $section = $phpWord->addSection();
+                        $header = $section->addHeader();
+                        $footer = $section->addFooter();
+        
+        
+                        // Content header
+                        $header->addImage("../public/images/FC-PRO-logo.png", [
+                            'height' => 50,
+                            'width' => 100,
+                            'positioning' => 'absolute'
+                        ]);
+                        $header->addText("OGEC Notre Dame de la Providence <w:br/> 
+                                        Service de Formation professionnelle continue <w:br/>
+                                        9, rue chanoine Bérenger BP 340 <w:br/>
+                                        50300 AVRANCHES <w:br/>", ['size' => 10], ['align' => 'right']);
+        
+                        // Content footer 
+                        $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", ['size' => 10], ['align' => 'left']); 
+                        
+                        // PAGE 2 --> Attestation
+                        $section->addText(htmlspecialchars("ATTESTATION DE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
+                        $pageContent = $section->addTextRun();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Je soussigné, Philippe LECOUVREUR, responsable de FC PRO service de formation professionnelle continue du lycée Notre Dame de la Providence, atteste que : "));
+                        $pageContent->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." ".$traineeCompanyRef."."), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("a suivi la prestation de formation décrite ci-dessous dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Prestation de formation : "));
+                        $pageContent->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef));
+                        $pageContent->addText(htmlspecialchars(" en date de mercredi 22 janvier 2020 (((TOUTES LES DATES DE SESSION))) "), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("pendant une durée de 6 heures (six heures)."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Objectifs de la formation :"), ['bold' => true]);
+                        $pageContent->addTextBreak();
+                        // Données issues de la BDD
+                        $i = 0;
+                        foreach ( $sessionTrainingGoals as $goal ) {
+                            $i++;
+                            if ( $trainingGoalsLength-1 >= $i ) {
+                                $pageContent->addText(htmlspecialchars($goal.", "));
+                            } else {
+                                $pageContent->addText(htmlspecialchars($goal."."));
+                            }
+                        }
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Fait pour servir et valoir ce que de droit."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        // Afficher la date du jour
+                        $pageContent->addText(htmlspecialchars("À Avranches, le (((DATE DERNIERE SESSION)))."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addImage("../public/images/signature.png", [
+                            'height' => 100,
+                            'width' => 170
+                        ]);
+                    }
+                break;
 
+                case 'Inscription':
+                    $phpWord = new PhpWord();
 
-            // Content header
-            $header->addImage("../public/images/FC-PRO-logo.png", [
-                'height' => 50,
-                'width' => 100,
-                'positioning' => 'absolute'
-            ]);
-            $header->addText("OGEC Notre Dame de la Providence <w:br/> 
-                            Service de Formation professionnelle continue <w:br/>
-                            9, rue chanoine Bérenger BP 340 <w:br/>
-                            50300 AVRANCHES <w:br/>", ['size' => 10], ['align' => 'right']);
+                    foreach ( $traineeCollection as $trainee ) {
+                        $trainee = $ter->findOneById($trainee->getId());
+                        $this->em->persist($trainee);
+        
+                        $training = $tgr->findOneById($session->getTraining()->getId());
+                        $this->em->persist($training);
+        
+                        $traineeCivility        = $trainee->getCivility();
+                        $traineeLastName        = $trainee->getLastName();
+                        $traineeFirstName       = $trainee->getFirstName();
+                        $traineeCompanyName     = $trainee->getCompany()->getCorporateName();
+                        $traineeCompanyCity     = $trainee->getCompany()->getCity();
+                        $traineeCompanyRef      = $trainee->getCompany()->getReferenceNumber();
+                        $sessionTrainingTitle   = $session->getTraining()->getTitle();
+                        $sessionTrainingRef     = $session->getTraining()->getReferenceNumber();
+                        $sessionDate            = $session->getDate()->format('Y-m-d');
+                                                setlocale(LC_TIME, "fr_FR");
+                                                $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+                        $sessionStartTimeAm     = $session->getStartTimeAm()->format('H:i');
+                        $sessionEndTimeAm       = $session->getEndTimeAm()->format('H:i');
+                        $sessionStartTimePm     = $session->getStartTimePm()->format('H:i');
+                        $sessionEndTimePm       = $session->getEndTimePm()->format('H:i');
+                        $sessionLocationName    = $session->getLocation()->getName();
+                        $sessionLocationStreet  = $session->getLocation()->getStreet();
+                        $sessionLocationPostalCode = $session->getLocation()->getPostalCode();
+                        $sessionLocationCity    = $session->getLocation()->getCity();
+                        // $sessionLength = dateMinus($sessionEndTimeAm, $sessionStartTimeAm, $sessionEndTimePm, $sessionStartTimePm);
+                        $sessionTrainingGoals   = $session->getTraining()->getGoals();
+                        $trainingGoalsLength    = $training->getGoals();
+                                                $trainingGoalsLength = count($trainingGoalsLength);
+                        $todayDate              = date('d/m/Y');
+                        
+        
+                        $phpWord->setDefaultFontName('Arial');
+                        $phpWord->setDefaultFontSize(11.5);
+                        $phpWord->setDefaultParagraphStyle(['lineHeight' => 1.3]);
+        
+                        $section = $phpWord->addSection();
+                        $header = $section->addHeader();
+                        $footer = $section->addFooter();
+        
+        
+                        // Content header
+                        $header->addImage("../public/images/FC-PRO-logo.png", [
+                            'height' => 50,
+                            'width' => 100,
+                            'positioning' => 'absolute'
+                        ]);
+                        $header->addText("OGEC Notre Dame de la Providence <w:br/> 
+                                        Service de Formation professionnelle continue <w:br/>
+                                        9, rue chanoine Bérenger BP 340 <w:br/>
+                                        50300 AVRANCHES <w:br/>", ['size' => 10], ['align' => 'right']);
+        
+                        // Content footer 
+                        $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", ['size' => 10], ['align' => 'left']); 
+                        
+                        // PAGE 3 --> Inscription 
+                        $section->addText(htmlspecialchars("INSCRIPTION À UNE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
+                        $pageContent = $section->addTextRun();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("À l'attention de "));
+                        $pageContent->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." ".$traineeCompanyRef."."), ['bold' => true]);
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("J'accuse réception de votre inscription à la formation :"));
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de 6 heures (six heures) qui aura lieu "));
+                        $pageContent->addText(htmlspecialchars( $sessionDate." "), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm." dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Objectifs de la formation "), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("(pour plus de détails, se rapporter au programme transmis précédemment) :"));
+                        $pageContent->addTextBreak();
+                        $i = 0;
+                        foreach ( $sessionTrainingGoals as $goal ) {
+                            $i++;
+                            if ( $trainingGoalsLength-1 >= $i ) {
+                                $pageContent->addText(htmlspecialchars($goal.", "));
+                            } else {
+                                $pageContent->addText(htmlspecialchars($goal."."));
+                            }
+                        }
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Cette formation pourra être annulée si le nombre d'inscrits n'atteint pas un effectif minimum."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Vous recevrez une convocation 10 jours avant le début de la session."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("À Avranches, le ".$todayDate."."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addImage("../public/images/signature.png", [
+                            'height' => 100,
+                            'width' => 170
+                        ]);
+                    }
+                break;
 
-            // Content footer 
-            $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", ['size' => 10], ['align' => 'left']);                             
+                case 'Reception':
+                    $phpWord = new PhpWord();
 
+                    foreach ( $traineeCollection as $trainee ) {
+                        $trainee = $ter->findOneById($trainee->getId());
+                        $this->em->persist($trainee);
+        
+                        $training = $tgr->findOneById($session->getTraining()->getId());
+                        $this->em->persist($training);
+        
+                        $traineeCivility        = $trainee->getCivility();
+                        $traineeLastName        = $trainee->getLastName();
+                        $traineeFirstName       = $trainee->getFirstName();
+                        $traineeCompanyName     = $trainee->getCompany()->getCorporateName();
+                        $traineeCompanyCity     = $trainee->getCompany()->getCity();
+                        $traineeCompanyRef      = $trainee->getCompany()->getReferenceNumber();
+                        $sessionTrainingTitle   = $session->getTraining()->getTitle();
+                        $sessionTrainingRef     = $session->getTraining()->getReferenceNumber();
+                        $sessionDate            = $session->getDate()->format('Y-m-d');
+                                                setlocale(LC_TIME, "fr_FR");
+                                                $sessionDate = strftime("%A %d %B %G", strtotime($sessionDate));
+                        $sessionStartTimeAm     = $session->getStartTimeAm()->format('H:i');
+                        $sessionEndTimeAm       = $session->getEndTimeAm()->format('H:i');
+                        $sessionStartTimePm     = $session->getStartTimePm()->format('H:i');
+                        $sessionEndTimePm       = $session->getEndTimePm()->format('H:i');
+                        $sessionLocationName    = $session->getLocation()->getName();
+                        $sessionLocationStreet  = $session->getLocation()->getStreet();
+                        $sessionLocationPostalCode = $session->getLocation()->getPostalCode();
+                        $sessionLocationCity    = $session->getLocation()->getCity();
+                        // $sessionLength = dateMinus($sessionEndTimeAm, $sessionStartTimeAm, $sessionEndTimePm, $sessionStartTimePm);
+                        $sessionTrainingGoals   = $session->getTraining()->getGoals();
+                        $trainingGoalsLength    = $training->getGoals();
+                                                $trainingGoalsLength = count($trainingGoalsLength);
+                        $todayDate              = date('d/m/Y');
+                        
+        
+                        $phpWord->setDefaultFontName('Arial');
+                        $phpWord->setDefaultFontSize(11.5);
+                        $phpWord->setDefaultParagraphStyle(['lineHeight' => 1.3]);
+        
+                        $section = $phpWord->addSection();
+                        $header = $section->addHeader();
+                        $footer = $section->addFooter();
+        
+        
+                        // Content header
+                        $header->addImage("../public/images/FC-PRO-logo.png", [
+                            'height' => 50,
+                            'width' => 100,
+                            'positioning' => 'absolute'
+                        ]);
+                        $header->addText("OGEC Notre Dame de la Providence <w:br/> 
+                                        Service de Formation professionnelle continue <w:br/>
+                                        9, rue chanoine Bérenger BP 340 <w:br/>
+                                        50300 AVRANCHES <w:br/>", ['size' => 10], ['align' => 'right']);
+        
+                        // Content footer 
+                        $footer->addText("FC PRO service de formation professionnelle Continue de OGEC Notre Dame de la Providence <w:br/>9, rue chanoine Bérenger BP 340, 50300 AVRANCHES. Tel 02.33.58.02.22 <w:br/>mail fcpro@ndlaprovidence.org <w:br/>N° activité 25500040250 référençable DataDocks", ['size' => 10], ['align' => 'left']); 
+                        
+                        //PAGE 4 --> Accusé de réception
+                        $section->addText(htmlspecialchars('ACCUSÉ DE RÉCEPTION'), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
+                        $pageContent = $section->addTextRun();
+                        $pageContent->addTextBreak(); 
+                        $pageContent->addText(htmlspecialchars("Je soussigné, "));
+                        $pageContent->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." ".$traineeCompanyRef."."), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("confirme avoir reçu une attestation pour la formation que j'ai suivie "));
+                        $pageContent->addText(htmlspecialchars("mercredi 22 janvier 2020 (((DATE DERNIERE SESSION))) "), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars("pendant une durée de 6 heures (six heures) dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Prestation de la formation : "));
+                        $pageContent->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
+                        $pageContent->addText(htmlspecialchars( "identifiée par le numéro ".$sessionTrainingRef));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Objectifs de la formation :"), ['bold' => true]);
+                        $pageContent->addTextBreak();
+                        $i = 0;
+                        foreach ( $sessionTrainingGoals as $goal ) {
+                            $i++;
+                            if ( $trainingGoalsLength-1 >= $i ) {
+                                $pageContent->addText(htmlspecialchars($goal.", "));
+                            } else {
+                                $pageContent->addText(htmlspecialchars($goal."."));
+                            }
+                        }
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("Fait pour servir et valoir ce que de droit."));
+                        $pageContent->addTextBreak();
+                        $pageContent->addTextBreak();
+                        $pageContent->addText(htmlspecialchars("À Avranches, le ".$todayDate."."));
+                    }
+                break;
 
-            // PAGE 1 --> Convocation
-            $section->addText(htmlspecialchars("CONVOCATION À UNE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
-            $page1 = $section->addTextRun();
-            $page1->addTextBreak();
-            $page1->addText(htmlspecialchars("A l'attention de "));
-            $page1->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." ".$traineeCompanyRef."."), ['bold' => true]);
-            $page1->addTextBreak(); 
-            $page1->addTextBreak();
-            $page1->addText(htmlspecialchars("Vous voudrez bien vous présenter à la session de la formation :"));
-            $page1->addTextBreak();
-            $page1->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
-            $page1->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de 6 heures (six heures) qui aura lieu "));
-            $page1->addText(htmlspecialchars( $sessionDate." "), ['bold' => true]); 
-            $page1->addText(htmlspecialchars("de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm." dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
-            $page1->addTextBreak();
-            $page1->addTextBreak();
-            $page1->addText(htmlspecialchars("Objectifs de la formation "), ['bold' => true]);
-            $page1->addText(htmlspecialchars("(pour plus de détails, se rapporter au programme transmis précédemment) :"));
-            $page1->addTextBreak();
-            $i = 0;
-            foreach ( $sessionTrainingGoals as $goal ) {
-                $i++;
-                if ( $trainingGoalsLength-1 >= $i ) {
-                    $page1->addText(htmlspecialchars($goal.", "));
-                } else {
-                    $page1->addText(htmlspecialchars($goal."."));
-                }
+                default:
+
+                break;
             }
-            $page1->addTextBreak();
-            $page1->addTextBreak();
-            $page1->addText(htmlspecialchars("Votre arrivée dans les locaux est souhaitée un quart d'heure avant le début de la session."));
-            $page1->addTextBreak();
-            $page1->addTextBreak();
-            $page1->addText(htmlspecialchars("Je vous souhaite une bonne formation."));
-            $page1->addTextBreak();
-            $page1->addTextBreak();
-            // Afficher la date du jour
-            $page1->addText(htmlspecialchars("À Avranches, le ".$todayDate."."));
-            $page1->addTextBreak();
-            $page1->addImage("../public/images/signature.png", [
-                'height' => 100,
-                'width' => 170
-            ]);
-
-
-            // PAGE 2 --> Attestation
-            $section = $phpWord->addSection();
-            $section->addText(htmlspecialchars("ATTESTATION DE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
-            $page2 = $section->addTextRun();
-            $page2->addTextBreak();
-            $page2->addText(htmlspecialchars("Je soussigné, Philippe LECOUVREUR, responsable de FC PRO service de formation professionnelle continue du lycée Notre Dame de la Providence, atteste que : "));
-            $page2->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." ".$traineeCompanyRef."."), ['bold' => true]);
-            $page2->addText(htmlspecialchars("a suivi la prestation de formation décrite ci-dessous dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
-            $page2->addTextBreak();
-            $page2->addTextBreak();
-            $page2->addText(htmlspecialchars("Prestation de formation : "));
-            $page2->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
-            $page2->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef));
-            $page2->addText(htmlspecialchars(" en date de mercredi 22 janvier 2020 (((TOUTES LES DATES DE SESSION))) "), ['bold' => true]);
-            $page2->addText(htmlspecialchars("pendant une durée de 6 heures (six heures)."));
-            $page2->addTextBreak();
-            $page2->addTextBreak();
-            $page2->addText(htmlspecialchars("Objectifs de la formation :"), ['bold' => true]);
-            $page2->addTextBreak();
-            // Données issues de la BDD
-            $i = 0;
-            foreach ( $sessionTrainingGoals as $goal ) {
-                $i++;
-                if ( $trainingGoalsLength-1 >= $i ) {
-                    $page2->addText(htmlspecialchars($goal.", "));
-                } else {
-                    $page2->addText(htmlspecialchars($goal."."));
-                }
-            }
-            $page2->addTextBreak();
-            $page2->addTextBreak();
-            $page2->addText(htmlspecialchars("Fait pour servir et valoir ce que de droit."));
-            $page2->addTextBreak();
-            $page2->addTextBreak();
-            // Afficher la date du jour
-            $page2->addText(htmlspecialchars("À Avranches, le (((DATE DERNIERE SESSION)))."));
-            $page2->addTextBreak();
-            $page2->addImage("../public/images/signature.png", [
-                'height' => 100,
-                'width' => 170
-            ]);
-
-
-            // PAGE 3 --> Inscription 
-            $section = $phpWord->addSection();
-            $section->addText(htmlspecialchars("INSCRIPTION À UNE FORMATION"), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
-            $page3 = $section->addTextRun();
-            $page3->addTextBreak();
-            $page3->addText(htmlspecialchars("À l'attention de "));
-            $page3->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." ".$traineeCompanyRef."."), ['bold' => true]);
-            $page3->addTextBreak();
-            $page3->addText(htmlspecialchars("J'accuse réception de votre inscription à la formation :"));
-            $page3->addTextBreak();
-            $page3->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
-            $page3->addText(htmlspecialchars("identifiée par le numéro ".$sessionTrainingRef." d'une durée de 6 heures (six heures) qui aura lieu "));
-            $page3->addText(htmlspecialchars( $sessionDate." "), ['bold' => true]);
-            $page3->addText(htmlspecialchars("de ".$sessionStartTimeAm." à ".$sessionEndTimeAm." et de ".$sessionStartTimePm." à ".$sessionEndTimePm." dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
-            $page3->addTextBreak();
-            $page3->addTextBreak();
-            $page3->addText(htmlspecialchars("Objectifs de la formation "), ['bold' => true]);
-            $page3->addText(htmlspecialchars("(pour plus de détails, se rapporter au programme transmis précédemment) :"));
-            $page3->addTextBreak();
-            $i = 0;
-            foreach ( $sessionTrainingGoals as $goal ) {
-                $i++;
-                if ( $trainingGoalsLength-1 >= $i ) {
-                    $page3->addText(htmlspecialchars($goal.", "));
-                } else {
-                    $page3->addText(htmlspecialchars($goal."."));
-                }
-            }
-            $page3->addTextBreak();
-            $page3->addTextBreak();
-            $page3->addText(htmlspecialchars("Cette formation pourra être annulée si le nombre d'inscrits n'atteint pas un effectif minimum."));
-            $page3->addTextBreak();
-            $page3->addTextBreak();
-            $page3->addText(htmlspecialchars("Vous recevrez une convocation 10 jours avant le début de la session."));
-            $page3->addTextBreak();
-            $page3->addTextBreak();
-            $page3->addText(htmlspecialchars("À Avranches, le ".$todayDate."."));
-            $page3->addTextBreak();
-            $page3->addImage("../public/images/signature.png", [
-                'height' => 100,
-                'width' => 170
-            ]);
-
-
-            //PAGE 4 --> Accusé de réception
-            $section = $phpWord->addSection();
-            $section->addText(htmlspecialchars('ACCUSÉ DE RÉCEPTION'), ['bold' => true, 'size' => 16 ], ['align' => 'center']);
-            $page4 = $section->addTextRun();
-            $page4->addTextBreak(); 
-            $page4->addText(htmlspecialchars("Je soussigné, "));
-            $page4->addText(htmlspecialchars( $traineeCivility." ".$traineeLastName." ".$traineeFirstName.", ".$traineeCompanyName." ".$traineeCompanyCity." ".$traineeCompanyRef."."), ['bold' => true]);
-            $page4->addText(htmlspecialchars("confirme avoir reçu une attestation pour la formation que j'ai suivie "));
-            $page4->addText(htmlspecialchars("mercredi 22 janvier 2020 (((DATE DERNIERE SESSION))) "), ['bold' => true]);
-            $page4->addText(htmlspecialchars("pendant une durée de 6 heures (six heures) dans les locaux de ".$sessionLocationName.", ".$sessionLocationStreet." ".$sessionLocationPostalCode." ".$sessionLocationCity."."));
-            $page4->addTextBreak();
-            $page4->addTextBreak();
-            $page4->addText(htmlspecialchars("Prestation de la formation : "));
-            $page4->addText(htmlspecialchars( $sessionTrainingTitle." "), ['bold' => true]);
-            $page4->addText(htmlspecialchars( "identifiée par le numéro ".$sessionTrainingRef));
-            $page4->addTextBreak();
-            $page4->addTextBreak();
-            $page4->addText(htmlspecialchars("Objectifs de la formation :"), ['bold' => true]);
-            $page4->addTextBreak();
-            $i = 0;
-            foreach ( $sessionTrainingGoals as $goal ) {
-                $i++;
-                if ( $trainingGoalsLength-1 >= $i ) {
-                    $page4->addText(htmlspecialchars($goal.", "));
-                } else {
-                    $page4->addText(htmlspecialchars($goal."."));
-                }
-            }
-            $page4->addTextBreak();
-            $page4->addTextBreak();
-            $page4->addText(htmlspecialchars("Fait pour servir et valoir ce que de droit."));
-            $page4->addTextBreak();
-            $page4->addTextBreak();
-            $page4->addText(htmlspecialchars("À Avranches, le ".$todayDate."."));        
 
             // Saving the document as OOXML file...
             $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
             
             // Name generated of file
-            $fileName = $traineeLastName."-".$traineeFirstName."-".$sessionTrainingRef."-".rand(10000,99999).".docx";
+            $fileName = $document[$currentDoc].".docx";
 
             // Path of saved file
             $filePath = "../public/temp/".$fileName;

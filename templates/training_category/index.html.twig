@@ -20,7 +20,7 @@
             {{'Training'|trans}}
         </div>
     </div>
-    {% for trainingCategory in training_categories %}
+    {% for trainingCategory in training_categories | sortByField('title','desc') %}
         <a href="{{ path('training_category_show', {'id': trainingCategory.id}) }}" class="link-unstyled">
             <div class="row text-center tab-row link-style-disabled">
                 <div class="col-10 tab-cell px-2 py-2">

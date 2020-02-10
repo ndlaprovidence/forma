@@ -20,7 +20,7 @@
             {{'City'|trans}}
         </div>
     </div>
-    {% for company in companies %}
+    {% for company in companies | sortByField('corporateName','asc') %}
         <a href="{{ path('company_show', {'id': company.id}) }}" class="link-unstyled">
             <div class="row text-center tab-row link-style-disabled">
                 <div class="col-4 tab-cell px-2 py-2">

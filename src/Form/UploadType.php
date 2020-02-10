@@ -16,7 +16,7 @@ class UploadType extends AbstractType
         $builder
             ->add('file_name', FileType::class)
             ->add('submit', SubmitType::class, array(
-                'label' => 'New session'  
+                'label' => 'New session'
             ))
         ;
     }
