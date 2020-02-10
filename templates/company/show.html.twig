@@ -22,7 +22,7 @@
                     <h5>{{ company.street }}</h5>
                     <h5>{{ company.postalCode }} - {{ company.city }}</h5>
                 {% else %}
-                    <h5 class="font-italic text-danger">No address set for this company</h5>
+                    <a href="{{ path('company_edit', {'id': company.id}) }}"><h5 class="font-italic text-danger">No address set for this company</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -33,7 +33,7 @@
                 {% if (company.phoneNumber ) %}
                     <h5>0{{ company.phoneNumber }}</h5>
                 {% else %}
-                    <h5 class="font-italic text-danger">No phone number set for this company</h5>
+                    <a href="{{ path('company_edit', {'id': company.id}) }}"><h5 class="font-italic text-danger">No phone number set for this company</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -44,7 +44,7 @@
                 {% if (company.referenceNumber) %}
                     <h5>{{ company.referenceNumber }}</h5>
                 {% else %}
-                    <h5 class="font-italic text-danger">No reference number set for this company</h5>
+                    <a href="{{ path('company_show', {'id': company.id}) }}"><h5 class="font-italic text-danger">No reference number set for this company</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -54,7 +54,7 @@
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if company.trainees|length > 0 %}
                     {% for trainee in company.trainees %}
-                        <h5>{{ trainee.lastName }} {{ trainee.firstName }}</h5>
+                        <a href="{{ path('trainee_show', {'id': trainee.id}) }}"><h5>{{ trainee.lastName }} {{ trainee.firstName }}</h5></a>
                         <hr>
                     {% endfor %}
                 {% else %}

@@ -22,7 +22,7 @@
                 <hr>
                 {% if location.sessions|length > 0 %}
                     {% for session in location.sessions %}
-                        <h5>{{ session.date|date("d-m-Y") }} : {{ session.training.title }}</h5>
+                        <a href="{{ path('session_show', {'id': session.id}) }}"><h5>{{ session.date|date("d-m-Y") }} : {{ session.training.title }}</h5></a>
                         <hr>
                     {% endfor %}
                 {% else %}

@@ -22,7 +22,7 @@
                 <hr>
                 {% if training_category.trainings|length > 0 %}
                     {% for training in training_category.trainings %}
-                        <h5>{{ training.title }}</h5>
+                        <a href="{{ path('training_show', {'id': training.id}) }}"><h5>{{ training.title }}</h5></a>
                         <hr>
                     {% endfor %}
                 {% else %}
