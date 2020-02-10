@@ -96,8 +96,8 @@ class SessionController extends AbstractController
         // BgColor cells
         $tabColor = ['EC7063', 'A3E4D7', 'F9E79F'];
 
-        $cells = ['A1','B1','C1','D1', 'E1','F1','G1','H1', 'I1','J1','K1','L1', 'M1', 'N1'];
-        $valuesHeader = ["Formateur", "Titre", "Prestation", "N° de la prestation", "Civilité", "Prénom stagiaire","Nom stagiaire", "Email du stagiaire", "N° de l'établissement", "Établissement", "Durée de la formation", "Date de session", "Lieu de la session","Objectifs de la formation", "Plateforme" ];
+        $cells = ['A1','B1','C1','D1', 'E1','F1','G1','H1', 'I1','J1','K1','L1', 'M1'];
+        $valuesHeader = ["Formateur", "Prestation", "N° de la prestation", "Civilité", "Prénom stagiaire","Nom stagiaire", "Email du stagiaire", "N° de l'établissement", "Établissement", "Durée de la formation", "Date de session", "Lieu de la session","Objectifs de la formation", "Plateforme" ];
 
         for ($t = 0; $t < sizeof($cells); $t++)
         {
@@ -113,6 +113,7 @@ class SessionController extends AbstractController
 
             $instructorRow = "";
             $instructorProfession = "";
+            $sessionDate = "";
             
 
             foreach ($sessionCollection as $session) 
@@ -120,6 +121,8 @@ class SessionController extends AbstractController
                 $traineeCollection = $session->getTrainees();
                 $goalCollection = $session->getTraining()->getGoals();
                 $instructorCollection = $session->getInstructors();
+                
+                $sessionDate = $sessionDate . $session->getDate()->format('d/m/y') . ", ";
 
                 $nbGoals = 0;
                 foreach ($goalCollection as $goal)
@@ -127,17 +130,10 @@ class SessionController extends AbstractController
                     $nbGoals++;
                 }
 
-                $nbInstructors = 0 ;
-                $k = 0;
                 foreach ($instructorCollection as $instructor)
                 {
-                    if ($k < $nbInstructors) $instructorRow = $instructorRow . $instructor ;
-                    else $instructorRow = $instructorRow . $instructor . ", ";
-
-                    $nbInstructors++;
-                    $k++;
-
                     $instructorProfession = $instructor->getProfession();
+                    $instructorRow = $instructorRow . $instructor . " - " . $instructorProfession . ", ";
                 }
             }
 
@@ -147,30 +143,28 @@ class SessionController extends AbstractController
 
                 $sheet->getCell('A'. $currentRow)->setValue($instructorRow);
                 $sheet->getStyle('A'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('B'. $currentRow)->setValue($instructorProfession);
+                $sheet->getCell('B'. $currentRow)->setValue($training->getTitle());
                 $sheet->getStyle('B'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('C'. $currentRow)->setValue($training->getTitle());
+                $sheet->getCell('C'. $currentRow)->setValue($training->getReferenceNumber());
                 $sheet->getStyle('C'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('D'. $currentRow)->setValue($training->getReferenceNumber());
+                $sheet->getCell('D'. $currentRow)->setValue($trainee->getCivility());
                 $sheet->getStyle('D'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('E'. $currentRow)->setValue($trainee->getCivility());
+                $sheet->getCell('E'. $currentRow)->setValue($trainee->getFirstName());
                 $sheet->getStyle('E'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('F'. $currentRow)->setValue($trainee->getFirstName());
+                $sheet->getCell('F'. $currentRow)->setValue($trainee->getLastName());
                 $sheet->getStyle('F'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('G'. $currentRow)->setValue($trainee->getLastName());
+                $sheet->getCell('G'. $currentRow)->setValue($trainee->getEmail());
                 $sheet->getStyle('G'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('H'. $currentRow)->setValue($trainee->getEmail());
+                $sheet->getCell('H'. $currentRow)->setValue($companyNb);
                 $sheet->getStyle('H'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('I'. $currentRow)->setValue($companyNb);
+                $sheet->getCell('I'. $currentRow)->setValue($trainee->getCompany());
                 $sheet->getStyle('I'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('J'. $currentRow)->setValue($trainee->getCompany());
+                $sheet->getCell('J'. $currentRow)->setValue("");
                 $sheet->getStyle('J'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('K'. $currentRow)->setValue("");
+                $sheet->getCell('K'. $currentRow)->setValue($sessionDate);
                 $sheet->getStyle('K'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('L'. $currentRow)->setValue($session->getDate());
+                $sheet->getCell('L'. $currentRow)->setValue($session->getLocation());
                 $sheet->getStyle('L'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('M'. $currentRow)->setValue($session->getLocation());
-                $sheet->getStyle('M'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
 
                 $goalRow = "";
                 $j = 0;
@@ -181,8 +175,8 @@ class SessionController extends AbstractController
                     else  $goalRow = $goalRow. $goal;
                 }
 
-                $sheet->getCell('N'. $currentRow)->setValue($goalRow);
-                $sheet->getStyle('N'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
+                $sheet->getCell('M'. $currentRow)->setValue($goalRow);
+                $sheet->getStyle('M'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
 
                 
 
