@@ -69,7 +69,7 @@ class SessionController extends AbstractController
         $spreadsheet = new Spreadsheet();
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");  
 
-        $trainings = $tr->findAll();
+        $uploads = $tr->findAll();
         // $sessions = $sr->findAll();
 
         $currentRow = 2;
@@ -94,17 +94,15 @@ class SessionController extends AbstractController
         {
             $sheet->getCell($cells[$t])->setValue($valuesHeader[$t]);
             $sheet->getCell($cells[$t])->getStyle()->getFont()->setBold(true);
-            $sheet->getStyle($cells[$t])->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle($cells[$t])->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);  
         }
 
-        $upload = $ur->findOneById($session->getUpload()->getId());
-        $sessionCollection = $sr->findsessionsCollectionByUpload($upload);
-
-
-        foreach ($trainings as $training) {
+        
+        
+        foreach ($uploads as $upload) {
             
-            $sessionCollection = $training->getSessions();
-
+            $sessionCollection = $upload->getSessions();
+            
             $instructorRow = "";
             $instructorProfession = "";
             $sessionDate = "";
@@ -118,6 +116,7 @@ class SessionController extends AbstractController
             
             foreach ($sessionCollection as $session) 
             {
+                $trainingCollection = $session->getTraining();
                 $traineeCollection = $session->getTrainees();
                 $goalCollection = $session->getTraining()->getGoals();
                 $instructorCollection = $session->getInstructors();
@@ -142,6 +141,12 @@ class SessionController extends AbstractController
                     $instructorRow = $instructorRow . $instructor . " - " . $instructorProfession ;
         
                 }
+
+                $trainingTitle = "";
+                $trainingNumber= "";
+            
+                $trainingTitle = $session->getTraining()->getTitle();
+                $trainingNumber = $session->getTraining()->getReferenceNumber();
             }
 
             // $sessionHoursLength = $this->formaHelper->formatHoursTotal($sessionHoursLength);
@@ -152,9 +157,9 @@ class SessionController extends AbstractController
 
                 $sheet->getCell('A'. $currentRow)->setValue($instructorRow);
                 $sheet->getStyle('A'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('B'. $currentRow)->setValue($training->getTitle());
+                $sheet->getCell('B'. $currentRow)->setValue($trainingTitle);
                 $sheet->getStyle('B'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
-                $sheet->getCell('C'. $currentRow)->setValue($training->getReferenceNumber());
+                $sheet->getCell('C'. $currentRow)->setValue($trainingNumber);
                 $sheet->getStyle('C'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
                 $sheet->getCell('D'. $currentRow)->setValue($trainee->getCivility());
                 $sheet->getStyle('D'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$i]);
