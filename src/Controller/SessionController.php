@@ -63,7 +63,7 @@ class SessionController extends AbstractController
     /**
      * @Route("/export", name="session_export", methods={"GET"})
      */
-    public function export(SessionRepository $sr, TrainingRepository $tr)
+    public function export(SessionRepository $sr, TrainingRepository $tr, UploadRepository $ur)
     {
         $filePath = '../public/temp/data.xlsx'; 
         $spreadsheet = new Spreadsheet();
@@ -95,8 +95,11 @@ class SessionController extends AbstractController
             $sheet->getCell($cells[$t])->setValue($valuesHeader[$t]);
             $sheet->getCell($cells[$t])->getStyle()->getFont()->setBold(true);
             $sheet->getStyle($cells[$t])->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-            
         }
+
+        $upload = $ur->findOneById($session->getUpload()->getId());
+        $sessionCollection = $sr->findsessionsCollectionByUpload($upload);
+
 
         foreach ($trainings as $training) {
             
@@ -635,8 +638,6 @@ class SessionController extends AbstractController
         $traineesCollection = $session->getTrainees();
 
         $nbTrainees = 0;
-
-        $traineesCollection = $session->getTrainees();
         
         foreach ($traineesCollection as $trainee) {
 
@@ -780,9 +781,6 @@ class SessionController extends AbstractController
             $i++;
 
         }
-        // for($i = 1; $i <= $nbSessions; $i++)
-        // {
-        // }
         
         $traineesCollection = $session->getTrainees();
 
