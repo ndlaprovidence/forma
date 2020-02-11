@@ -30,12 +30,6 @@ class Training
     private $platform;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\TrainingCategory", inversedBy="trainings")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $training_category;
-
-    /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Goal", inversedBy="trainings")
      * @ORM\JoinColumn(nullable=true)
      */
@@ -87,18 +81,6 @@ class Training
     public function setPlatform(string $platform): self
     {
         $this->platform = $platform;
-
-        return $this;
-    }
-
-    public function getTrainingCategory(): ?TrainingCategory
-    {
-        return $this->training_category;
-    }
-
-    public function setTrainingCategory(?TrainingCategory $training_category): self
-    {
-        $this->training_category = $training_category;
 
         return $this;
     }

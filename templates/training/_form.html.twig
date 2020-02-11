@@ -11,11 +11,10 @@
     {{ form_errors(form.reference_number) }}
     {{ form_widget(form.reference_number, {'attr': {'class': 'mb-3'}}) }}
 
-    <h5>{{'Category'|trans}}</h5>
-    {{ form_errors(form.training_category) }}
-    {{ form_widget(form.training_category, {'attr': {'class': 'mb-3'}}) }}
-
-    <h5>{{'Goals'|trans}}</h5>
+    <h5>{{'Goals'|trans}}</h5> 
+    <a href="{{ path('goal_new')}}">
+        <div class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-4 mb-3">{{'Nouvel objectif'|trans}}</div>
+    </a>
     {{ form_errors(form.goals) }}
     {{ form_widget(form.goals, {'attr': {'class': 'mb-5'}}) }}
 

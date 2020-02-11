@@ -23,7 +23,7 @@
 
         <nav class="navbar navbar-expand-md navbar-light custom-nav fixed-top">
             <img class="ml-5" width="50" src='{{ asset('images/logo.png') }}'> 
-            <a class="navbar-brand" href="{{ path('default') }}">Forma</a>
+            <a class="navbar-brand" href="{{ path('default') }}">Formadyto</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -44,12 +44,13 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="{{ path('instructor_index') }}">{{ 'Instructors'|trans }}</a>
+                            <a class="dropdown-item" href="{{ path('goal_index') }}">{{ 'Goals'|trans }}</a>
+                            <hr>
                             <a class="dropdown-item" href="{{ path('trainee_index') }}">{{ 'Trainees'|trans }}</a>
                             <a class="dropdown-item" href="{{ path('training_index') }}">{{ 'Trainings'|trans }}</a>
-                            <a class="dropdown-item" href="{{ path('training_category_index') }}">{{ 'Categories'|trans }}</a>
                             <a class="dropdown-item" href="{{ path('location_index') }}">{{ 'Locations'|trans }}</a>
-                            <a class="dropdown-item" href="{{ path('goal_index') }}">{{ 'Goals'|trans }}</a>
                             <a class="dropdown-item" href="{{ path('company_index') }}">{{ 'Companies'|trans }}</a>
+                            <hr>
                             <a class="dropdown-item" href="{{ path('user_index') }}">{{ 'Users'|trans }}</a>
                         </div>
                     </div>
@@ -74,13 +75,13 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2 class="modal-title">{{'About Forma'|trans}}</h2>
+                            <h2 class="modal-title">{{'About Formadyto'|trans}}</h2>
                             <button type="button" class="close" data-dismiss="modal">
                                 <span>&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Forma is a free software under an "insert name" license. It is developped with Symfony 4.</p>
+                            <p>Formadyto is a free software under an "insert name" license. It is developped with Symfony 4.</p>
                             <hr>
                             <h5>Software developped by :</h5>
                             <p>2020 - HOCHET Dylan & HEUVELINE Thomas</p>

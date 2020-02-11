@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Goal;
 use App\Form\GoalType;
 use App\Entity\Training;
-use App\Entity\TrainingCategory;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -21,7 +20,6 @@ class TrainingType extends AbstractType
             ->add('platform', TextType::class, [
                 'disabled' => true
             ])
-            ->add('training_category')
             ->add('goals')
             ->add('reference_number');
     }

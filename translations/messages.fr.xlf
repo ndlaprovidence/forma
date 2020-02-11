@@ -273,9 +273,9 @@
         <source>Code hosted by GitHub</source>
         <target>Code hébergé par GitHub</target>
       </trans-unit>
-      <trans-unit id="y.ECJRD" resname="Forma is an online quiz software.">
-        <source>Forma is an online quiz software.</source>
-        <target>Forma est un logiciel en ligne.</target>
+      <trans-unit id="y.ECJRD" resname="Formadyto is an online quiz software.">
+        <source>Formadyto is an online quiz software.</source>
+        <target>Formadyto est un logiciel en ligne.</target>
       </trans-unit>
       <trans-unit id="GHIguwW" resname="A simple and free tool.">
         <source>A simple and free tool.</source>
@@ -353,9 +353,9 @@
         <source>About</source>
         <target>À propos</target>
       </trans-unit>
-      <trans-unit id="M3n3oYz" resname="About Forma">
-        <source>About Forma</source>
-        <target>À propos de Forma</target>
+      <trans-unit id="M3n3oYz" resname="About Formadyto">
+        <source>About Formadyto</source>
+        <target>À propos de Formadyto</target>
       </trans-unit>
       <trans-unit id="Q7IPmX." resname="Popover in a modal">
         <source>Popover in a modal</source>
