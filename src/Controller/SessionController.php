@@ -75,7 +75,7 @@ class SessionController extends AbstractController
 
         $sheet = $spreadsheet->getActiveSheet();
         
-        $columns = ['A','B','C','D', 'E','F','G','H', 'I','J','K','L', 'M'];
+        $columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M'];
 
         for ($a = 0; $a < sizeof($columns); $a++) {
             $spreadsheet->getActiveSheet()->getColumnDimension($columns[$a])->setAutoSize(true);        

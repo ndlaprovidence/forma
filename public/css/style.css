@@ -89,12 +89,12 @@ body {
 }
 
 .tab-cell {
-    border-right: 1px solid rgb(66, 66, 66);
-    border-bottom: 1px solid rgb(66, 66, 66);
+    border-right: 1px solid rgb(125, 125, 125);
+    border-bottom: 1px solid rgb(125, 125, 125);
 }
 
 .tab-cell:first-child {
-    border-left: 1px solid rgb(66, 66, 66);
+    border-left: 1px solid rgb(125, 125, 125);
 }
 
 .tab-row-light {
