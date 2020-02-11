@@ -13,7 +13,6 @@ use App\Form\SessionType;
 use App\Util\FormaHelper;
 use Doctrine\ORM\EntityManager;
 use PhpOffice\PhpWord\PhpWord;
-use App\Entity\TrainingCategory;
 use PhpOffice\PhpWord\IOFactory;
 use App\Repository\UploadRepository;
 use Symfony\Component\Finder\Finder;
@@ -28,7 +27,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\Request;
-use App\Repository\TrainingCategoryRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -63,7 +61,7 @@ class SessionController extends AbstractController
     /**
      * @Route("/export", name="session_export", methods={"GET"})
      */
-    public function export(SessionRepository $sr, TrainingRepository $tr)
+    public function export(SessionRepository $sr, TrainingRepository $tr, UploadRepository $ur)
     {
         $filePath = '../public/temp/data.xlsx'; 
         $spreadsheet = new Spreadsheet();
@@ -95,8 +93,11 @@ class SessionController extends AbstractController
             $sheet->getCell($cells[$t])->setValue($valuesHeader[$t]);
             $sheet->getCell($cells[$t])->getStyle()->getFont()->setBold(true);
             $sheet->getStyle($cells[$t])->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-            
         }
+
+        $upload = $ur->findOneById($session->getUpload()->getId());
+        $sessionCollection = $sr->findsessionsCollectionByUpload($upload);
+
 
         foreach ($trainings as $training) {
             
@@ -200,7 +201,7 @@ class SessionController extends AbstractController
     /**
      * @Route("/new", name="session_new", methods={"GET","POST"})
      */
-    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, TrainingCategoryRepository $tgcr, LocationRepository $lr, UploadRepository $ur, SessionRepository $sr): Response
+    public function new(Request $request, EntityManagerInterface $em, CompanyRepository $cr, TraineeRepository $ter, TrainingRepository $tgr, LocationRepository $lr, UploadRepository $ur, SessionRepository $sr): Response
     {
         if ( $request->query->has('file_name')) {
             
@@ -240,24 +241,6 @@ class SessionController extends AbstractController
                         {
                             $currentTrainee = $sheetData[$i];
 
-                            // Créer la category de formation si elle n'existe pas déjà
-                            $trainingCategoryTitle = $currentTrainee[14]; 
-
-                            $temp = $tgcr->findSameTrainingCategory($trainingCategoryTitle);
-
-                            if ($temp)
-                            {
-                                $existingTrainingCategory = $temp;
-                                $trainingCategory = $tgcr->findOneById($existingTrainingCategory);
-                                $this->em->persist($trainingCategory);
-                            } else {
-                                $trainingCategory = new TrainingCategory();
-                                $trainingCategory
-                                    ->setTitle($trainingCategoryTitle);
-                                $this->em->persist($trainingCategory);
-                            }
-
-
                             // Créer la formation si elle n'existe pas déjà
                             $trainingTitle = $currentTrainee[15]; 
                             $trainingReferenceNumber = 'Non-renseigné'; 
@@ -274,8 +257,7 @@ class SessionController extends AbstractController
                                 $training
                                     ->setTitle($trainingTitle)
                                     ->setPlatform('Opcalia')
-                                    ->setReferenceNumber($trainingReferenceNumber)
-                                    ->setTrainingCategory($trainingCategory);
+                                    ->setReferenceNumber($trainingReferenceNumber);
                                 $this->em->persist($training);
                             }
 
@@ -630,27 +612,19 @@ class SessionController extends AbstractController
 
         $idSession = $session->getId();
 
-        $idSession = intval($idSession);
-
         $traineesCollection = $session->getTrainees();
 
         $nbTrainees = 0;
-
-        $traineesCollection = $session->getTrainees();
         
         foreach ($traineesCollection as $trainee) {
-
             $nbTrainees++;
         }
 
-        $uploadId = $session->getUpload()->getId();
-        $upload = $ur->findOneById($uploadId);
+        $upload = $ur->findOneById($session->getUpload()->getId());
         $this->em->persist($upload);
-
-        $sessionsCollection = $upload->getSessions();
+        $sessionsCollection = $sr->findsessionsCollectionByUpload($upload);
 
         $nbSessions = 0;
-
         foreach ($sessionsCollection as $session) {
             $nbSessions++;
         }
@@ -780,9 +754,6 @@ class SessionController extends AbstractController
             $i++;
 
         }
-        // for($i = 1; $i <= $nbSessions; $i++)
-        // {
-        // }
         
         $traineesCollection = $session->getTrainees();
 

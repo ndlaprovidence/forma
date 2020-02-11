@@ -133,17 +133,6 @@
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-list-ul fa-2x"></i><label class='h4 px-3'>Training category</label></div>
-            <div class='info-box-content px-4 py-3 text-center'>
-                {% if session.training.trainingCategory %}
-                    <a href="{{ path('training_category_show', {'id': session.training.trainingCategory.id}) }}"><h5>{{ session.training.trainingCategory.title }}</h5></a>
-                {% else %}
-                    <a href="{{ path('training_edit', {'id': session.training.id}) }}"><h5 class="font-italic text-danger">No category set for this training</h5></a>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class='mb-4'>
             <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>Training goals</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.training.goals|length > 0 %}

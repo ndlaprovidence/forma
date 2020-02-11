@@ -7,7 +7,9 @@
     <div class="text-center">
 
         <h2 class="card-title">{{'F.C. Pro training management software'|trans}}</h2>
-        <h5 class="card-title text-center font-italic">{{'Import a new .csv file to get started'|trans}}</h5>
+        <h5 class="card-title text-center font-italic">{{'Import a new .csv file to get started'|trans}}
+            <i class="fas fa-question-circle fa-sm ml-2" data-toggle="tooltip" data-placement="bottom" title="Pensez a ajouté au préalable des formateurs et des objectifs"></i>
+        </h5>
 
         {{ form_start(form) }}
 
@@ -78,10 +80,14 @@
     </div>
     
     <div class="text-center fixed-bottom">
-        <h5 class="h5 font-weight-normal">©{{ "now"|date("Y") }} - Forma</h5>
+        <h5 class="h5 font-weight-normal">©{{ "now"|date("Y") }} - Formadyto</h5>
     </div>
 
     <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
         $('#upload_file_name').on('change',function(){
             var fileName = $(this).val();
             $(this).next('.custom-file-label').html(fileName);
