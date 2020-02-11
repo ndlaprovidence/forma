@@ -81,7 +81,7 @@ body {
 }
 
 .tab-cell-header {
-    border-right: 1px solid #ced4da;
+    border-right: 1px solid rgb(66, 66, 66);
 }
 
 .tab-cell-header:last-child {
@@ -89,31 +89,27 @@ body {
 }
 
 .tab-cell {
-    border-right: 1px solid #ced4da;
-    border-bottom: 1px solid #ced4da;
+    border-right: 1px solid rgb(66, 66, 66);
+    border-bottom: 1px solid rgb(66, 66, 66);
 }
 
 .tab-cell:first-child {
-    border-left: 1px solid #ced4da;
+    border-left: 1px solid rgb(66, 66, 66);
 }
 
 .tab-row-light {
-    background-color: #EEEEEE;
+    background-color: rgba(190, 186, 186, 0.322);
 
 }
 
 .tab-row-light-alt {
-    background-color: #DDDDDD;
+    background-color: rgba(143, 137, 137, 0.678);
 }
 
 .tab-row:hover {
     background-color: #ced4da;
     transition: 0.2s;
     text-decoration: none;
-}
-
-.light-bottom-border {
-    border-bottom: 1px solid #ced4da;
 }
 
 .link-unstyled, 
