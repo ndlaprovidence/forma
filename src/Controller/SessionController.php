@@ -79,12 +79,17 @@ class SessionController extends AbstractController
         foreach ($finder as $file) {
             $fileName = $file->getRelativePathname();
             $upload = $ur->findSameUpload($fileName);
+
             if (!$upload) {
                 $filesystem->remove([$path.'/'.$fileName]);
-            } else if ( count($upload->getSessions()) == 0 ) {
-                $this->$em->remove($upload);
-                $this->em->flush();
-                $filesystem->remove([$path.'/'.$fileName]);
+            } else {
+                $upload = $ur->findOneById($upload);
+                if ( count($upload->getSessions() ) == 0 ) {
+                    $this->em->persist($upload);
+                    $this->em->remove($upload);
+                    $this->em->flush();
+                    $filesystem->remove([$path.'/'.$fileName]);
+                }
             }
         }
  
