@@ -12,7 +12,7 @@
 
             {% for error in app.request.get('errors') %}
                 {% if error == 'training_title' %}
-                    <h5>Veuillez renseigné un nom de formation</h5>
+                    <h5>{{'Please enter a training title'|trans}}</h5>
                     {{ form_start(training.form) }}
 
                     <h5>{{'Reference number'|trans}}</h5>
@@ -21,41 +21,41 @@
 
                     <div class='row justify-content-center'>
                         <div class='col text-center'>
-                            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save') }}</button>
+                            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save'|trans) }}</button>
                         </div>
                     </div>
                     {{ form_end(training.form) }}
 
                 {% endif %}
                 {% if error == 'training_ref_number' %}
-                    <h5>Veuillez renseigné un numéro de reference de formation</h5>
+                    <h5>{{'Please enter a training reference number'|trans}}</h5>
                 {% endif %}
                 {% if error == 'training_goals' %}
-                    <h5>Veuillez renseigné au moins un objectif de formation</h5>
+                    <h5>{{'Please enter at least one goal for this training'|trans}}</h5>
                 {% endif %}
             {% endfor %}
 
             {% if app.request.get('location_name') %}
                 {% for session_date in app.request.get('location_name') %}
-                    <h5>Veuillez renseigné le nom de l'établissement pour la session du {{ session_date }}</h5>
+                    <h5>{{'Please enter a location name for this session :'|trans}} {{ session_date }}</h5>
                 {% endfor %}
             {% endif %}   
 
             {% if app.request.get('location_pc') %}
                 {% for session_date in app.request.get('location_pc') %}
-                    <h5>Veuillez renseigné le code postal de la ville pour la session du {{ session_date }}</h5>
+                    <h5>{{'Please enter a location postal code for this session :'|trans}} {{ session_date }}</h5>
                 {% endfor %}
             {% endif %}     
 
             {% if app.request.get('location_street') %}
                 {% for session_date in app.request.get('location_street') %}
-                    <h5>Veuillez renseigné la rue de l'établissement pour la session du {{ session_date }}</h5>
+                    <h5>{{'Please enter a location street for this session :'|trans}} {{ session_date }}</h5>
                 {% endfor %}
             {% endif %}  
 
             {% if app.request.get('location_city') %}
                 {% for session_date in app.request.get('location_city') %}
-                    <h5>Veuillez renseigné le nom de la ville pour la session du {{ session_date }}</h5>
+                    <h5>{{'Please enter a city name for this session :'|trans}} {{ session_date }}</h5>
                 {% endfor %}
             {% endif %}   
         </div>
@@ -79,26 +79,26 @@
     <div class='d-flex row mb-5 justify-content-around'>
     
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon far fa-calendar-alt fa-2x"></i><label class='h4 px-3'>Horaires</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon far fa-calendar-alt fa-2x"></i><label class='h4 px-3'>{{'Schedules'|trans}}</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 <h5 class='mb-3'>Le {{ session.date|date("d/m/Y") }}</h5>
                 <hr>
-                <h5 class="text-center w-100">Matinée : {{ session.startTimeAm|date("H\\h\i") }}-{{ session.endTimeAm|date("H\\h\i") }}</h5>
-                <h5 class="text-center w-100">Après-midi : {{ session.startTimePm|date("H\\h\i") }}-{{ session.endTimePm|date("H\\h\i") }}</h5>
+                <h5 class="text-center w-100"{{'AM :'|trans}} {{ session.startTimeAm|date("H\\h\i") }}-{{ session.endTimeAm|date("H\\h\i") }}</h5>
+                <h5 class="text-center w-100">{{'PM :'|trans}} {{ session.startTimePm|date("H\\h\i") }}-{{ session.endTimePm|date("H\\h\i") }}</h5>
                 <hr>
-                <h5>{{ session.endTimeAm|date_minus(session.startTimeAm,session.endTimePm,session.startTimePm) }} de formation</h5>
+                <h5>{{ session.endTimeAm|date_minus(session.startTimeAm,session.endTimePm,session.startTimePm) }} {{'of training'|trans}}</h5>
             </div>
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-map-marker-alt fa-2x"></i><label class='h4 px-3'>Location</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-map-marker-alt fa-2x"></i><label class='h4 px-3'>{{'Location'|trans}}</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.location %}
                     <h5>{{ session.location.name}}</h5>
                     <h5>{{ session.location.street}}</h5>
                     <h5>{{ session.location.postalCode}} - {{ session.location.city}}</h5>
                 {% else %}
-                    <a href="{{ path('session_edit', {'id': session.id}) }}"><h5 class="font-italic text-danger">No location set for this session</h5></a>
+                    <a href="{{ path('session_edit', {'id': session.id}) }}"><h5 class="font-italic text-danger">{{'No location set for this session'|trans}}</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -122,18 +122,18 @@
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>Training reference</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>{{'Training reference'|trans}}</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.training.referenceNumber != 'Non-renseigné' %}
                     <a href="{{ path('training_show', {'id': session.training.id}) }}"><h5>{{ session.training.referenceNumber }}</h5></a>
                 {% else %}
-                    <a href="{{ path('training_edit', {'id': session.training.id}) }}"><h5 class="font-italic text-danger">Réference de formation non-renseigné</h5></a>
+                    <a href="{{ path('training_edit', {'id': session.training.id}) }}"><h5 class="font-italic text-danger">{{'No training reference set for this training'|trans}}</h5></a>
                 {% endif %}
             </div>
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>Training goals</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>{{'Training goals'|trans}}</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.training.goals|length > 0 %}
                     {% for goal in session.training.goals %}
@@ -141,17 +141,17 @@
                         <hr>
                     {% endfor %}
                 {% else %}
-                    <a href="{{ path('training_edit', {'id': session.training.id}) }}"><h5 class="font-italic text-danger">No goal set for this training</h5></a>
+                    <a href="{{ path('training_edit', {'id': session.training.id}) }}"><h5 class="font-italic text-danger">{{'No goal set for this training'|trans}}</h5></a>
                 {% endif %}
             </div>
         </div>
     </div>
 
     <a href="/uploads/{{ session.upload.fileName }}">
-        <button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5 mb-3">{{ session.upload.fileName|trans }} <i class="fas fa-download fa-lg"></i></button>
+        <button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5 mb-3">{{ session.upload.fileName }} <i class="fas fa-download fa-lg"></i></button>
     </a>
     <a href="{{ path('session_all_documents', {'id': session.id}) }}">
-        <button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5 mb-3">{{'Publipostage'|trans}} <i class="fas fa-file-alt fa-lg"></i></button>
+        <button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5 mb-3">{{'Direct mail'|trans}} <i class="fas fa-file-alt fa-lg"></i></button>
     </a>
 
 

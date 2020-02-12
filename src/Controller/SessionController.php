@@ -61,10 +61,38 @@ class SessionController extends AbstractController
     /**
      * @Route("/export", name="session_export", methods={"GET"})
      */
-    public function export(SessionRepository $sr, TrainingRepository $tr, UploadRepository $ur)
+    public function export(EntityManagerInterface $em, SessionRepository $sr, TrainingRepository $tr, UploadRepository $ur)
     {
         $this->formaHelper->clearFolder('../public/temp');
+        $this->em = $em;
 
+        $uploads = $ur->findAll();
+
+        // Vérfie si un upload à bien une session dans la BDD
+        $finder = new Finder();
+        $filesystem = new Filesystem();
+
+        $path = '../public/uploads';
+        $finder->files()->in($path);
+
+        // Dans le répértoire
+        foreach ($finder as $file) {
+            $fileName = $file->getRelativePathname();
+            $upload = $ur->findSameUpload($fileName);
+
+            if (!$upload) {
+                $filesystem->remove([$path.'/'.$fileName]);
+            } else {
+                $upload = $ur->findOneById($upload);
+                if ( count($upload->getSessions() ) == 0 ) {
+                    $this->em->persist($upload);
+                    $this->em->remove($upload);
+                    $this->em->flush();
+                    $filesystem->remove([$path.'/'.$fileName]);
+                }
+            }
+        }
+ 
         $spreadsheet = new Spreadsheet();
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");  
 

@@ -16,27 +16,27 @@
     <div class='d-flex row mb-5 justify-content-around'>
     
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-database fa-2x"></i><label class='h4 px-3'>Platform</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-database fa-2x"></i><label class='h4 px-3'>{{'Platform'|trans}}</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 <h5>{{ training.platform }}</h5>
             </div>
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>Training reference</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-hashtag fa-2x"></i><label class='h4 px-3'>{{'Training reference'|trans}}</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if training.referenceNumber != 'Non-renseigné' %}
                     <h5>{{ training.referenceNumber }}</h5>
                 {% else %}
-                    <a href="{{ path('training_edit', {'id': training.id}) }}"><h5 class="font-italic text-danger">Unknown training reference</h5></a>
+                    <a href="{{ path('training_edit', {'id': training.id}) }}"><h5 class="font-italic text-danger">{{'Unknown training reference'|trans}}</h5></a>
                 {% endif %}
             </div>
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>Goals</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-bullseye fa-2x"></i><label class='h4 px-3'>{{'Goals'|trans}}</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
-                <h5>Number : {{ training.goals|length }}</h5>
+                <h5>{{'Number :'|trans}} {{ training.goals|length }}</h5>
                 <hr>
                 {% if training.goals|length > 0 %}
                     {% for goal in training.goals %}
@@ -44,23 +44,23 @@
                         <hr>
                     {% endfor %}
                 {% else %}
-                    <a href="{{ path('training_edit', {'id': training.id}) }}"><h5 class="font-italic text-danger">No goal set for this training</h5></a>
+                    <a href="{{ path('training_edit', {'id': training.id}) }}"><h5 class="font-italic text-danger">{{'No goal set for this training'|trans}}</h5></a>
                 {% endif %}
             </div>
         </div>
 
         <div class='mb-4'>
-            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-chalkboard-teacher fa-2x"></i><label class='h4 px-3'>Associated sessions</label></div>
+            <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-chalkboard-teacher fa-2x"></i><label class='h4 px-3'>{{'Associated sessions'|trans}}</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
-                <h5>Number : {{ training.sessions|length }}</h5>
+                <h5>{{'Number :'|trans}} {{ training.sessions|length }}</h5>
                 <hr>
                 {% if training.sessions|length > 0 %}
                     {% for session in training.sessions %}
-                        <a href="{{ path('session_show', {'id': session.id}) }}"><h5>Session du {{ session.date|date('d-m-Y') }} à {{ session.location.city }}</h5></a>
+                        <a href="{{ path('session_show', {'id': session.id}) }}"><h5>{{'Session :'|trans}} {{ session.date|date('d-m-Y') }} at {{ session.location.city }}</h5></a>
                         <hr>
                     {% endfor %}
                 {% else %}
-                    <h5 class="font-italic text-danger">No sessions for this training</h5>
+                    <h5 class="font-italic text-danger">{{'No sessions for this training'|trans}}</h5>
                 {% endif %}
             </div>
         </div>

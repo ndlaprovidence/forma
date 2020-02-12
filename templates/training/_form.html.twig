@@ -13,14 +13,14 @@
 
     <h5>{{'Goals'|trans}}</h5> 
     <a href="{{ path('goal_new')}}">
-        <div class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-4 mb-3">{{'Nouvel objectif'|trans}}</div>
+        <div class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-4 mb-3">{{'New goal'|trans}}</div>
     </a>
     {{ form_errors(form.goals) }}
     {{ form_widget(form.goals, {'attr': {'class': 'mb-5'}}) }}
 
     <div class='row justify-content-center'>
         <div class='col text-center'>
-            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save') }}</button>
+            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save'|trans) }}</button>
         </div>
     </div>
 {{ form_end(form) }}

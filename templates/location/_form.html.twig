@@ -1,5 +1,5 @@
 {{ form_start(form) }}
-    <h5>Name</h5>
+    <h5>{{'Name'|trans}}</h5>
     {{ form_errors(form.name) }}
     {{ form_widget(form.name, {'attr': {'class': 'mb-3'}}) }}
 
@@ -17,7 +17,7 @@
 
     <div class='row justify-content-center'>
         <div class='col text-center'>
-            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save') }}</button>
+            <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save'|trans) }}</button>
         </div>
     </div>
 {{ form_end(form) }}
