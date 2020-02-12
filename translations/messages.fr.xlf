@@ -273,9 +273,9 @@
         <source>Code hosted by GitHub</source>
         <target>Code hébergé par GitHub</target>
       </trans-unit>
-      <trans-unit id="y.ECJRD" resname="formadytho is an online quiz software.">
-        <source>formadytho is an online quiz software.</source>
-        <target>formadytho est un logiciel en ligne.</target>
+      <trans-unit id="y.ECJRD" resname="Formadytho is an online quiz software.">
+        <source>Formadytho is an online quiz software.</source>
+        <target>Formadytho est un logiciel en ligne.</target>
       </trans-unit>
       <trans-unit id="GHIguwW" resname="A simple and free tool.">
         <source>A simple and free tool.</source>
@@ -353,9 +353,9 @@
         <source>About</source>
         <target>À propos</target>
       </trans-unit>
-      <trans-unit id="M3n3oYz" resname="About formadytho">
-        <source>About formadytho</source>
-        <target>À propos de formadytho</target>
+      <trans-unit id="M3n3oYz" resname="About Formadytho">
+        <source>About Formadytho</source>
+        <target>À propos de Formadytho</target>
       </trans-unit>
       <trans-unit id="Q7IPmX." resname="Popover in a modal">
         <source>Popover in a modal</source>
