@@ -92,14 +92,8 @@ class SessionController extends AbstractController
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, "Xlsx");  
 
         $sheet = $spreadsheet->getActiveSheet();
-        
-        $columns = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N'];
 
-        for ($i = 0; $i < sizeof($columns); $i++) {
-            $spreadsheet->getActiveSheet()->getColumnDimension($columns[$i])->setAutoSize(false);        
-        }
-
-        $cells = ['A1','B1','C1','D1','E1','F1','G1','H1','I1','J1','K1','L1','M1','N1'];
+        $cells = ['A1','B1','C1','D1','E1','F1','G1','H1','I1','J1','K1','L1','M1','N1', "O1"];
         $valuesHeader = [
             "Formateur", 
             "Prestation", 
@@ -111,6 +105,7 @@ class SessionController extends AbstractController
             "N° de l'établissement", 
             "Établissement", 
             "Durée de la formation", 
+            "Nombre de sessions",
             "Date de session",
             "Lieu de la session",
             "Objectifs de la formation", 
@@ -123,6 +118,15 @@ class SessionController extends AbstractController
             $sheet->getStyle($cells[$i])->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
 
+<<<<<<< HEAD
+=======
+        $uploads = $ur->findAll();
+
+        // BgColor cells
+        $tabColor = ['EC7063', 'A3E4D7', 'F9E79F'];
+        $color = 0;
+
+>>>>>>> 52d6840bf9ad690a024adbd18d04320f6c8c104f
         // Pour chaque upload
         $currentRow = 2;
         foreach ($uploads as $upload) {
@@ -143,7 +147,7 @@ class SessionController extends AbstractController
                     $instructorCollection = $session->getInstructors();
                     foreach ($instructorCollection as $instructor) {
 
-                        $currentInstructor = $instructor->getLastName().' '.$instructor->getFirstName();
+                        $currentInstructor = $instructor->getLastName().' '.$instructor->getFirstName().' ('.$instructor->getProfession().')';
                         if (!in_array($currentInstructor, $instructorList)) {
                             array_push($instructorList, $currentInstructor);
                         }
@@ -183,6 +187,7 @@ class SessionController extends AbstractController
                         $dateRow = $dateRow.$session->getDate()->format('d-m-Y');
                     }
                 }
+                $sessionNumberRow = $i;
 
                 // Recupère tout les lieux de la formation
                 $i = 1;
@@ -216,26 +221,44 @@ class SessionController extends AbstractController
                     }
                 }
 
+            if ($currentRow % 3 == 0) $color = 0;
+            else $color++;  
 
             // Ecriture des informations récurentes
             foreach ($traineeCollection as $trainee) {
                 $sheet->getCell('A'. $currentRow)->setValue($instructorRow);
+                $sheet->getStyle('A'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
                 $sheet->getCell('B'. $currentRow)->setValue($sessionCollection[0]->getTraining()->getTitle());
+                $sheet->getStyle('B'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
                 $sheet->getCell('C'. $currentRow)->setValue($sessionCollection[0]->getTraining()->getReferenceNumber());
+                $sheet->getStyle('c'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
                 $sheet->getCell('D'. $currentRow)->setValue($trainee->getCivility());
+                $sheet->getStyle('D'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
                 $sheet->getCell('E'. $currentRow)->setValue($trainee->getLastName());
+                $sheet->getStyle('E'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
                 $sheet->getCell('F'. $currentRow)->setValue($trainee->getFirstName());
+                $sheet->getStyle('F'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
                 $sheet->getCell('G'. $currentRow)->setValue($trainee->getEmail());
+                $sheet->getStyle('G'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
                 $sheet->getCell('H'. $currentRow)->setValue($trainee->getCompany()->getReferenceNumber());
+                $sheet->getStyle('H'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
                 $sheet->getCell('I'. $currentRow)->setValue($trainee->getCompany()->getCorporateName());
+                $sheet->getStyle('I'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
                 $sheet->getCell('J'. $currentRow)->setValue($trainingLengthRow);
-                $sheet->getCell('K'. $currentRow)->setValue($dateRow);
-                $sheet->getCell('L'. $currentRow)->setValue($locationRow);
-                $sheet->getCell('M'. $currentRow)->setValue($goalRow);
-                $sheet->getCell('N'. $currentRow)->setValue($sessionCollection[0]->getTraining()->getPlatform());
+                $sheet->getStyle('J'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
+                $sheet->getCell('K'. $currentRow)->setValue($sessionNumberRow);
+                $sheet->getStyle('K'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
+                $sheet->getCell('L'. $currentRow)->setValue($dateRow);
+                $sheet->getStyle('L'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
+                $sheet->getCell('M'. $currentRow)->setValue($locationRow);
+                $sheet->getStyle('M'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
+                $sheet->getCell('N'. $currentRow)->setValue($goalRow);
+                $sheet->getStyle('N'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
+                $sheet->getCell('O'. $currentRow)->setValue($sessionCollection[0]->getTraining()->getPlatform());
+                $sheet->getStyle('O'. $currentRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB($tabColor[$color]);
 
                 $currentRow++;
-            }
+            } 
         }
 
         $fileName = date('d-m-Y').'-'.rand(10000,99999).'.xlsx';
