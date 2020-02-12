@@ -118,15 +118,12 @@ class SessionController extends AbstractController
             $sheet->getStyle($cells[$i])->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
         }
 
-<<<<<<< HEAD
-=======
         $uploads = $ur->findAll();
 
         // BgColor cells
         $tabColor = ['EC7063', 'A3E4D7', 'F9E79F'];
         $color = 0;
 
->>>>>>> 52d6840bf9ad690a024adbd18d04320f6c8c104f
         // Pour chaque upload
         $currentRow = 2;
         foreach ($uploads as $upload) {
