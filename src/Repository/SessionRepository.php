@@ -74,7 +74,7 @@ class SessionRepository extends ServiceEntityRepository
     }
 
 
-    public function findsessionsCollectionByUpload($upload)
+    public function findSessionsCollectionByUpload($upload)
     {
         return $this->createQueryBuilder('s')
             ->where('s.upload = :val')

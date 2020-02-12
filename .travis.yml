@@ -7,12 +7,12 @@ services:
   - postgresql
 
 before_script:
-  - psql -c "CREATE USER formadyto WITH PASSWORD 'db_password';" -U postgres
-  - psql -c "CREATE DATABASE formadyto;" -U postgres
-  - psql -c "GRANT ALL PRIVILEGES ON DATABASE formadyto TO formadyto;" -U postgres
+  - psql -c "CREATE USER formadytho WITH PASSWORD 'db_password';" -U postgres
+  - psql -c "CREATE DATABASE formadytho;" -U postgres
+  - psql -c "GRANT ALL PRIVILEGES ON DATABASE formadytho TO formadytho;" -U postgres
 
 env:
-    - DATABASE_URL="mysql://formadyto:db_password@127.0.0.1:5432/formadyto"
+    - DATABASE_URL="mysql://formadytho:db_password@127.0.0.1:5432/formadytho"
 
 script:
    - composer install

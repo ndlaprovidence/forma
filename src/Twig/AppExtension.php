@@ -13,6 +13,7 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFilter('date_minus', [$this, 'dateMinus']),
             new TwigFilter('sortByField', array($this, 'sortByField')),
+            new TwigFilter('session_display', array($this, 'sessionDisplay')),
         ];
     }
 
@@ -74,4 +75,9 @@ class AppExtension extends AbstractExtension
         }
         return $content;
     }
+
+    public function sessionDisplay($session){
+        return $result = intval($session)+1;
+    }
+    
 }

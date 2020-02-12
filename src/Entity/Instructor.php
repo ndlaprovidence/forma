@@ -46,7 +46,7 @@ class Instructor
 
     public function __toString()
     {
-        return $this->last_name . " " . $this->first_name;
+        return $this->last_name . " " . $this->first_name . " (" . $this->profession . ")";
     }
 
     public function getId(): ?int
