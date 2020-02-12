@@ -18,7 +18,7 @@
         <div class='mb-4'>
             <div class='info-box-header p-3 text-center'><i class="info-box-icon fas fa-chalkboard-teacher fa-2x"></i><label class='h4 px-3'>{{'Associated trainings'|trans}}</label></div>
             <div class='info-box-content px-4 py-3 text-center'>
-                <h5>Number : {{ goal.trainings|length }}</h5>
+                <h5>{{'Number : '|trans}}{{ goal.trainings|length }}</h5>
                 <hr>
                 {% if goal.trainings|length > 0 %}
                     {% for training in goal.trainings %}

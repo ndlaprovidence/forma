@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>
-            {% block title %}{{'Welcome!'|trans}}
+            {% block title %}{{'Index'|trans}}
             {% endblock %}
         </title>
         {% block javascripts %}
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <li class="nav-item px-4">
-                        <a class="nav-link" href="" data-toggle="modal" data-target="#demoModal">{{ 'About'|trans }}</a>
+                        <a class="nav-link" href="" data-toggle="modal" data-target="#about">{{ 'About'|trans }}</a>
                     </li>
                     <li class="nav-item pl-4 pr-5">
                         <a class="nav-link text-danger" href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i></a>
@@ -71,7 +71,7 @@
 
             <div class="{% if app.request.attributes.get('_route') != 'app_login' %}starter-template{% endif %}"> 
 
-            <div class="modal fade" id="demoModal">
+            <div class="modal fade" id="about">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -81,20 +81,20 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Formadytho is a free software under an "insert name" license. It is developped with Symfony 4.</p>
+                            <p>{{'Formadytho is a free software under an "insert name" license. It is developped with Symfony 4.'|trans}}</p>
                             <hr>
-                            <h5>Software developped by :</h5>
+                            <h5>{{'Software developped by :'|trans}}</h5>
                             <p>2020 - HOCHET Dylan & HEUVELINE Thomas</p>
                             <hr>
-                            <h5>Libraries used :</h5>
+                            <h5>{{'Libraries used :'|trans}}</h5>
                             <label class='w-100'>phpoffice/phpspreadsheet</label>
                             <label class='w-100'>phpoffice/phpword</label>
                             <hr>
-                            <h5>Version :</h5>
+                            <h5>{{'Version :'|trans}}</h5>
                             <label class='w-100'>0.0.1</label>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary mx-auto" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary mx-auto" data-dismiss="modal">{{'Close'|trans}}</button>
                         </div>
                     </div>
                 </div>

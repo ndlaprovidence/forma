@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!
-{% endblock %}
+{% block title %}{{'Log in'|trans}}{% endblock %}
 
 {% block body %}
     <form method="post">
@@ -11,10 +10,10 @@
 
             <img class="mb-3" width="180" src='{{ asset('images/logo.png') }}'> 
 
-            <label for="inputEmail" class="sr-only">Email</label>
+            <label for="inputEmail" class="sr-only">{{'Email'|trans}}</label>
             <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control rad-rounded" placeholder="Email" required autofocus>
             <br/>
-            <label for="inputPassword" class="sr-only">Password</label>
+            <label for="inputPassword" class="sr-only">{{'Password'|trans}}</label>
             <input type="password" name="password" id="inputPassword" class="form-control rad-rounded" placeholder="Password" required>
             <br/>
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
@@ -31,7 +30,7 @@
                 #}
 
             <button class="btn btn-lg btn-primary rad-rounded-xs px-5 mb-4" type="submit">
-                Connexion
+                {{'Log in'|trans}}
             </button>
 
             {% if error %}

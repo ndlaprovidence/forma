@@ -6,7 +6,7 @@
 
     <div class='row justify-content-center mb-3'>
         <div class='col text-center'>
-            <a href="{{ path('location_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'New'|trans}}</button></a>
+            <a href="{{ path('location_new') }} "><button class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-5">{{'New location'|trans}}</button></a>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
             {{'Postal code'|trans}}
         </div>
         <div class="col-3 tab-cell-header px-2 py-2">
-            City
+            {{'City'|trans}}
         </div>
     </div>
     {% for location in locations | sortByField('name','asc') %}

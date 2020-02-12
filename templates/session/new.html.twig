@@ -9,14 +9,14 @@
             <h5 class='border-rounded py-2 px-4'>{{ platform_name }}</h5>
             {% if platform_name == 'Formiris' %}
                 {% if app.request.get('current_session_number') %}
-                    <h5 class='w-100'>Session {{ app.request.get('current_session_number')|session_display(app.request.get('current_session_number')) }}/{{ total_sessions_number }}</h5>
+                    <h5 class='w-100'>{{'Session'|trans}} {{ app.request.get('current_session_number')|session_display(app.request.get('current_session_number')) }}/{{ total_sessions_number }}</h5>
                 {% else %}
-                    <h5 class='w-100'>Session 1/{{ total_sessions_number }}</h5>
+                    <h5 class='w-100'>{{'Session'|trans}} 1/{{ total_sessions_number }}</h5>
                 {% endif %}
 
             {% endif %}
             {% if platform_name == 'Opcalia' %}
-                <h5 class='w-100'>Session 1/1</h5>
+                <h5 class='w-100'>{{'Session'|trans}} 1/1</h5>
             {% endif %}
         </div>
     </div>
