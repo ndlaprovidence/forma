@@ -545,6 +545,10 @@
         <source>Save</source>
         <target>Sauvegarder</target>
       </trans-unit>
+      <trans-unit id="DFd1KlS" resname="New session">
+        <source>New session</source>
+        <target>Nouvelle session</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
