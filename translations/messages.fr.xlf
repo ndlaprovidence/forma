@@ -169,9 +169,9 @@
         <source>Import a new .csv file to get started</source>
         <target>Importer un nouveau fichier .csv pour commencer</target>
       </trans-unit>
-      <trans-unit id="fbHhPBP" resname="Remember to add goals and instructors first">
-        <source>Remember to add goals and instructors first</source>
-        <target>Pensez a ajouter au préalable des objectifs et des formateurs</target>
+      <trans-unit id=".GpwTvE" resname="Remember to add goals first">
+        <source>Remember to add goals first</source>
+        <target>Pensez a ajouter au préalable des objectifs</target>
       </trans-unit>
       <trans-unit id="PZakWBI" resname="recorded">
         <source>recorded</source>
@@ -545,9 +545,25 @@
         <source>Save</source>
         <target>Sauvegarder</target>
       </trans-unit>
-      <trans-unit id="DFd1KlS" resname="New session">
+      <trans-unit id="z.26Iq3" resname="New session">
         <source>New session</source>
         <target>Nouvelle session</target>
+      </trans-unit>
+      <trans-unit id="18A5glF" resname="No location name set for this session">
+        <source>No location name set for this session</source>
+        <target>Pas de nom de lieu définit pour cette formation</target>
+      </trans-unit>
+      <trans-unit id="ULwhaD9" resname="No location street set for this session">
+        <source>No location street set for this session</source>
+        <target>Pas de rue définie pour cette formation</target>
+      </trans-unit>
+      <trans-unit id="sda5G2f" resname="at">
+        <source>at</source>
+        <target>à</target>
+      </trans-unit>
+      <trans-unit id="cfrUb.2" resname="Training successfuly added">
+        <source>Training successfuly added</source>
+        <target>Formation ajoutée avec succès</target>
       </trans-unit>
     </body>
   </file>

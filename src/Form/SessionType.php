@@ -16,8 +16,12 @@ class SessionType extends AbstractType
     {   
         $builder
             ->add('training')
-            ->add('location')
-            ->add('instructors')
+            ->add('location', null, [
+                'required' => true,
+            ])
+            ->add('instructors', null, [
+                'required' => true,
+            ])
             ->add('date', DateType::Class , [
                 'widget' => 'single_text',
             ])

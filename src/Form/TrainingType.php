@@ -20,8 +20,14 @@ class TrainingType extends AbstractType
             ->add('platform', TextType::class, [
                 'disabled' => true
             ])
-            ->add('goals')
-            ->add('reference_number');
+            ->add('reference_number', null, [
+                'required' => true,
+            ])
+            ->add('goals', null, [
+                'required' => true,
+            ])
+            
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

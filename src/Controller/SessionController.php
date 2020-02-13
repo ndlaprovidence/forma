@@ -316,7 +316,7 @@ class SessionController extends AbstractController
 
                             // Créer la formation si elle n'existe pas déjà
                             $trainingTitle = $currentTrainee[15]; 
-                            $trainingReferenceNumber = 'Non-renseigné'; 
+                            $trainingReferenceNumber = null; 
 
                             $temp = $tgr->findSameTraining($trainingTitle);
 
@@ -404,7 +404,6 @@ class SessionController extends AbstractController
                             } else {
                                 $location = new Location();
                                 $location
-                                    ->setName("Nom de l'établissement non-renseigné")
                                     ->setPostalCode($postalCode)
                                     ->setCity($city)
                                     ->setStreet($street);
@@ -420,7 +419,7 @@ class SessionController extends AbstractController
 
                         if ($temp)
                         {
-                            $existingSession = $temp;
+                            $existingSession = $temp[0];
                             $existingUpload = $existingSession->getUpload()->getId();
 
                             $upload = $ur->findOneById($existingUpload);
@@ -446,7 +445,7 @@ class SessionController extends AbstractController
                             ->setStartTimePm(new \DateTime('@'.strtotime('13:30')))
                             ->setEndTimePm(new \DateTime('@'.strtotime('17:30')));
 
-                        break;
+                    break;
 
                     // FORMIRIS CSV's
                     case 'Prestation':
@@ -562,11 +561,10 @@ class SessionController extends AbstractController
                             }
 
                             // Créer une location si il n'existe pas déjà
-                            $street = 'Non-renseignée';
                             $postalCode = strtoupper($currentSession[5]);
-                            $city = strtoupper($city);;
+                            $city = strtoupper($city);
 
-                            $temp = $lr->findSameLocation($city,$postalCode,$street);
+                            $temp = $lr->findSameLocation($city,$postalCode,'');
                             if ($temp)
                             {
                                 $existingLocation = $temp;
@@ -575,10 +573,9 @@ class SessionController extends AbstractController
                             } else {
                                 $location = new Location();
                                 $location
-                                    ->setName("Nom de l'établissement non-renseigné")
+                                    ->setStreet('')
                                     ->setPostalCode(intval($postalCode))
-                                    ->setCity($city)
-                                    ->setStreet($street);
+                                    ->setCity($city);
                                 $this->em->persist($location);
                             }
     
@@ -614,11 +611,11 @@ class SessionController extends AbstractController
                             ->setEndTimeAm(new \DateTime('@'.strtotime('12:00')))
                             ->setStartTimePm(new \DateTime('@'.strtotime('13:30')))
                             ->setEndTimePm(new \DateTime('@'.strtotime('17:30')));
-                        break;
+                    break;
                     
                     default:
                         # code...
-                        break;
+                    break;
                 };
             }
         }
@@ -642,7 +639,9 @@ class SessionController extends AbstractController
                     ]);
                 }
                 $this->formaHelper->clearFolder('../public/temp');
-                return $this->redirectToRoute('session_index');
+                return $this->redirectToRoute('session_index', [
+                    'training' => 'success'
+                ]);
             } else {
                 if ( $sessionsNbrTotal != 1 ) {
                     $currentSessionNbr = 1;
@@ -652,7 +651,9 @@ class SessionController extends AbstractController
                     ]);
                 }
                 $this->formaHelper->clearFolder('../public/temp');
-                return $this->redirectToRoute('session_index');
+                return $this->redirectToRoute('session_index', [
+                    'training' => 'success'
+                ]);
             }
         }
 

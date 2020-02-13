@@ -56,7 +56,7 @@
                 <hr>
                 {% if training.sessions|length > 0 %}
                     {% for session in training.sessions %}
-                        <a href="{{ path('session_show', {'id': session.id}) }}"><h5>{{'Session :'|trans}} {{ session.date|date('d-m-Y') }} at {{ session.location.city }}</h5></a>
+                        <a href="{{ path('session_show', {'id': session.id}) }}"><h5>{{'Session :'|trans}} {{ session.date|date('d-m-Y') }} {{'at'|trans}} {{ session.location.city }}</h5></a>
                         <hr>
                     {% endfor %}
                 {% else %}

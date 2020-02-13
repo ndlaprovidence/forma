@@ -14,7 +14,9 @@ class InstructorType extends AbstractType
         $builder
             ->add('last_name')
             ->add('first_name')
-            ->add('profession')
+            ->add('profession', null, [
+                'required' => true,
+            ])
         ;
     }
 

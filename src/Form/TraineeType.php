@@ -12,7 +12,9 @@ class TraineeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('civility')
+            ->add('civility', null, [
+                'required' => true,
+            ])
             ->add('last_name')
             ->add('first_name')
             ->add('email')
