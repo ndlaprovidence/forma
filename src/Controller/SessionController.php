@@ -614,7 +614,9 @@ class SessionController extends AbstractController
                     break;
                     
                     default:
-                        # code...
+                        return $this->redirectToRoute('session_index', [
+                            'training' => 'fail'
+                        ]);
                     break;
                 };
             }

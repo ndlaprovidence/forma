@@ -11,6 +11,16 @@
             <i class="fas fa-question-circle fa-sm ml-2" data-toggle="tooltip" data-placement="bottom" title="{{'Remember to add goals first'|trans}}"></i>
         </h5>
 
+        {% if app.request.get('training') == 'fail' %}
+            <div class="text-center mx-auto mb-5 alert alert-fail alert-dismissable fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+                <h5>{{'There was a problem with the csv file'|trans}}</h5>
+            </div>
+        {% endif %}
+
         {{ form_start(form) }}
 
             {{ form_widget(form.file_name, {'attr': {'class': 'mb-4'}}) }}

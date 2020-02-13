@@ -565,6 +565,10 @@
         <source>Training successfuly added</source>
         <target>Formation ajoutée avec succès</target>
       </trans-unit>
+      <trans-unit id="9.l5vGr" resname="There was a problem with the csv file">
+        <source>There was a problem with the csv file</source>
+        <target>Un problème est survenu avec le fichier csv</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
