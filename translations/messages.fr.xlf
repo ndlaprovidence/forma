@@ -563,11 +563,11 @@
       </trans-unit>
       <trans-unit id="9.l5vGr" resname="There was a problem with the csv file">
         <source>There was a problem with the csv file</source>
-        <target>Un problème est survenu avec le fichier csv</target>
+        <target>Un problème est survenu avec le fichier .csv</target>
       </trans-unit>
-      <trans-unit id="n4xmE33" resname="The uploaded file is not correct">
-        <source>The uploaded file is not correct</source>
-        <target>Le fichier envoyé n'est pas correct</target>
+      <trans-unit id="n4xmE33" resname="The uploaded file is not a csv">
+        <source>The uploaded file is not a csv</source>
+        <target>Le fichier envoyé n'est pas un .csv</target>
       </trans-unit>
       <trans-unit id="H3L7Fvp" resname="Goal successfuly added">
         <source>Goal successfuly added</source>

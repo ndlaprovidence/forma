@@ -58,60 +58,59 @@
     {{ form_errors(form.comment) }}
     {{ form_widget(form.comment, {'attr': {'class': 'mb-3'}}) }}
 
-    {% if app.request.attributes.get('_route') != 'session_new' %}
-        <a href='/uploads/{{ session.upload.fileName }}'><h5>{{ session.upload.fileName }} <i class="fas fa-download"></i></h5></a>
-    {% else %}
+    {% if app.request.attributes.get('_route') == 'session_new' %}
         <h5>{{ session.upload.fileName }}</h5>
-    {% endif %}
 
-    <div class="row text-center tab-header">
-        <div class="col-2 tab-cell-header px-2 py-2">
-            {{'Civility'|trans}}
-        </div>
-        <div class="col-2 tab-cell-header px-2 py-2">
-            {{'Last name'|trans}}
-        </div>
-        <div class="col-2 tab-cell-header px-2 py-2">
-            {{'First name'|trans}}
-        </div>
-        <div class="col-3 tab-cell-header px-2 py-2">
-            {{'Email'|trans}}
-        </div>
-        <div class="col-3 tab-cell-header px-2 py-2">
-            {{'Company'|trans}}
-        </div>
-    </div>
-    {% for trainee in session.trainees %}
-        <div class="row text-center tab-row link-style-disabled">
-            <div class="col-2 tab-cell px-2 py-2">
-                {{ trainee.civility }}
+        <div class="row text-center tab-header">
+            <div class="col-2 tab-cell-header px-2 py-2">
+                {{'Civility'|trans}}
             </div>
-            <div class="col-2 tab-cell px-2 py-2">
-                {{ trainee.lastName }}
+            <div class="col-2 tab-cell-header px-2 py-2">
+                {{'Last name'|trans}}
             </div>
-            <div class="col-2 tab-cell px-2 py-2">
-                {{ trainee.firstName }}
+            <div class="col-2 tab-cell-header px-2 py-2">
+                {{'First name'|trans}}
             </div>
-            <div class="col-3 tab-cell px-2 py-2">
-                {{ trainee.email }}
+            <div class="col-3 tab-cell-header px-2 py-2">
+                {{'Email'|trans}}
             </div>
-            <div class="col-3 tab-cell px-2 py-2">
-                {{ trainee.company.corporateName }}
+            <div class="col-3 tab-cell-header px-2 py-2">
+                {{'Company'|trans}}
             </div>
         </div>
-    {% else %}
-        <div class='row justify-content-center mt-2'>
-            <div class='col text-center'>
-                <div class="alert alert-danger">{{'No entry found'|trans}}</div>
+        {% for trainee in session.trainees %}
+            <div class="row text-center tab-row link-style-disabled">
+                <div class="col-2 tab-cell px-2 py-2">
+                    {{ trainee.civility }}
+                </div>
+                <div class="col-2 tab-cell px-2 py-2">
+                    {{ trainee.lastName }}
+                </div>
+                <div class="col-2 tab-cell px-2 py-2">
+                    {{ trainee.firstName }}
+                </div>
+                <div class="col-3 tab-cell px-2 py-2">
+                    {{ trainee.email }}
+                </div>
+                <div class="col-3 tab-cell px-2 py-2">
+                    {{ trainee.company.corporateName }}
+                </div>
             </div>
-        </div>
-    {% endfor %}
-    <div class="mb-5"></div>
+        {% else %}
+            <div class='row justify-content-center mt-2'>
+                <div class='col text-center'>
+                    <div class="alert alert-danger">{{'No entry found'|trans}}</div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="mb-5"></div>
+
+    {% endif %}
 
     <div class='row justify-content-center'>
         <div class='col text-center'>
             <button class="btn btn-lg btn-primary rad-rounded-xs px-5">{{ button_label|default('Save'|trans) }}</button>
         </div>
     </div>
-    
+
 {{ form_end(form) }}

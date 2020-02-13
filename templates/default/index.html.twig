@@ -15,7 +15,7 @@
                 {% if app.request.get('training') == 'fail-data' %}
                     <h5>{{'There was a problem with the csv file'|trans}}</h5>
                 {% elseif app.request.get('training') == 'fail-file' %}
-                    <h5>{{'The uploaded file is not correct'|trans}}</h5>
+                    <h5>{{'The uploaded file is not a csv'|trans}}</h5>
                 {% endif %}
             </div>
         {% endif %}
