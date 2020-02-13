@@ -668,6 +668,7 @@ class SessionController extends AbstractController
         return $this->render('session/new.html.twig', [
             'session' => $session,
             'file_name' => $fileName,
+            'extension' => $request->query->get('extension'),
             'platform_name' => $platformName,
             'form' => $form->createView(),
             'total_sessions_number' => $sessionsNbrTotal
