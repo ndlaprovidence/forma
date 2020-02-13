@@ -278,7 +278,7 @@ class SessionController extends AbstractController
     {
         if ( $request->query->has('file_name')) {
             
-            if ( $request->query->has('extension') != 'csv' ) {
+            if ( $request->query->get('extension') != 'csv' ) {
                 return $this->redirectToRoute('default', [
                     'training' => 'fail-file'
                 ]);
