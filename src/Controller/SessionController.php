@@ -296,6 +296,8 @@ class SessionController extends AbstractController
             $inputFileType = 'Csv';
             $inputFileName = '../public/temp/'.$fileName;
 
+            dump($fileName);exit;
+
             /**  Create a new Reader of the type defined in $inputFileType  **/
             $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
 
