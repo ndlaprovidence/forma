@@ -59,7 +59,7 @@ class SessionRepository extends ServiceEntityRepository
     }
     
 
-    public function findSessionByParameters($location,$training,$date): ?Session
+    public function findSessionByParameters($location,$training,$date)
     {
         return $this->createQueryBuilder('s')
             ->where('s.location = :val1')
@@ -69,7 +69,7 @@ class SessionRepository extends ServiceEntityRepository
             ->andWhere('s.date = :val3')
             ->setParameter('val3', $date)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getResult()
         ;
     }
 

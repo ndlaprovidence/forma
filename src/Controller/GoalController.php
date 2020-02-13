@@ -39,6 +39,13 @@ class GoalController extends AbstractController
             $entityManager->persist($goal);
             $entityManager->flush();
 
+            if ( $request->query->get('source') == 'training' ) {
+
+                return $this->redirectToRoute('training_edit', [
+                    'id' => $request->query->get('id')
+                ]);
+            }
+
             return $this->redirectToRoute('goal_index');
         }
 

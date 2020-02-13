@@ -51,7 +51,17 @@ class Location
 
     public function __toString()
     {
-        return  $this->name . " - " . $this->postal_code . " " . $this->city;
+        if ( $this->name == null ) {
+            $name = "Nom de l'établissement non-renseigné";
+        } else {
+            $name = $this->name;
+        }
+        if ( $this->street == null ) {
+            $street = "Nom de la rue non-renseignée";
+        } else {
+            $street = $this->street;
+        }
+        return  $name . " - " .  $street . ", " . $this->postal_code . " " . $this->city;
     }
 
     public function getId(): ?int

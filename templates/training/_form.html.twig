@@ -11,10 +11,8 @@
     {{ form_errors(form.reference_number) }}
     {{ form_widget(form.reference_number, {'attr': {'class': 'mb-3'}}) }}
 
-    <h5>{{'Goals'|trans}}</h5> 
-    <a href="{{ path('goal_new')}}">
-        <div class="btn btn-lg btn-no-bg hover-pr rad-rounded-xs px-4 mb-3">{{'New goal'|trans}}</div>
-    </a>
+    
+    <h5>{{'Goals'|trans}} <a href="{{ path('goal_new', {'source': 'training', 'id': training.id})}}"><i class="fas fa-plus-circle"></i></a></h5> 
     {{ form_errors(form.goals) }}
     {{ form_widget(form.goals, {'attr': {'class': 'mb-5'}}) }}
 

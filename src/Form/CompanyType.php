@@ -13,10 +13,18 @@ class CompanyType extends AbstractType
     {
         $builder
             ->add('corporate_name')
-            ->add('street')
-            ->add('postal_code')
-            ->add('city')
-            ->add('reference_number')
+            ->add('street', null, [
+                'required' => true,
+            ])
+            ->add('postal_code', null, [
+                'required' => true,
+            ])
+            ->add('city', null, [
+                'required' => true,
+            ])
+            ->add('reference_number', null, [
+                'required' => true,
+            ])
             ->add('phone_number')
         ;
     }

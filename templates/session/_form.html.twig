@@ -11,11 +11,24 @@
         {{ form_widget(form.training, {'attr': {'class': 'mb-3'}}) }}
     {% endif %}
 
-    <h5>{{'Location'|trans}}</h5>
+    <h5>
+        {{'Location'|trans}} 
+        <a href="{{ path('location_new')}}"><i class="fas fa-plus-circle"></i></a>
+    </h5>
     {{ form_errors(form.location) }}
     {{ form_widget(form.location, {'attr': {'class': 'mb-3'}}) }}
 
-    <h5>{{'Instructors'|trans}}</h5>
+    <h5>{{'Instructors'|trans}} 
+    {% if app.request.get('file_name') %}
+        {% if app.request.get('current_session_number') %}
+            <a href="{{ path('instructor_new', {'source': 'session', 'file_name': file_name, 'current_session_number': app.request.get('current_session_number') }) }}"><i class="fas fa-plus-circle"></i></a>
+        {% else %}
+            <a href="{{ path('instructor_new', {'source': 'session', 'file_name': file_name }) }}"><i class="fas fa-plus-circle"></i></a>
+        {% endif %}
+    {% else %}
+        <a href="{{ path('instructor_new', {'source': 'session', 'id': session.id }) }}"><i class="fas fa-plus-circle"></i></a>
+    {% endif %}
+    </h5>
     {{ form_errors(form.instructors) }}
     {{ form_widget(form.instructors, {'attr': {'class': 'mb-3'}}) }}
 
