@@ -825,8 +825,8 @@ class SessionController extends AbstractController
                 $table->addCell(null, $cellRowContinue);
             }
                        
-            $table->addCell(2000)->addText(htmlspecialchars("de " . $startTimeAm . " à " . $endTimeAm), $fontTitle2, $timeDay);
-            $table->addCell(2000)->addText(htmlspecialchars("de " . $startTimePm . " à " . $endTimePm), $fontTitle2, $timeDay);
+            $table->addCell(2000)->addText(htmlspecialchars($startTimeAm . " à " . $endTimeAm), $fontTitle2, $timeDay);
+            $table->addCell(2000)->addText(htmlspecialchars($startTimePm . " à " . $endTimePm), $fontTitle2, $timeDay);
             
             $i++;
 

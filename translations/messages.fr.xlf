@@ -47,11 +47,11 @@
       </trans-unit>
       <trans-unit id="Tvyg0Qx" resname="About">
         <source>About</source>
-        <target>A propos</target>
+        <target>À propos</target>
       </trans-unit>
       <trans-unit id="IP9vm0h" resname="About Formadytho">
         <source>About Formadytho</source>
-        <target>A propos Formadytho</target>
+        <target>À propos Formadytho</target>
       </trans-unit>
       <trans-unit id="JnqRaEN" resname="Formadytho is a free software under an &quot;insert name&quot; license. It is developped with Symfony 4.">
         <source>Formadytho is a free software under an "insert name" license. It is developped with Symfony 4.</source>
