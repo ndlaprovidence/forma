@@ -39,24 +39,26 @@ class InstructorController extends AbstractController
             $entityManager->persist($instructor);
             $entityManager->flush();
 
-            if ( $request->query->get('source') == 'session' ) {
+            if ( $request->query->has('source') == 'session' ) {
 
-                if ( $request->query->get('id') ) {
+                if ( $request->query->has('id') ) {
                     return $this->redirectToRoute('session_edit', [
                         'id' => $request->query->get('id')
                     ]);
                 }
 
-                if ( $request->query->get('current_session_number') ) {
+                if ( $request->query->has('current_session_number') ) {
 
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $request->query->get('file_name'),
+                        'extension' => $request->query->get('extension'),
                         'current_session_number' => $request->query->get('current_session_number')
                     ]);
                 } else {
 
                     return $this->redirectToRoute('session_new', [
-                        'file_name' => $request->query->get('file_name')
+                        'file_name' => $request->query->get('file_name'),
+                        'extension' => $request->query->get('extension')
                     ]);
                 }
             }
