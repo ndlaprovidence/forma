@@ -284,7 +284,9 @@ class SessionController extends AbstractController
                 ]);
             }
 
-            $fileName = $request->query->get('file_name').'.'.$request->query->get('extension');
+            $fileName = $request->query->get('file_name');
+            $extension = $request->query->get('extension');
+            $completeFileName = $request->query->get('file_name').'.'.$request->query->get('extension');
             $this->em = $em;
 
             $todayDate = new \DateTime('@'.strtotime('now'));
@@ -294,7 +296,7 @@ class SessionController extends AbstractController
 
             $filesystem = new Filesystem();
             $inputFileType = 'Csv';
-            $inputFileName = '../public/temp/'.$fileName;
+            $inputFileName = '../public/temp/'.$completeFileName;
 
             /**  Create a new Reader of the type defined in $inputFileType  **/
             $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader($inputFileType);
@@ -431,10 +433,10 @@ class SessionController extends AbstractController
                             $upload = $ur->findOneById($existingUpload);
                             $this->em->persist($upload);
                         } else {
-                            $filesystem->copy('../public/temp/'.$fileName, '../public/uploads/'.$fileName);
+                            $filesystem->copy('../public/temp/'.$completefileName, '../public/uploads/'.$completefileName);
                             $upload = new Upload();
                             $upload
-                                ->setFileName($fileName)
+                                ->setFileName($completeFileName)
                                 ->setDate($todayDate);
                                 
                             $this->em->persist($upload);
@@ -591,7 +593,7 @@ class SessionController extends AbstractController
                         }
 
                         // Créer un upload si il n'existe pas déjà
-                        $temp = $ur->findSameUpload($fileName);
+                        $temp = $ur->findSameUpload($completeFileName);
 
                         if ($temp)
                         {
@@ -599,10 +601,10 @@ class SessionController extends AbstractController
                             $upload = $ur->findOneById($existingUpload);
                             $this->em->persist($upload);
                         } else {
-                            $filesystem->copy('../public/temp/'.$fileName, '../public/uploads/'.$fileName);
+                            $filesystem->copy('../public/temp/'.$completeFileName, '../public/uploads/'.$completeFileName);
                             $upload = new Upload();
                             $upload
-                                ->setFileName($fileName)
+                                ->setFileName($completeFileName)
                                 ->setDate($todayDate);
                                 
                             $this->em->persist($upload);
@@ -643,7 +645,7 @@ class SessionController extends AbstractController
                     $currentSessionNbr = $currentSessionNbr+1;
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $fileName,
-                        'extension' => $request->query->get('extension'),
+                        'extension' => $extension,
                         'current_session_number' => $currentSessionNbr
                     ]);
                 }
@@ -656,7 +658,7 @@ class SessionController extends AbstractController
                     $currentSessionNbr = 1;
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $fileName,
-                        'extension' => $request->query->get('extension'),
+                        'extension' => $extension,
                         'current_session_number' => $currentSessionNbr
                     ]);
                 }
@@ -669,8 +671,7 @@ class SessionController extends AbstractController
 
         return $this->render('session/new.html.twig', [
             'session' => $session,
-            'file_name' => $fileName,
-            'extension' => $request->query->get('extension'),
+            'file_name' => $completeFileName,
             'platform_name' => $platformName,
             'form' => $form->createView(),
             'total_sessions_number' => $sessionsNbrTotal
