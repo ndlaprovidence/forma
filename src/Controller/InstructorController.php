@@ -43,7 +43,8 @@ class InstructorController extends AbstractController
 
                 if ( $request->query->has('id') ) {
                     return $this->redirectToRoute('session_edit', [
-                        'id' => $request->query->get('id')
+                        'id' => $request->query->get('id'),
+                        'instructor' => 'success'
                     ]);
                 }
 
@@ -52,18 +53,22 @@ class InstructorController extends AbstractController
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $request->query->get('file_name'),
                         'extension' => $request->query->get('extension'),
-                        'current_session_number' => $request->query->get('current_session_number')
+                        'current_session_number' => $request->query->get('current_session_number'),
+                        'instructor' => 'success'
                     ]);
                 } else {
 
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $request->query->get('file_name'),
-                        'extension' => $request->query->get('extension')
+                        'extension' => $request->query->get('extension'),
+                        'instructor' => 'success'
                     ]);
                 }
             }
 
-            return $this->redirectToRoute('instructor_index');
+            return $this->redirectToRoute('instructor_index', [
+                'new' => 'success'
+            ]);
         }
 
         return $this->render('instructor/new.html.twig', [
@@ -95,6 +100,7 @@ class InstructorController extends AbstractController
 
             return $this->redirectToRoute('instructor_show', [
                 'id' => $instructor->getId(),
+                'update' => 'success'
             ]);
         }
 

@@ -53,10 +53,6 @@
         <source>About Formadytho</source>
         <target>À propos Formadytho</target>
       </trans-unit>
-      <trans-unit id="JnqRaEN" resname="Formadytho is a free software under an &quot;insert name&quot; license. It is developped with Symfony 4.">
-        <source>Formadytho is a free software under an "insert name" license. It is developped with Symfony 4.</source>
-        <target>Formadytho est un logiciel libre sous licence "LICENCE". Il est développé avec Symfony 4.</target>
-      </trans-unit>
       <trans-unit id="CqFZnl_" resname="Software developped by :">
         <source>Software developped by :</source>
         <target>Logiciel développé par :</target>
@@ -572,6 +568,54 @@
       <trans-unit id="n4xmE33" resname="The uploaded file is not correct">
         <source>The uploaded file is not correct</source>
         <target>Le fichier envoyé n'est pas correct</target>
+      </trans-unit>
+      <trans-unit id="H3L7Fvp" resname="Goal successfuly added">
+        <source>Goal successfuly added</source>
+        <target>Objectif ajouté avec succès</target>
+      </trans-unit>
+      <trans-unit id="qz.t9K_" resname="Instructor successfuly added">
+        <source>Instructor successfuly added</source>
+        <target>Formateur ajouté avec succès</target>
+      </trans-unit>
+      <trans-unit id="3e9wd0q" resname="Location successfuly added">
+        <source>Location successfuly added</source>
+        <target>Lieu ajouté avec succès</target>
+      </trans-unit>
+      <trans-unit id="YBcm4UA" resname="Formadytho is a free software under an">
+        <source>Formadytho is a free software under an</source>
+        <target>Formadytho est un logiciel libre sous licence</target>
+      </trans-unit>
+      <trans-unit id="lXFRwh8" resname="license. It is developped with Symfony 4.">
+        <source>license. It is developped with Symfony 4.</source>
+        <target>. Il a été conçu et développé avec Symfony 4.</target>
+      </trans-unit>
+      <trans-unit id="CekMVoP" resname="Company successfuly updated">
+        <source>Company successfuly updated</source>
+        <target>Entreprise mise à jour avec succès</target>
+      </trans-unit>
+      <trans-unit id="syMUnuS" resname="Goal successfuly updated">
+        <source>Goal successfuly updated</source>
+        <target>Objectif mis à jour avec succès</target>
+      </trans-unit>
+      <trans-unit id=".BT9F0y" resname="Instructor successfuly updated">
+        <source>Instructor successfuly updated</source>
+        <target>Formateur mis à jour avec succès</target>
+      </trans-unit>
+      <trans-unit id="v7.bIC1" resname="Location successfuly updated">
+        <source>Location successfuly updated</source>
+        <target>Lieu mis à jour avec succès</target>
+      </trans-unit>
+      <trans-unit id="rW5eYtr" resname="Training successfuly updated">
+        <source>Training successfuly updated</source>
+        <target>Formation mise à jour avec succès</target>
+      </trans-unit>
+      <trans-unit id="AHB3xEL" resname="Session successfuly updated">
+        <source>Session successfuly updated</source>
+        <target>Session mise à jour avec succès</target>
+      </trans-unit>
+      <trans-unit id="6tCrTF2" resname="Trainee successfuly updated">
+        <source>Trainee successfuly updated</source>
+        <target>Stagiaire mis à jour avec succès</target>
       </trans-unit>
     </body>
   </file>

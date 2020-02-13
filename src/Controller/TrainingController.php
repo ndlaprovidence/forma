@@ -46,8 +46,20 @@ class TrainingController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
+
+            if ( $request->query->has('source')) {
+
+                if ( $request->query->get('source') == 'session') {
+                    return $this->redirectToRoute('session_show', [
+                        'id' => $request->query->get('id_session'),
+                        'training' => 'success'
+                    ]);
+                }
+            }
+
             return $this->redirectToRoute('training_show', [
                 'id' => $training->getId(),
+                'update' => 'success'
             ]);
         }
 

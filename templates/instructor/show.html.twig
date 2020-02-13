@@ -3,6 +3,17 @@
 {% block title %}{{'Instructor'|trans}}{% endblock %}
 
 {% block body %}
+
+    {% if app.request.get('update') == 'success' %}
+        <div class="text-center mx-auto alert alert-success alert-dismissable fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <h5>{{'Instructor successfuly updated'|trans}}</h5>
+        </div>
+    {% endif %}
+
     <a href="{{ path('instructor_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
     
     <div class='row justify-content-center mb-5'>

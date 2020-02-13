@@ -12,7 +12,13 @@
     {{ form_widget(form.reference_number, {'attr': {'class': 'mb-3'}}) }}
 
     
-    <h5>{{'Goals'|trans}} <a href="{{ path('goal_new', {'source': 'training', 'id': training.id})}}"><i class="fas fa-plus-circle"></i></a></h5> 
+    <h5>{{'Goals'|trans}}
+        {% if app.request.get('source') == 'session' %}
+            <a href="{{ path('goal_new', {'source': 'training', 'id': training.id, 'id_session': app.request.get('id_session')} )}}"><i class="fas fa-plus-circle"></i></a>
+        {% else %}
+            <a href="{{ path('goal_new', {'source': 'training', 'id': training.id})}}"><i class="fas fa-plus-circle"></i></a>
+        {% endif %}
+    </h5> 
     {{ form_errors(form.goals) }}
     {{ form_widget(form.goals, {'attr': {'class': 'mb-5'}}) }}
 

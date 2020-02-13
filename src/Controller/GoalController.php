@@ -39,14 +39,36 @@ class GoalController extends AbstractController
             $entityManager->persist($goal);
             $entityManager->flush();
 
-            if ( $request->query->has('source') == 'training' ) {
+            if ( $request->query->has('source')) {
 
-                return $this->redirectToRoute('training_edit', [
-                    'id' => $request->query->get('id')
-                ]);
+                if ( $request->query->get('source') == 'training') {
+
+                    if ( $request->query->has('id_session')) {
+
+                        return $this->redirectToRoute('training_edit', [
+                            'id' => $request->query->get('id'),
+                            'id_session' => $request->query->get('id_session'),
+                            'source' => 'session',
+                            'goal' => 'success'
+                        ]);
+                    }
+
+                    return $this->redirectToRoute('training_edit', [
+                        'id' => $request->query->get('id'),
+                        'goal' => 'success'
+                    ]);
+
+                } else if ( $request->query->get('source') == 'session') {
+                    return $this->redirectToRoute('session_show', [
+                        'id' => $request->query->get('session_id'),
+                        'goal' => 'success'
+                    ]);
+                } 
             }
 
-            return $this->redirectToRoute('goal_index');
+            return $this->redirectToRoute('goal_index', [
+                'new' => 'success'
+            ]);
         }
 
         return $this->render('goal/new.html.twig', [
@@ -78,6 +100,7 @@ class GoalController extends AbstractController
 
             return $this->redirectToRoute('goal_show', [
                 'id' => $goal->getId(),
+                'update' => 'success'
             ]);
         }
 

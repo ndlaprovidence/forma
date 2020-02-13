@@ -48,6 +48,7 @@ class TraineeController extends AbstractController
 
             return $this->redirectToRoute('trainee_show', [
                 'id' => $trainee->getId(),
+                'update' => 'success'
             ]);
         }
 

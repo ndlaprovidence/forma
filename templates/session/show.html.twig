@@ -61,6 +61,34 @@
         </div>
     {% endif %}
 
+    {% if app.request.get('location') == 'success' %}
+        <div class="text-center mx-auto alert alert-success alert-dismissable fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <h5>{{'Location successfuly updated'|trans}}</h5>
+        </div>
+    {% endif %}
+    {% if app.request.get('training') == 'success' %}
+        <div class="text-center mx-auto alert alert-success alert-dismissable fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <h5>{{'Training successfuly updated'|trans}}</h5>
+        </div>
+    {% endif %}
+    {% if app.request.get('update') == 'success' %}
+        <div class="text-center mx-auto alert alert-success alert-dismissable fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <h5>{{'Session successfuly updated'|trans}}</h5>
+        </div>
+    {% endif %}
+
     <a href="{{ path('session_index') }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
     
     <div class='row justify-content-center mb-5'>
@@ -83,7 +111,7 @@
             <div class='info-box-content px-4 py-3 text-center'>
                 <h5 class='mb-3'>Le {{ session.date|date("d/m/Y") }}</h5>
                 <hr>
-                <h5 class="text-center w-100"{{'AM :'|trans}} {{ session.startTimeAm|date("H\\h\i") }}-{{ session.endTimeAm|date("H\\h\i") }}</h5>
+                <h5 class="text-center w-100">{{'AM :'|trans}} {{ session.startTimeAm|date("H\\h\i") }}-{{ session.endTimeAm|date("H\\h\i") }}</h5>
                 <h5 class="text-center w-100">{{'PM :'|trans}} {{ session.startTimePm|date("H\\h\i") }}-{{ session.endTimePm|date("H\\h\i") }}</h5>
                 <hr>
                 <h5>{{ session.endTimeAm|date_minus(session.startTimeAm,session.endTimePm,session.startTimePm) }} {{'of training'|trans}}</h5>
@@ -95,12 +123,12 @@
             <div class='info-box-content px-4 py-3 text-center'>
                 {% if session.location %}
                     {% if session.location.name == null %}
-                        <a href="{{ path('location_edit', {'id': session.location.id}) }}"><h5 class="font-italic text-danger">{{'No location name set for this session'|trans}}</h5></a>
+                        <a href="{{ path('location_edit', {'id': session.location.id, 'source': 'session', 'id_session': session.id}) }}"><h5 class="font-italic text-danger">{{'No location name set for this session'|trans}}</h5></a>
                     {% else %}
                         <h5>{{ session.location.name}}</h5>
                     {% endif %}
                     {% if session.location.street == null %}
-                        <a href="{{ path('location_edit', {'id': session.location.id}) }}"><h5 class="font-italic text-danger">{{'No location street set for this session'|trans}}</h5></a>
+                        <a href="{{ path('location_edit', {'id': session.location.id, 'source': 'session', 'id_session': session.id}) }}"><h5 class="font-italic text-danger">{{'No location street set for this session'|trans}}</h5></a>
                     {% else %}
                         <h5>{{ session.location.street}}</h5>
                     {% endif %}
@@ -135,7 +163,7 @@
                 {% if session.training.referenceNumber != null %}
                     <a href="{{ path('training_show', {'id': session.training.id}) }}"><h5>{{ session.training.referenceNumber }}</h5></a>
                 {% else %}
-                    <a href="{{ path('training_edit', {'id': session.training.id}) }}"><h5 class="font-italic text-danger">{{'No training reference set for this training'|trans}}</h5></a>
+                    <a href="{{ path('training_edit', {'id': session.training.id, 'source': 'session', 'id_session': session.id}) }}"><h5 class="font-italic text-danger">{{'No training reference set for this training'|trans}}</h5></a>
                 {% endif %}
             </div>
         </div>
@@ -149,7 +177,7 @@
                         <hr>
                     {% endfor %}
                 {% else %}
-                    <a href="{{ path('training_edit', {'id': session.training.id}) }}"><h5 class="font-italic text-danger">{{'No goal set for this training'|trans}}</h5></a>
+                    <a href="{{ path('training_edit', {'id': session.training.id, 'source': 'session', 'id_session': session.id}) }}"><h5 class="font-italic text-danger">{{'No goal set for this training'|trans}}</h5></a>
                 {% endif %}
             </div>
         </div>

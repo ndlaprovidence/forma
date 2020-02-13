@@ -48,6 +48,7 @@ class CompanyController extends AbstractController
 
             return $this->redirectToRoute('company_show', [
                 'id' => $company->getId(),
+                'update' => 'success'
             ]);
         }
 

@@ -433,7 +433,7 @@ class SessionController extends AbstractController
                             $upload = $ur->findOneById($existingUpload);
                             $this->em->persist($upload);
                         } else {
-                            $filesystem->copy('../public/temp/'.$completefileName, '../public/uploads/'.$completefileName);
+                            $filesystem->copy('../public/temp/'.$completeFileName, '../public/uploads/'.$completeFileName);
                             $upload = new Upload();
                             $upload
                                 ->setFileName($completeFileName)
@@ -651,7 +651,7 @@ class SessionController extends AbstractController
                 }
                 $this->formaHelper->clearFolder('../public/temp');
                 return $this->redirectToRoute('session_index', [
-                    'training' => 'success'
+                    'new' => 'success'
                 ]);
             } else {
                 if ( $sessionsNbrTotal != 1 ) {
@@ -664,7 +664,7 @@ class SessionController extends AbstractController
                 }
                 $this->formaHelper->clearFolder('../public/temp');
                 return $this->redirectToRoute('session_index', [
-                    'training' => 'success'
+                    'new' => 'success'
                 ]);
             }
         }
@@ -1476,6 +1476,7 @@ class SessionController extends AbstractController
 
             return $this->redirectToRoute('session_show', [
                 'id' => $session->getId(),
+                'update' => 'success'
             ]);
         }
 

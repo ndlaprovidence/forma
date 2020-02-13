@@ -3,6 +3,17 @@
 {% block title %}{{'Edit Training'|trans}}{% endblock %}
 
 {% block body %}
+
+    {% if app.request.get('goal') == 'success' %}
+        <div class="text-center mx-auto alert alert-success alert-dismissable fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <h5>{{'Goal successfuly added'|trans}}</h5>
+        </div>
+    {% endif %}
+
     <a href="{{ path('training_show', {'id': training.id}) }}"><i class="fas fa-chevron-left h1 back-btn"></i></a>
 
     <h1 class='text-center mb-5'>{{'Edit Training'|trans}}</h1>

@@ -39,7 +39,9 @@ class LocationController extends AbstractController
             $entityManager->persist($location);
             $entityManager->flush();
 
-            return $this->redirectToRoute('location_index');
+            return $this->redirectToRoute('location_index', [
+                'new' => 'success'
+            ]);
         }
 
         return $this->render('location/new.html.twig', [
@@ -69,8 +71,17 @@ class LocationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
+            if ( $request->query->has('source') ) {
+
+                return $this->redirectToRoute('session_show', [
+                    'location' => 'success',
+                    'id' => $request->query->get('id_session')
+                ]);
+            }
+
             return $this->redirectToRoute('location_show', [
                 'id' => $location->getId(),
+                'update' => 'success'
             ]);
         }
 
