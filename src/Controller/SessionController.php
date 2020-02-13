@@ -278,7 +278,13 @@ class SessionController extends AbstractController
     {
         if ( $request->query->has('file_name')) {
             
-            $fileName = $request->query->get('file_name');
+            if ( $request->query->has('extension') != 'csv' ) {
+                return $this->redirectToRoute('default', [
+                    'training' => 'fail-file'
+                ]);
+            }
+
+            $fileName = $request->query->get('file_name').'.'.$request->query->get('extension');
             $this->em = $em;
 
             $todayDate = new \DateTime('@'.strtotime('now'));
@@ -615,7 +621,7 @@ class SessionController extends AbstractController
                     
                     default:
                         return $this->redirectToRoute('default', [
-                            'training' => 'fail'
+                            'training' => 'fail-data'
                         ]);
                     break;
                 };

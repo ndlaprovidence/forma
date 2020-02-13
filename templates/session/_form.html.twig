@@ -11,10 +11,7 @@
         {{ form_widget(form.training, {'attr': {'class': 'mb-3'}}) }}
     {% endif %}
 
-    <h5>
-        {{'Location'|trans}} 
-        <a href="{{ path('location_new')}}"><i class="fas fa-plus-circle"></i></a>
-    </h5>
+    <h5>{{'Location'|trans}}</h5>
     {{ form_errors(form.location) }}
     {{ form_widget(form.location, {'attr': {'class': 'mb-3'}}) }}
 

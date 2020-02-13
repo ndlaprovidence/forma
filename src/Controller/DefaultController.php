@@ -38,12 +38,14 @@ class DefaultController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $originalFile = $upload->getFileName();
-            $fileName = time().'-'.rand(10000,99999).'.'.$originalFile->getClientOriginalExtension();
-            $originalFile->move($this->getParameter('temp_directory'), $fileName);
+            $extension = $originalFile->getClientOriginalExtension();
+            $fileName = time().'-'.rand(10000,99999);
+            $originalFile->move($this->getParameter('temp_directory'), $fileName.'.'.$extension);
             $upload->setFileName($fileName);
     
             return $this->redirectToRoute('session_new', [
                 'file_name' => $fileName,
+                'extension' => $extension
             ]);
         }
 
