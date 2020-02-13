@@ -643,6 +643,7 @@ class SessionController extends AbstractController
                     $currentSessionNbr = $currentSessionNbr+1;
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $fileName,
+                        'extension' => $request->query->get('extension'),
                         'current_session_number' => $currentSessionNbr
                     ]);
                 }
@@ -655,6 +656,7 @@ class SessionController extends AbstractController
                     $currentSessionNbr = 1;
                     return $this->redirectToRoute('session_new', [
                         'file_name' => $fileName,
+                        'extension' => $request->query->get('extension'),
                         'current_session_number' => $currentSessionNbr
                     ]);
                 }
