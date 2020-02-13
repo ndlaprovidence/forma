@@ -18,9 +18,9 @@
     <h5>{{'Instructors'|trans}} 
     {% if app.request.get('file_name') %}
         {% if app.request.get('current_session_number') %}
-            <a href="{{ path('instructor_new', {'source': 'session', 'file_name': file_name, 'current_session_number': app.request.get('current_session_number') }) }}"><i class="fas fa-plus-circle"></i></a>
+            <a href="{{ path('instructor_new', {'source': 'session', 'file_name': file_name, 'extension': extension, 'current_session_number': app.request.get('current_session_number') }) }}"><i class="fas fa-plus-circle"></i></a>
         {% else %}
-            <a href="{{ path('instructor_new', {'source': 'session', 'file_name': file_name }) }}"><i class="fas fa-plus-circle"></i></a>
+            <a href="{{ path('instructor_new', {'source': 'session', 'file_name': file_name, 'extension': extension }) }}"><i class="fas fa-plus-circle"></i></a>
         {% endif %}
     {% else %}
         <a href="{{ path('instructor_new', {'source': 'session', 'id': session.id }) }}"><i class="fas fa-plus-circle"></i></a>

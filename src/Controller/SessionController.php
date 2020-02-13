@@ -642,7 +642,7 @@ class SessionController extends AbstractController
                 if ( $currentSessionNbr < $sessionsNbrTotal-1 ) {
                     $currentSessionNbr = $currentSessionNbr+1;
                     return $this->redirectToRoute('session_new', [
-                        'file_name' => $fileName,
+                        'file_name' => $request->query->get('file_name'),
                         'extension' => $request->query->get('extension'),
                         'current_session_number' => $currentSessionNbr
                     ]);
@@ -655,7 +655,7 @@ class SessionController extends AbstractController
                 if ( $sessionsNbrTotal != 1 ) {
                     $currentSessionNbr = 1;
                     return $this->redirectToRoute('session_new', [
-                        'file_name' => $fileName,
+                        'file_name' => $request->query->get('file_name'),
                         'extension' => $request->query->get('extension'),
                         'current_session_number' => $currentSessionNbr
                     ]);
