@@ -127,7 +127,7 @@ class SessionController extends AbstractController
 
         // BgColor cells
         $tabColor = ['EC7063', 'A3E4D7', 'F9E79F'];
-        $color = 0;
+        $color = 1;
 
         // Pour chaque upload
         $currentRow = 2;
