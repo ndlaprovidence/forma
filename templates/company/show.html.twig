@@ -44,7 +44,7 @@
                 {% if (company.referenceNumber) %}
                     <h5>{{ company.referenceNumber }}</h5>
                 {% else %}
-                    <a href="{{ path('company_show', {'id': company.id}) }}"><h5 class="font-italic text-danger">{{'No reference number set for this company'|trans}}</h5></a>
+                    <a href="{{ path('company_edit', {'id': company.id}) }}"><h5 class="font-italic text-danger">{{'No reference number set for this company'|trans}}</h5></a>
                 {% endif %}
             </div>
         </div>
